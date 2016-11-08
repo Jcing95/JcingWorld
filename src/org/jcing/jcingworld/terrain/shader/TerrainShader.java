@@ -1,16 +1,17 @@
-package org.jcing.jcingworld.shading;
+package org.jcing.jcingworld.terrain.shader;
 
 import org.jcing.jcingworld.entities.Ambient;
 import org.jcing.jcingworld.entities.Camera;
 import org.jcing.jcingworld.entities.Light;
+import org.jcing.jcingworld.shading.ShaderProgram;
 import org.jcing.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class TerrainShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/shading/TerrainVertexShader";
-	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/shading/TerrainFragmentShader";
+	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/terrain/shader/TerrainVertexShader";
+	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/terrain/shader/TerrainFragmentShader";
 
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;

@@ -1,4 +1,6 @@
-package org.jcing.jcingworld.terrains;
+package org.jcing.jcingworld.terrain;
+
+import java.util.Random;
 
 import org.jcing.jcingworld.main.Loader;
 import org.jcing.jcingworld.models.RawModel;
@@ -25,6 +27,7 @@ public class Terrain {
 	}
 
 	private RawModel generateTerrain(Loader loader) {
+		Random random = new Random();
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
@@ -34,7 +37,7 @@ public class Terrain {
 		for (int i = 0; i < VERTEX_COUNT; i++) {
 			for (int j = 0; j < VERTEX_COUNT; j++) {
 				vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
-				vertices[vertexPointer * 3 + 1] = 0;
+				vertices[vertexPointer * 3 + 1] = random.nextFloat()*3.0f;
 				vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;

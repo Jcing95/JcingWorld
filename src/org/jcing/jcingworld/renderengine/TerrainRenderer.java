@@ -3,8 +3,8 @@ package org.jcing.jcingworld.renderengine;
 import java.util.List;
 
 import org.jcing.jcingworld.models.RawModel;
-import org.jcing.jcingworld.shading.TerrainShader;
-import org.jcing.jcingworld.terrains.Terrain;
+import org.jcing.jcingworld.terrain.Terrain;
+import org.jcing.jcingworld.terrain.shader.TerrainShader;
 import org.jcing.jcingworld.textures.TerrainTexturePack;
 import org.jcing.toolbox.Maths;
 import org.lwjgl.opengl.GL11;

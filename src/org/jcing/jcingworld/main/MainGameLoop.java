@@ -29,7 +29,7 @@ import org.jcing.jcingworld.models.TexturedModel;
 import org.jcing.jcingworld.renderengine.DisplayManager;
 import org.jcing.jcingworld.renderengine.MasterRenderer;
 import org.jcing.jcingworld.renderengine.OBJLoader;
-import org.jcing.jcingworld.terrains.Terrain;
+import org.jcing.jcingworld.terrain.Terrain;
 import org.jcing.jcingworld.textures.ModelTexture;
 import org.jcing.jcingworld.textures.TerrainTexture;
 import org.jcing.jcingworld.textures.TerrainTexturePack;
