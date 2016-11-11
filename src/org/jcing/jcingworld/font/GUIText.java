@@ -1,6 +1,7 @@
 package org.jcing.jcingworld.font;
 
 import org.jcing.jcingworld.font.rendering.TextMaster;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -52,14 +53,19 @@ public class GUIText {
 	 * @param centered
 	 *            - whether the text should be centered or not.
 	 */
-	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength,
-			boolean centered) {
+	public GUIText(String text, float fontSize, FontType font, Vector2f position, float maxLineLength, boolean centered) {
 		this.textString = text;
 		this.fontSize = fontSize;
 		this.font = font;
 		this.position = position;
 		this.lineMaxSize = maxLineLength;
 		this.centerText = centered;
+		TextMaster.loadText(this);
+	}
+
+	public void setText(String text) {
+		textString = text;
+		TextMaster.removeText(this);
 		TextMaster.loadText(this);
 	}
 
@@ -136,6 +142,10 @@ public class GUIText {
 	public void setMeshInfo(int vao, int verticesCount) {
 		this.textMeshVao = vao;
 		this.vertexCount = verticesCount;
+	}
+
+	public void deleteMeshInfo() {
+		GL30.glDeleteVertexArrays(textMeshVao);
 	}
 
 	/**

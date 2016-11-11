@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.renderengine;
+package org.jcing.jcingworld.models;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jcing.jcingworld.main.Loader;
-import org.jcing.jcingworld.models.RawModel;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -37,7 +36,7 @@ public class OBJLoader {
 		int[] indicesArray = null;
 		try {
 
-			while (true) {
+			while (true) { //PARSE Vertices / Texture Coordinates / Normals
 				line = reader.readLine();
 				String[] currentLine = line.split(" ");
 				if (line.startsWith("v ")) {
@@ -51,7 +50,7 @@ public class OBJLoader {
 					Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
 							Float.parseFloat(currentLine[3]));
 					normals.add(normal);
-				} else if (line.startsWith("f ")) {
+				} else if (line.startsWith("f ")) { //break at first face
 					textureArray = new float[vertices.size() * 2];
 					normalsArray = new float[vertices.size() * 3];
 					break;

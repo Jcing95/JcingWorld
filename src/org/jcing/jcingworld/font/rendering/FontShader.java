@@ -31,8 +31,8 @@ public class FontShader extends ShaderProgram {
 	protected void loadColour(Vector3f colour) {
 		super.loadVector(location_colour, colour);
 	}
-	
-	protected void loadTransformation (Vector2f translation) {
+
+	protected void loadTransformation(Vector2f translation) {
 		super.load2DVector(location_translation, translation);
 	}
 }

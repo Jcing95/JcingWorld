@@ -2,6 +2,7 @@ package org.jcing.jcingworld.entities;
 
 import org.jcing.jcingworld.io.KeyBoard;
 import org.jcing.jcingworld.io.Mouse;
+import org.jcing.jcingworld.main.MainGameLoop;
 import org.jcing.jcingworld.models.TexturedModel;
 import org.jcing.jcingworld.renderengine.DisplayManager;
 import org.lwjgl.glfw.GLFW;
@@ -19,10 +20,8 @@ public class Player extends Entity {
 	private static final float SPEEDMOD = 7.5f;
 	private static final float HEADOFFSET = 3.5f;
 
-	private static final float GRAVITY = -75;
-	private static final float JUMP_POWER = 90;
-
-	private static final float TERRAIN_HEIGHT = 0;
+	private static final float GRAVITY = -70;
+	private static final float JUMP_POWER = 40;
 
 	private float currSpeed = 0;
 
@@ -112,10 +111,11 @@ public class Player extends Entity {
 
 		} else {
 			// NOT FLYING
-			if (getPosition().y + speedUp <= TERRAIN_HEIGHT) {
+			if (getPosition().y + speedUp < MainGameLoop.getTerrainHeight(getPosition().x, getPosition().z)) {
 				inAir = false;
+				upwardsSpeed = 0;
 				speedUp = 0;
-				getPosition().y = TERRAIN_HEIGHT;
+				getPosition().y = MainGameLoop.getTerrainHeight(getPosition().x, getPosition().z);
 			}
 			distanceY = speedUp;
 			distanceX = (float) (distanceForward * Math.sin(Math.toRadians(-getRotY())) + distanceRight * Math.sin(Math.toRadians(-getRotY() + 90)));

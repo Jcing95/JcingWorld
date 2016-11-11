@@ -1,7 +1,5 @@
 package org.jcing.jcingworld.entities;
 
-import java.util.List;
-
 import org.jcing.jcingworld.models.TexturedModel;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -11,9 +9,6 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
-
-	private boolean collision = false;
-	private List<Hitbox> hitbox;
 
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
 		this.model = model;

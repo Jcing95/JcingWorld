@@ -8,6 +8,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 
 import java.io.File;
 import java.nio.DoubleBuffer;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,15 +25,16 @@ import org.jcing.jcingworld.gui.GUIRenderer;
 import org.jcing.jcingworld.gui.GUIpart;
 import org.jcing.jcingworld.io.KeyBoard;
 import org.jcing.jcingworld.io.Mouse;
+import org.jcing.jcingworld.models.OBJLoader;
 import org.jcing.jcingworld.models.RawModel;
 import org.jcing.jcingworld.models.TexturedModel;
 import org.jcing.jcingworld.renderengine.DisplayManager;
 import org.jcing.jcingworld.renderengine.MasterRenderer;
-import org.jcing.jcingworld.renderengine.OBJLoader;
 import org.jcing.jcingworld.terrain.Terrain;
 import org.jcing.jcingworld.textures.ModelTexture;
 import org.jcing.jcingworld.textures.TerrainTexture;
 import org.jcing.jcingworld.textures.TerrainTexturePack;
+import org.jcing.toolbox.MousePicker;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -52,6 +54,9 @@ public class MainGameLoop {
 
 	private double prevMouseY;
 
+	private static Terrain terrain, terrain2;
+	GUIText text;
+
 	public static void main(String[] args) {
 		new MainGameLoop();
 	}
@@ -68,23 +73,25 @@ public class MainGameLoop {
 			// Terminate GLFW and free the error callback
 			glfwTerminate();
 			glfwSetErrorCallback(null).free();
-		}
+ 		}
 	}
 
 	private void loop() {
 
 		Loader loader = new Loader();
 		TextMaster.init(loader);
-		FontType font = new FontType(loader.loadTexture("fonts/halfelven",true), new File("res/fonts/halfelven.fnt"));
-		GUIText text = new GUIText("WELCOME TO THE FANTASTIC WORLD OF JCING!",1,font, new Vector2f(0.5f,0.5f),0.5f,false);
-		text.setColour(0.3f, 0.75f, 0.4f);
-		
-		
+		FontType font = new FontType(loader.loadTexture("fonts/halfelven", true), new File("res/fonts/halfelven.fnt"));
+		text = new GUIText("WELCOME TO THE FANTASTIC WORLD OF JCING!", 1, font, new Vector2f(0.5f, 0.5f), 0.5f, false);
+		text.setColour(1f, 0.25f, 0.4f);
+
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-		Light sun = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
-		Ambient ambient = new Ambient(0.125f);
+		Light sun = new Light(new Vector3f(0, 20000, 2000), new Vector3f(1, 1, 1));
+		Ambient ambient = new Ambient(0.25f);
+		
 		Camera cam = new Camera();
+		
+		
 
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("tut/grassy", true));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("tut/mud", true));
@@ -92,10 +99,10 @@ public class MainGameLoop {
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("tut/path", true));
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 
-		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("tut/blendMap", true));
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap", true));
 
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
-		Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
+		terrain = new Terrain(-0.5f, -0.5f, loader, texturePack, blendMap);
+//		terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
 
 		ModelTexture pyramid = new ModelTexture(loader.loadTexture("pyramid", true));
 
@@ -118,73 +125,71 @@ public class MainGameLoop {
 		ferntex.setUseFakeLighting(true);
 		TexturedModel fern = new TexturedModel(fernobj, ferntex);
 
-		RawModel grassobj = OBJLoader.loadObjModel("tut/grass", loader);
-		ModelTexture grasstex = new ModelTexture(loader.loadTexture("tut/grass", true));
-		grasstex.setHasTransparency(true);
-		grasstex.setUseFakeLighting(true);
-		TexturedModel grass = new TexturedModel(grassobj, grasstex);
+		RawModel rockobj = OBJLoader.loadObjModel("cube", loader);
+		ModelTexture rocktex = new ModelTexture(loader.loadTexture("cube", true));
+		// grasstex.setHasTransparency(true);
+		// grasstex.setUseFakeLighting(true);
+		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		RawModel lowtreeobj = OBJLoader.loadObjModel("tut/lowPolyTree", loader);
-		ModelTexture lowtreetex = new ModelTexture(loader.loadTexture("tut/lowPolyTree", true));
-		TexturedModel lowtree = new TexturedModel(lowtreeobj, lowtreetex);
-
-		for (int i = 0; i < 4000; i++) {
-			Entity entity;
-			switch (random.nextInt(10)) {
-			case 0:
-				entity = new Entity(tree, new Vector3f(1600 * random.nextFloat() - 800, 0, -800 * random.nextFloat()), 0, random.nextFloat() * 360, 0,
-						3.5f + 3.5f * random.nextFloat());
-				break;
-			case 1:
-				entity = new Entity(lowtree, new Vector3f(1600 * random.nextFloat() - 800, 0, -800 * random.nextFloat()), 0, random.nextFloat() * 360,
-						0, 0.5f + 0.5f * random.nextFloat());
-				break;
-			case 2:
-			case 3:
-			case 4:
-				entity = new Entity(fern, new Vector3f(1600 * random.nextFloat() - 800, 0, -800 * random.nextFloat()), 0, random.nextFloat() * 360, 0,
-						0.5f + 0.5f * random.nextFloat());
-				break;
-			default:
-				entity = new Entity(grass, new Vector3f(1600 * random.nextFloat() - 800, 0, -800 * random.nextFloat()), 0, random.nextFloat() * 360,
-						0, 2.0f + 1f * random.nextFloat());
-
-			}
-			flora.add(entity);
+		for (int i = 0; i < 300; i++) {
+			float x = Terrain.SIZE * random.nextFloat();
+			float z = -Terrain.SIZE * random.nextFloat();
+			float y = terrain.getHeight(x, z);
+			flora.add(new Entity(tree, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 3.5f + 3.5f * random.nextFloat()));
 		}
-		// Entity entity = new Entity(texturedModel, new Vector3f(0, 0.0f, -3f),
-		// 0f, 0, 0, 1);
+
+		for (int i = 0; i < 300; i++) {
+			float x = Terrain.SIZE * random.nextFloat();
+			float z = -Terrain.SIZE * random.nextFloat();
+			float y = terrain.getHeight(x, z);
+			flora.add(new Entity(fern, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f + 0.5f * random.nextFloat()));
+		}
+
+		for (int i = 0; i < 300; i++) {
+			float x = Terrain.SIZE * random.nextFloat();
+			float z = -Terrain.SIZE * random.nextFloat();
+			float y = terrain.getHeight(x, z);
+			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 1f * random.nextFloat()));
+		}
 
 		Player player = new Player(null, new Vector3f(0, 0, 5), 0, 0, 0, 1);
 
 		List<GUIpart> guis = new ArrayList<GUIpart>();
-		GUIpart gui = new GUIpart(loader.loadTexture("matrix",true),new Vector2f(0.5f,0.5f), new Vector2f(0.25f,0.25f));
+		GUIpart gui = new GUIpart(loader.loadTexture("matrix", true), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 		guis.add(gui);
-		
+
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
+
+		MousePicker picker = new MousePicker(cam, renderer.getProjectionMatrix(),terrain);
 		
+		Entity pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("tut/lowPolyTree", loader),new ModelTexture(loader.loadTexture("tut/lowPolyTree", true))),new Vector3f(0,1,0),0,0,0,1);
 		// Test method for testing different kinds of Stuff
 		test();
-		
+		DecimalFormat dec = new DecimalFormat("#.##");
+		dec.setMinimumFractionDigits(2);
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		while (!glfwWindowShouldClose(window)) {
 			manageMouse();
+			picker.update();
+			pickTest.setPosition(picker.getCurrentTerrainPoint());
+			pickTest.increasePosition(0, -0.5f, 0);
 			player.move();
 			player.moveCamera(cam);
 			if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
 				cam.reset();
 			}
-
+			text.setText("FPS: " + DisplayManager.fps + " X: " + dec.format(player.getPosition().x) + " Y: " + dec.format(player.getPosition().y)
+					+ " Z: " + dec.format(player.getPosition().z));
 			// renderer.processEntity(entity);
 
 			for (Entity e : flora) {
 				// bar.increaseRotation(0, spin[i], 0);
 				renderer.processEntity(e);
 			}
-
+			renderer.processEntity(pickTest);
 			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
+//			renderer.processTerrain(terrain2);
 
 			renderer.render(sun, ambient, cam);
 			guiRenderer.render(guis);
@@ -194,7 +199,17 @@ public class MainGameLoop {
 		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
-		
+
+	}
+
+	public static float getTerrainHeight(float x, float z) {
+		if (terrain.inTerrain(x, z)) {
+			return terrain.getHeight(x, z);
+		}
+		if (terrain2.inTerrain(x, z)) {
+			return terrain2.getHeight(x, z);
+		}
+		return 0;
 	}
 
 	private void test() {
@@ -207,8 +222,9 @@ public class MainGameLoop {
 		rot.setIdentity();
 
 		rot.rotate((float) Math.toRadians(30), new Vector3f(0, 1, 0));
-		vec.mul(vec, rot, vec);
+		Matrix4f.mul(vec, rot, vec);
 		System.out.println();
+		// GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 	}
 
 	private void manageMouse() {

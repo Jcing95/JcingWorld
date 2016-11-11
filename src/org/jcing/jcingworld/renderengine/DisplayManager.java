@@ -120,7 +120,7 @@ public class DisplayManager {
 			fps = frames;
 			frames = 0;
 			lastSecond = currentFrameTime;
-			System.out.println("FPS: " + fps);
+			// System.out.println("FPS: " + fps);
 		}
 		frames++;
 		delta = (currentFrameTime - lastFrameTime) / 1000f;
