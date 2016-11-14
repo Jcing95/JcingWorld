@@ -73,7 +73,7 @@ public class MainGameLoop {
 			// Terminate GLFW and free the error callback
 			glfwTerminate();
 			glfwSetErrorCallback(null).free();
- 		}
+		}
 	}
 
 	private void loop() {
@@ -86,12 +86,10 @@ public class MainGameLoop {
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
-		Light sun = new Light(new Vector3f(0, 20000, 2000), new Vector3f(1, 1, 1));
-		Ambient ambient = new Ambient(0.25f);
-		
+		Light sun = new Light(new Vector3f(0, 20000, 20000), new Vector3f(1, 1, 1));
+		Ambient ambient = new Ambient(0.15f);
+
 		Camera cam = new Camera();
-		
-		
 
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("tut/grassy", true));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("tut/mud", true));
@@ -102,13 +100,7 @@ public class MainGameLoop {
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap", true));
 
 		terrain = new Terrain(-0.5f, -0.5f, loader, texturePack, blendMap);
-//		terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
-
-		ModelTexture pyramid = new ModelTexture(loader.loadTexture("pyramid", true));
-
-		pyramid.setShineDamper(10);
-		pyramid.setReflectivity(1);
-		// pyramid.setUseFakeLighting(true);
+		// terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
 
 		MasterRenderer renderer = new MasterRenderer();
 
@@ -122,32 +114,33 @@ public class MainGameLoop {
 		RawModel fernobj = OBJLoader.loadObjModel("tut/fern", loader);
 		ModelTexture ferntex = new ModelTexture(loader.loadTexture("tut/fern", true));
 		ferntex.setHasTransparency(true);
-		ferntex.setUseFakeLighting(true);
+		ferntex.useFakeLighting(true);
 		TexturedModel fern = new TexturedModel(fernobj, ferntex);
 
-		RawModel rockobj = OBJLoader.loadObjModel("cube", loader);
-		ModelTexture rocktex = new ModelTexture(loader.loadTexture("cube", true));
+		RawModel rockobj = OBJLoader.loadObjModel("rock", loader);
+		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock", true));
+		rocktex.useFakeLighting(true);
 		// grasstex.setHasTransparency(true);
 		// grasstex.setUseFakeLighting(true);
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		for (int i = 0; i < 300; i++) {
-			float x = Terrain.SIZE * random.nextFloat();
-			float z = -Terrain.SIZE * random.nextFloat();
+		for (int i = 0; i < 1300; i++) {
+			float x = Terrain.SIZE * random.nextFloat() - 0.5f * Terrain.SIZE;
+			float z = Terrain.SIZE * random.nextFloat() - 0.5f * Terrain.SIZE;
 			float y = terrain.getHeight(x, z);
 			flora.add(new Entity(tree, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 3.5f + 3.5f * random.nextFloat()));
 		}
 
-		for (int i = 0; i < 300; i++) {
-			float x = Terrain.SIZE * random.nextFloat();
-			float z = -Terrain.SIZE * random.nextFloat();
+		for (int i = 0; i < 1300; i++) {
+			float x = Terrain.SIZE * random.nextFloat() - 0.5f * Terrain.SIZE;
+			float z = Terrain.SIZE * random.nextFloat() - 0.5f * Terrain.SIZE;
 			float y = terrain.getHeight(x, z);
 			flora.add(new Entity(fern, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f + 0.5f * random.nextFloat()));
 		}
 
-		for (int i = 0; i < 300; i++) {
-			float x = Terrain.SIZE * random.nextFloat();
-			float z = -Terrain.SIZE * random.nextFloat();
+		for (int i = 0; i < 1300; i++) {
+			float x = Terrain.SIZE * random.nextFloat() - 0.5f * Terrain.SIZE;
+			float z = Terrain.SIZE * random.nextFloat() - 0.5f * Terrain.SIZE;
 			float y = terrain.getHeight(x, z);
 			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 1f * random.nextFloat()));
 		}
@@ -160,9 +153,11 @@ public class MainGameLoop {
 
 		GUIRenderer guiRenderer = new GUIRenderer(loader);
 
-		MousePicker picker = new MousePicker(cam, renderer.getProjectionMatrix(),terrain);
-		
-		Entity pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("tut/lowPolyTree", loader),new ModelTexture(loader.loadTexture("tut/lowPolyTree", true))),new Vector3f(0,1,0),0,0,0,1);
+		MousePicker picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
+
+		Entity pickTest = new Entity(
+				new TexturedModel(OBJLoader.loadObjModel("tut/lowPolyTree", loader), new ModelTexture(loader.loadTexture("tut/lowPolyTree", true))),
+				new Vector3f(0, 1, 0), 0, 0, 0, 1);
 		// Test method for testing different kinds of Stuff
 		test();
 		DecimalFormat dec = new DecimalFormat("#.##");
@@ -189,7 +184,7 @@ public class MainGameLoop {
 			}
 			renderer.processEntity(pickTest);
 			renderer.processTerrain(terrain);
-//			renderer.processTerrain(terrain2);
+			// renderer.processTerrain(terrain2);
 
 			renderer.render(sun, ambient, cam);
 			guiRenderer.render(guis);

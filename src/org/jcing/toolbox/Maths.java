@@ -1,5 +1,6 @@
 package org.jcing.toolbox;
 
+import org.jcing.geometry.Triangle;
 import org.jcing.jcingworld.entities.Camera;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -50,5 +51,11 @@ public class Maths {
 
 	public static float getFloatColor(int color) {
 		return (float) (color / 255.0);
+	}
+	
+	public static Vector3f calculateNormal(Triangle triangle){
+		
+		
+		return null;
 	}
 }

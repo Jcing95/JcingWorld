@@ -36,7 +36,7 @@ public class OBJLoader {
 		int[] indicesArray = null;
 		try {
 
-			while (true) { //PARSE Vertices / Texture Coordinates / Normals
+			while (true) { // PARSE Vertices / Texture Coordinates / Normals
 				line = reader.readLine();
 				String[] currentLine = line.split(" ");
 				if (line.startsWith("v ")) {
@@ -50,7 +50,7 @@ public class OBJLoader {
 					Vector3f normal = new Vector3f(Float.parseFloat(currentLine[1]), Float.parseFloat(currentLine[2]),
 							Float.parseFloat(currentLine[3]));
 					normals.add(normal);
-				} else if (line.startsWith("f ")) { //break at first face
+				} else if (line.startsWith("f ")) { // break at first face
 					textureArray = new float[vertices.size() * 2];
 					normalsArray = new float[vertices.size() * 3];
 					break;

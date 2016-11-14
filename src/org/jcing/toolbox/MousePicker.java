@@ -1,10 +1,8 @@
 package org.jcing.toolbox;
 
 import org.jcing.jcingworld.entities.Camera;
-import org.jcing.jcingworld.io.Mouse;
 import org.jcing.jcingworld.renderengine.DisplayManager;
 import org.jcing.jcingworld.terrain.Terrain;
-import org.lwjgl.util.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -32,8 +30,8 @@ public class MousePicker {
 	}
 
 	public Vector3f getCurrentTerrainPoint() {
-		if(currentTerrainPoint == null){
-			return new Vector3f(0,0,0);
+		if (currentTerrainPoint == null) {
+			return new Vector3f(0, 0, 0);
 		}
 		return currentTerrainPoint;
 	}
@@ -53,8 +51,8 @@ public class MousePicker {
 	}
 
 	private Vector3f calculateMouseRay() {
-		float mouseX = (float) Mouse.posX;
-		float mouseY = (float) Mouse.posY;
+		float mouseX = (float) DisplayManager.width / 2.0f;// Mouse.posX;
+		float mouseY = (float) DisplayManager.height / 2.0f;// Mouse.posY;
 		Vector2f normalizedCoords = getNormalisedDeviceCoordinates(mouseX, mouseY);
 		Vector4f clipCoords = new Vector4f(normalizedCoords.x, normalizedCoords.y, -1.0f, 1.0f);
 		Vector4f eyeCoords = toEyeCoords(clipCoords);
@@ -77,8 +75,8 @@ public class MousePicker {
 	}
 
 	private Vector2f getNormalisedDeviceCoordinates(float mouseX, float mouseY) {
-		float x = (2.0f * mouseX) / DisplayManager.width-1;
-		float y = (2.0f * mouseY) / DisplayManager.height-1;
+		float x = (2.0f * mouseX) / DisplayManager.width - 1;
+		float y = (2.0f * mouseY) / DisplayManager.height - 1;
 		return new Vector2f(x, y);
 	}
 

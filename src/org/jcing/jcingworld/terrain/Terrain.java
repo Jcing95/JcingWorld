@@ -16,7 +16,7 @@ public class Terrain {
 	private static final int VERTEX_COUNT = 100;
 	public static final float SIZE = SQUARE_SIZE * VERTEX_COUNT;
 
-	private static float maxDelta = 32;
+	private static float maxDelta = 8;
 	private float[][] heightMap;
 
 	private float x;
@@ -84,21 +84,21 @@ public class Terrain {
 	}
 
 	private Vector3f calculateNormal(int x, int z) {
-		float heightL=0,heightR=0,heightD=0,heightU=0;
-		if(x-1 >= 0)
-		heightL = heightMap[x-1][z];
-		if(x+1 < heightMap.length)
-		heightR = heightMap[x + 1][z];
-		if(z-1 >= 0)
-		heightD = heightMap[x][ z - 1];
-		if(z+1 < heightMap.length)
-		heightU = heightMap[x][ z + 1];
-		
-		Vector3f normal = new Vector3f(heightL - heightR,SQUARE_SIZE, heightD - heightU);
+		float heightL = 0, heightR = 0, heightD = 0, heightU = 0;
+		if (x - 1 >= 0)
+			heightL = heightMap[x - 1][z];
+		if (x + 1 < heightMap.length)
+			heightR = heightMap[x + 1][z];
+		if (z - 1 >= 0)
+			heightD = heightMap[x][z - 1];
+		if (z + 1 < heightMap.length)
+			heightU = heightMap[x][z + 1];
+
+		Vector3f normal = new Vector3f(heightL - heightR, SQUARE_SIZE, heightD - heightU);
 		normal.normalise();
 		return normal;
 	}
-	
+
 	private void loadheightMap() {
 		Random random = new Random();
 		heightMap = new float[VERTEX_COUNT][VERTEX_COUNT];
@@ -143,8 +143,8 @@ public class Terrain {
 		float xCoord = (terrainX % squareNumber) / squareNumber;
 		float zCoord = (terrainZ % squareNumber) / squareNumber;
 		float answer;
-		
-		if(gridX +1 >= heightMap.length || gridZ+1 >= heightMap.length){
+
+		if (gridX + 1 >= heightMap.length || gridZ + 1 >= heightMap.length) {
 			return 0;
 		}
 		if (xCoord <= (1 - zCoord)) {
