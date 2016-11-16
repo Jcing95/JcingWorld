@@ -23,6 +23,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.jcing.jcingworld.io.KeyBoard;
+import org.jcing.jcingworld.io.Mouse;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -71,6 +72,7 @@ public class DisplayManager {
 		// Setup a key callback. It will be called every time a key is pressed,
 		// repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+			
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 			if (action == GLFW.GLFW_PRESS) {
@@ -82,6 +84,16 @@ public class DisplayManager {
 			// System.out.println("win: " +window + " key: " + key + " scancode:
 			// " + scancode + " action: " + action + " mods: " + mods);
 		});
+		
+		GLFW.glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+			if(action == GLFW.GLFW_PRESS){
+				Mouse.button[button] = true;
+			}
+			if(action == GLFW.GLFW_RELEASE){
+				Mouse.button[button] = false;
+			}
+		});
+		
 
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 

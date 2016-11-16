@@ -25,7 +25,7 @@ public class Player extends Entity {
 
 	private float currSpeed = 0;
 
-	private boolean flying = false;
+	private boolean flying =false;
 
 	private boolean inAir = false;
 
@@ -35,7 +35,7 @@ public class Player extends Entity {
 
 	public void move() {
 
-		flying = KeyBoard.toggled(GLFW.GLFW_KEY_F);
+		flying = !KeyBoard.toggled(GLFW.GLFW_KEY_F);
 
 		// SPEED
 		if (KeyBoard.key(GLFW.GLFW_KEY_LEFT_SHIFT)) {
@@ -126,7 +126,13 @@ public class Player extends Entity {
 		// MOVE
 		increasePosition(distanceX, distanceY, distanceZ);
 	}
-
+	
+	public void reset() {
+		setPosition(new Vector3f());
+		super.setRotX(0);
+		super.setRotY(0);
+		super.setRotZ(0);
+	}
 	private void jump() {
 		if (!inAir) {
 			this.upwardsSpeed = JUMP_POWER;

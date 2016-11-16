@@ -87,8 +87,8 @@ public class Loader {
 		}
 		int width = w.get();
 		int height = h.get();
-
 		int textureID = GL11.glGenTextures();
+//		image.flip();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
 		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);

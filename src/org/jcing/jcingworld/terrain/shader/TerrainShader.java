@@ -4,6 +4,7 @@ import org.jcing.jcingworld.entities.Ambient;
 import org.jcing.jcingworld.entities.Camera;
 import org.jcing.jcingworld.entities.Light;
 import org.jcing.jcingworld.shading.ShaderProgram;
+import org.jcing.jcingworld.terrain.Terrain;
 import org.jcing.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -27,6 +28,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_gTexture;
 	private int location_bTexture;
 	private int location_blendMap;
+	private int location_terrainSize;
 
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -55,6 +57,7 @@ public class TerrainShader extends ShaderProgram {
 		location_gTexture = super.getUniformLocation("gTexture");
 		location_bTexture = super.getUniformLocation("bTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
+		location_terrainSize = super.getUniformLocation("terrainSize");
 	}
 
 	public void connectTextureUnits() {
@@ -63,6 +66,7 @@ public class TerrainShader extends ShaderProgram {
 		super.loadInt(location_gTexture, 2);
 		super.loadInt(location_bTexture, 3);
 		super.loadInt(location_blendMap, 4);
+		super.loadFloat(location_terrainSize, Terrain.SQUARE_COUNT);
 	}
 
 	public void loadShineVariables(float damper, float reflectivity) {

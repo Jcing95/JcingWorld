@@ -16,8 +16,10 @@ public class KeyBoard {
 	}
 
 	public static void press(int key2) {
-		key[key2] = true;
-		toggled[key2] = !toggled[key2];
+		if (key2 >= 0) {
+			key[key2] = true;
+			toggled[key2] = !toggled[key2];
+		}
 	}
 
 	public static void release(int key2) {
