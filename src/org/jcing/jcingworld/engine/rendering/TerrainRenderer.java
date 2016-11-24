@@ -1,12 +1,12 @@
-package org.jcing.jcingworld.renderengine;
+package org.jcing.jcingworld.engine.rendering;
 
 import java.util.List;
 
-import org.jcing.jcingworld.models.RawModel;
-import org.jcing.jcingworld.terrain.Terrain;
-import org.jcing.jcingworld.terrain.shader.TerrainShader;
-import org.jcing.jcingworld.textures.TerrainTexturePack;
-import org.jcing.toolbox.Maths;
+import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
+import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
+import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;

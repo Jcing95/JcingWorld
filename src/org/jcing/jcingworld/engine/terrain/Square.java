@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.terrain;
+package org.jcing.jcingworld.engine.terrain;
 
 import org.lwjgl.util.vector.Vector3f;
 

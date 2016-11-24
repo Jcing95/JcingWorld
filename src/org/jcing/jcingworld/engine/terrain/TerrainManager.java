@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.terrain;
+package org.jcing.jcingworld.engine.terrain;
 
 import java.util.HashMap;
 import java.util.List;

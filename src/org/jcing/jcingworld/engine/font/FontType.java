@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.font;
+package org.jcing.jcingworld.engine.font;
 
 import java.io.File;
 

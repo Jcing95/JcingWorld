@@ -1,10 +1,10 @@
-package org.jcing.jcingworld.entities;
+package org.jcing.jcingworld.engine.entities;
 
-import org.jcing.jcingworld.io.KeyBoard;
-import org.jcing.jcingworld.io.Mouse;
-import org.jcing.jcingworld.main.MainGameLoop;
-import org.jcing.jcingworld.models.TexturedModel;
-import org.jcing.jcingworld.renderengine.DisplayManager;
+import org.jcing.jcingworld.engine.DisplayManager;
+import org.jcing.jcingworld.engine.entities.models.TexturedModel;
+import org.jcing.jcingworld.engine.io.KeyBoard;
+import org.jcing.jcingworld.engine.io.Mouse;
+import org.jcing.jcingworld.main.MainLoop;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -111,11 +111,11 @@ public class Player extends Entity {
 
 		} else {
 			// NOT FLYING
-			if (getPosition().y + speedUp < MainGameLoop.getTerrainHeight(getPosition().x, getPosition().z)) {
+			if (getPosition().y + speedUp < MainLoop.getGame().getTerrainHeight(getPosition().x, getPosition().z)) {
 				inAir = false;
 				upwardsSpeed = 0;
 				speedUp = 0;
-				getPosition().y = MainGameLoop.getTerrainHeight(getPosition().x, getPosition().z);
+				getPosition().y = MainLoop.getGame().getTerrainHeight(getPosition().x, getPosition().z);
 			}
 			distanceY = speedUp;
 			distanceX = (float) (distanceForward * Math.sin(Math.toRadians(-getRotY())) + distanceRight * Math.sin(Math.toRadians(-getRotY() + 90)));

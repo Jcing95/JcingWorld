@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.entities;
+package org.jcing.jcingworld.engine.lighting;
 
 import org.lwjgl.util.vector.Vector3f;
 

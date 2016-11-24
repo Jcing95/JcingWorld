@@ -1,8 +1,8 @@
-package org.jcing.toolbox;
+package org.jcing.jcingworld.toolbox;
 
-import org.jcing.jcingworld.entities.Camera;
-import org.jcing.jcingworld.renderengine.DisplayManager;
-import org.jcing.jcingworld.terrain.Terrain;
+import org.jcing.jcingworld.engine.DisplayManager;
+import org.jcing.jcingworld.engine.entities.Camera;
+import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

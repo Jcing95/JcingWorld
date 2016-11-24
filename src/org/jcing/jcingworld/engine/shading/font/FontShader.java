@@ -1,13 +1,13 @@
-package org.jcing.jcingworld.font.rendering;
+package org.jcing.jcingworld.engine.shading.font;
 
-import org.jcing.jcingworld.shading.ShaderProgram;
+import org.jcing.jcingworld.engine.shading.ShaderProgram;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class FontShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/font/rendering/fontVertex.txt";
-	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/font/rendering/fontFragment.txt";
+	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/engine/shading/font/fontVertex.txt";
+	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/engine/shading/font/fontFragment.txt";
 
 	private int location_colour;
 	private int location_translation;

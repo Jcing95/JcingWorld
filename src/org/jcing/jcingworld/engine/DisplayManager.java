@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.renderengine;
+package org.jcing.jcingworld.engine;
 
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
@@ -22,13 +22,14 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import org.jcing.jcingworld.io.KeyBoard;
-import org.jcing.jcingworld.io.Mouse;
+import org.jcing.jcingworld.engine.io.KeyBoard;
+import org.jcing.jcingworld.engine.io.Mouse;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 public class DisplayManager {
 
@@ -114,12 +115,15 @@ public class DisplayManager {
 		// Make the window visible
 		glfwShowWindow(window);
 		lastFrameTime = getCurrentTime();
+		
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 		GL.createCapabilities();
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		return window;
 	}
 

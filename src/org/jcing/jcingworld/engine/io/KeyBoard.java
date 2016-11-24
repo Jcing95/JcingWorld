@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.io;
+package org.jcing.jcingworld.engine.io;
 
 import org.lwjgl.glfw.GLFW;
 

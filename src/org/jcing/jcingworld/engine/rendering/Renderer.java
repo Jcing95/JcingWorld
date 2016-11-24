@@ -1,14 +1,15 @@
-package org.jcing.jcingworld.renderengine;
+package org.jcing.jcingworld.engine.rendering;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 
-import org.jcing.jcingworld.entities.Entity;
-import org.jcing.jcingworld.models.RawModel;
-import org.jcing.jcingworld.models.TexturedModel;
-import org.jcing.jcingworld.shading.StaticShader;
-import org.jcing.toolbox.Maths;
+import org.jcing.jcingworld.engine.DisplayManager;
+import org.jcing.jcingworld.engine.entities.Entity;
+import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.entities.models.TexturedModel;
+import org.jcing.jcingworld.engine.shading.entities.StaticShader;
+import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;

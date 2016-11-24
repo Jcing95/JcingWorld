@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.textures;
+package org.jcing.jcingworld.engine.textures;
 
 public class TerrainTexture {
 

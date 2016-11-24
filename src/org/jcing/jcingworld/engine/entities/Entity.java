@@ -1,6 +1,6 @@
-package org.jcing.jcingworld.entities;
+package org.jcing.jcingworld.engine.entities;
 
-import org.jcing.jcingworld.models.TexturedModel;
+import org.jcing.jcingworld.engine.entities.models.TexturedModel;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Entity {

@@ -1,12 +1,12 @@
-package org.jcing.jcingworld.gui;
+package org.jcing.jcingworld.engine.shading.gui;
 
-import org.jcing.jcingworld.shading.ShaderProgram;
+import org.jcing.jcingworld.engine.shading.ShaderProgram;
 import org.lwjgl.util.vector.Matrix4f;
 
 public class GUIShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/gui/GUIVertexshader";
-	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/gui/GUIFragmentshader";
+	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/engine/shading/gui/GUIVertexshader";
+	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/engine/shading/gui/GUIFragmentshader";
 
 	private int location_transformationMatrix;
 

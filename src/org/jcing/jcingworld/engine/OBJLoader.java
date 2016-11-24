@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.models;
+package org.jcing.jcingworld.engine;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcing.jcingworld.main.Loader;
+import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 

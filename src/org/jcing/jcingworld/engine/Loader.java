@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.main;
+package org.jcing.jcingworld.engine;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -6,7 +6,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcing.jcingworld.models.RawModel;
+import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -14,6 +14,12 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 
+/**
+ * Loads stuff to the Graphics card
+ * 
+ * @author ThinMatrix / Jasin
+ *
+ */
 public class Loader {
 
 	private List<Integer> vaos = new ArrayList<Integer>();

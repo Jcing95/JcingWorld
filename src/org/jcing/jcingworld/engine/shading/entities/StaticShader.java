@@ -1,16 +1,16 @@
-package org.jcing.jcingworld.shading;
+package org.jcing.jcingworld.engine.shading.entities;
 
-import org.jcing.jcingworld.entities.Ambient;
-import org.jcing.jcingworld.entities.Camera;
-import org.jcing.jcingworld.entities.Light;
-import org.jcing.toolbox.Maths;
+import org.jcing.jcingworld.engine.entities.Camera;
+import org.jcing.jcingworld.engine.lighting.Ambient;
+import org.jcing.jcingworld.engine.lighting.Light;
+import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-public class StaticShader extends ShaderProgram {
+public class StaticShader extends org.jcing.jcingworld.engine.shading.ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/shading/vertexShader";
-	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/shading/fragmentShader";
+	private static final String VERTEX_FILE = "src/org/jcing/jcingworld/engine/shading/entities/vertexShader";
+	private static final String FRAGMENT_FILE = "src/org/jcing/jcingworld/engine/shading/entities/fragmentShader";
 
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;

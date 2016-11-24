@@ -1,6 +1,6 @@
-package org.jcing.jcingworld.font;
+package org.jcing.jcingworld.engine.font;
 
-import org.jcing.jcingworld.font.rendering.TextMaster;
+import org.jcing.jcingworld.engine.rendering.TextMaster;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

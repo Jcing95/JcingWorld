@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.font;
+package org.jcing.jcingworld.engine.font;
 
 /**
  * Simple data structure class holding information about a certain glyph in the

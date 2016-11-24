@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.renderengine;
+package org.jcing.jcingworld.engine.rendering;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -9,15 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jcing.jcingworld.entities.Ambient;
-import org.jcing.jcingworld.entities.Camera;
-import org.jcing.jcingworld.entities.Entity;
-import org.jcing.jcingworld.entities.Light;
-import org.jcing.jcingworld.models.TexturedModel;
-import org.jcing.jcingworld.shading.StaticShader;
-import org.jcing.jcingworld.terrain.Terrain;
-import org.jcing.jcingworld.terrain.shader.TerrainShader;
-import org.jcing.toolbox.Maths;
+import org.jcing.jcingworld.engine.DisplayManager;
+import org.jcing.jcingworld.engine.entities.Camera;
+import org.jcing.jcingworld.engine.entities.Entity;
+import org.jcing.jcingworld.engine.entities.models.TexturedModel;
+import org.jcing.jcingworld.engine.lighting.Ambient;
+import org.jcing.jcingworld.engine.lighting.Light;
+import org.jcing.jcingworld.engine.shading.entities.StaticShader;
+import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
+import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 

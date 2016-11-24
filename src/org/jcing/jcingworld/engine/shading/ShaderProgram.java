@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.shading;
+package org.jcing.jcingworld.engine.shading;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

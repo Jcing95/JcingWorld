@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.font;
+package org.jcing.jcingworld.engine.font;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcing.jcingworld.renderengine.DisplayManager;
+import org.jcing.jcingworld.engine.DisplayManager;
 
 /**
  * Provides functionality for getting the values from a font file.

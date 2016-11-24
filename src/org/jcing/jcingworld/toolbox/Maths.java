@@ -1,7 +1,7 @@
-package org.jcing.toolbox;
+package org.jcing.jcingworld.toolbox;
 
-import org.jcing.geometry.Triangle;
-import org.jcing.jcingworld.entities.Camera;
+import org.jcing.jcingworld.engine.DisplayManager;
+import org.jcing.jcingworld.engine.entities.Camera;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -53,9 +53,7 @@ public class Maths {
 		return (float) (color / 255.0);
 	}
 	
-	public static Vector3f calculateNormal(Triangle triangle){
-		
-		
-		return null;
+	public static Vector2f calcOrigSizeScale(int width, int height){
+		return new Vector2f((float)width/DisplayManager.width,(float)height/DisplayManager.height);
 	}
 }

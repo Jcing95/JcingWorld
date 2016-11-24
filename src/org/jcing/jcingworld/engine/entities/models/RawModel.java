@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.models;
+package org.jcing.jcingworld.engine.entities.models;
 
 public class RawModel {
 

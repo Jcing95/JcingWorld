@@ -1,14 +1,15 @@
-package org.jcing.jcingworld.font.rendering;
+package org.jcing.jcingworld.engine.rendering;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jcing.jcingworld.font.FontType;
-import org.jcing.jcingworld.font.GUIText;
-import org.jcing.jcingworld.font.TextMeshData;
-import org.jcing.jcingworld.main.Loader;
+import org.jcing.jcingworld.engine.Loader;
+import org.jcing.jcingworld.engine.font.FontType;
+import org.jcing.jcingworld.engine.font.GUIText;
+import org.jcing.jcingworld.engine.font.TextMeshData;
+import org.jcing.jcingworld.engine.shading.font.FontRenderer;
 
 public class TextMaster {
 	private static Loader loader;

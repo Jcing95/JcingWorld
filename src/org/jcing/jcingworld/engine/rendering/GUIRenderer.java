@@ -1,10 +1,12 @@
-package org.jcing.jcingworld.gui;
+package org.jcing.jcingworld.engine.rendering;
 
 import java.util.List;
 
-import org.jcing.jcingworld.main.Loader;
-import org.jcing.jcingworld.models.RawModel;
-import org.jcing.toolbox.Maths;
+import org.jcing.jcingworld.engine.Loader;
+import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.gui.GuiPart;
+import org.jcing.jcingworld.engine.shading.gui.GUIShader;
+import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -22,14 +24,14 @@ public class GUIRenderer {
 		shader = new GUIShader();
 	}
 
-	public void render(List<GUIpart> guis) {
+	public void render(List<GuiPart> guis) {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		for (GUIpart gui : guis) {
+		for (GuiPart gui : guis) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, gui.getTexture());
 			Matrix4f matrix = Maths.createTransformationMatrix(gui.getPos(), gui.getScale());

@@ -1,10 +1,10 @@
-package org.jcing.jcingworld.font.rendering;
+package org.jcing.jcingworld.engine.shading.font;
 
 import java.util.List;
 import java.util.Map;
 
-import org.jcing.jcingworld.font.FontType;
-import org.jcing.jcingworld.font.GUIText;
+import org.jcing.jcingworld.engine.font.FontType;
+import org.jcing.jcingworld.engine.font.GUIText;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
