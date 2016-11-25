@@ -27,6 +27,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_rTexture;
 	private int location_gTexture;
 	private int location_bTexture;
+	private int location_blackTexture;
 	private int location_blendMap;
 	private int location_terrainSize;
 
@@ -56,6 +57,7 @@ public class TerrainShader extends ShaderProgram {
 		location_rTexture = super.getUniformLocation("rTexture");
 		location_gTexture = super.getUniformLocation("gTexture");
 		location_bTexture = super.getUniformLocation("bTexture");
+		location_blackTexture = super.getUniformLocation("blackTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
 		location_terrainSize = super.getUniformLocation("terrainSize");
 	}
@@ -65,7 +67,8 @@ public class TerrainShader extends ShaderProgram {
 		super.loadInt(location_rTexture, 1);
 		super.loadInt(location_gTexture, 2);
 		super.loadInt(location_bTexture, 3);
-		super.loadInt(location_blendMap, 4);
+		super.loadInt(location_blackTexture, 4);
+		super.loadInt(location_blendMap, 5);
 		super.loadFloat(location_terrainSize, Terrain.SQUARE_COUNT);
 	}
 

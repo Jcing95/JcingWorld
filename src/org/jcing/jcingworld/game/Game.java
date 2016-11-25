@@ -46,13 +46,14 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 		
-		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grass", false));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("minecraft/cobblestone", false));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("minecraft/stone", false));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
-        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/colors/black", false));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("terrain/colors/red", false));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("terrain/colors/green", false));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("terrain/colors/blue", false));
+        TerrainTexture blackTexture = new TerrainTexture(loader.loadTexture("terrain/colors/white", false));
+        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
         
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("terrain/blendmap", true));
+        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("terrain/blendmap", false));
         
 		terrain = new Terrain(0f, 0f, loader, texturePack, blendMap);
 		
@@ -73,7 +74,7 @@ public class Game {
 		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 		
-		int entitynr = 0 /3;
+		int entitynr = 300 /3;
 		Random random = new Random();
 		for (int i = 0; i < entitynr; i++) {
 			float x = terrain.getX() + Terrain.SIZE * random.nextFloat();

@@ -57,6 +57,8 @@ public class TerrainRenderer {
 		GL13.glActiveTexture(GL13.GL_TEXTURE3);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getbTexture().getTextureID());
 		GL13.glActiveTexture(GL13.GL_TEXTURE4);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getblackTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE5);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
 	}
 
