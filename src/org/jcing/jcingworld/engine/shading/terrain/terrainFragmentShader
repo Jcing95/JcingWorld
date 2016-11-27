@@ -31,12 +31,17 @@ void main(void){
 	float blackTextureAmount = 1 - (blendMapColour.r + blendMapColour.g + blendMapColour.b);
 
 	vec4 backgroundTextureColour = texture(backgroundTexture, tiledCoords) * backGroundTextureAmount;
-	vec4 rTextureColour = texture(rTexture, tiledCoords) * blendMapColour.r;
-	vec4 gTextureColour = texture(gTexture, tiledCoords) * blendMapColour.g;
-	vec4 bTextureColour = texture(bTexture, tiledCoords) * blendMapColour.b;
-	vec4 blackTextureColour = texture(blackTexture, tiledCoords) * blackTextureAmount;
-	if(blendMapColour.r == blendMapColour.g == blendMapColour.b
-	vec4 totalColour = backgroundTextureColour + rTextureColour + gTextureColour + bTextureColour + blackTextureColour;
+	vec4 rTextureColour = texture(rTexture, tiledCoords) * blendMapColour.r*blendMapColour.a;
+	vec4 gTextureColour = texture(gTexture, tiledCoords) * blendMapColour.g*blendMapColour.a;
+	vec4 bTextureColour = texture(bTexture, tiledCoords) * blendMapColour.b*blendMapColour.a;
+	vec4 blackTextureColour = texture(blackTexture, tiledCoords) * blackTextureAmount *blendMapColour.a;
+	vec4 totalColour;
+	if(blendMapColour.r == blendMapColour.g && blendMapColour.g == blendMapColour.b){
+	totalColour = backgroundTextureColour + blackTextureColour;
+	}
+	else{
+	totalColour = backgroundTextureColour + rTextureColour + bTextureColour+ gTextureColour;
+	}
 	
 	
 	vec3 unitNormal = normalize(surfaceNormal);
