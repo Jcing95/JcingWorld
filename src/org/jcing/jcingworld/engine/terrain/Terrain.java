@@ -18,7 +18,7 @@ public class Terrain {
     private static final int VERTEX_COUNT = (SQUARE_COUNT) * 2;
     public static final float SIZE = SQUARE_SIZE * SQUARE_COUNT;
  
-    private static float maxDelta = 1f;
+    private static float maxDelta = 3f;
     private float[][] heightMap;
     private Square[][] squares;
  

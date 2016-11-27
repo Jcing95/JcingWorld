@@ -46,7 +46,7 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 		
-		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/colors/black", false));
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grass", false));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("terrain/colors/red", false));
         TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("terrain/colors/green", false));
         TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("terrain/colors/blue", false));
@@ -80,7 +80,7 @@ public class Game {
 			float x = terrain.getX() + Terrain.SIZE * random.nextFloat();
 			float z = terrain.getZ() + Terrain.SIZE * random.nextFloat();
 			float y = terrain.getHeight(x, z);
-			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 3.5f + 3.5f * random.nextFloat()));
+			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
 		}
 
 		for (int i = 0; i < entitynr; i++) {
