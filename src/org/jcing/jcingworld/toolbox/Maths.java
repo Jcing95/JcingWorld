@@ -52,8 +52,8 @@ public class Maths {
 	public static float getFloatColor(int color) {
 		return (float) (color / 255.0);
 	}
-	
-	public static Vector2f calcOrigSizeScale(int width, int height){
-		return new Vector2f((float)width/DisplayManager.width,(float)height/DisplayManager.height);
+
+	public static Vector2f calcOrigSizeScale(int width, int height) {
+		return new Vector2f((float) width / DisplayManager.width, (float) height / DisplayManager.height);
 	}
 }

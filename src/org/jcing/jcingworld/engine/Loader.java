@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.lwjgl.BufferUtils;
@@ -21,13 +22,16 @@ import org.lwjgl.stb.STBImage;
  *
  */
 public class Loader {
+	
+	//TODO: fix VAO management - VAOData + Textures list instead of vao/vbo etc.
+	//		essential for consitency later on!
 
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 
 	private List<VAOData> VAODatas = new ArrayList<VAOData>();
-	
+
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
@@ -35,7 +39,7 @@ public class Loader {
 		int textureCoordsPointer = storeDataInAttributeList(1, 2, textureCoords);
 		int normalsPointer = storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
-		VAOData data = new VAOData(vaoID,verticesPointer, textureCoordsPointer,normalsPointer);
+		VAOData data = new VAOData(vaoID, verticesPointer, textureCoordsPointer, normalsPointer);
 		return new RawModel(data, indices.length);
 	}
 
@@ -98,7 +102,7 @@ public class Loader {
 		int width = w.get();
 		int height = h.get();
 		int textureID = GL11.glGenTextures();
-//		image.flip();
+		// image.flip();
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
 		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
@@ -151,7 +155,18 @@ public class Loader {
 	private void unbindVAO() {
 		GL30.glBindVertexArray(0);
 	}
-
+	
+	public void updateVBOfloat(int vaoID, int vboID, float[] data) {
+	    FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+	    buffer.put(data);
+	    buffer.flip();
+	    GL30.glBindVertexArray(vaoID);
+	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+	    GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, (long)(1 * Float.BYTES), buffer);
+	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+	    GL30.glBindVertexArray(0);
+	}
+	
 	private void bindIndicesBuffer(int[] indices) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);

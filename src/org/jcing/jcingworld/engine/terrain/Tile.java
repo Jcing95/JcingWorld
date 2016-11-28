@@ -2,21 +2,22 @@ package org.jcing.jcingworld.engine.terrain;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Square {
-	
+public class Tile {
+
 	private float[] x;
 	private float[] y;
 	private float[] z;
-	
+
 	private Vector3f normal;
-	private boolean swapTriangles; //false wenn oben/rechts nicht tiefste
+	private boolean swapTriangles; // false wenn oben/rechts nicht tiefste
+	int textureID;
 	int indexX, indexY;
-	
-	public Square(float[] x, float[] y, float[] z, int indexX, int indexY){
+
+	public Tile(float[] x, float[] y, float[] z, int indexX, int indexY) {
 		this.x = new float[4];
 		this.y = new float[4];
 		this.z = new float[4];
-		for(int i=0; i<4; i++){
+		for (int i = 0; i < 4; i++) {
 			this.x[i] = x[i];
 			this.y[i] = y[i];
 			this.z[i] = z[i];
@@ -26,16 +27,15 @@ public class Square {
 		calcSwap();
 		calcNormal();
 	}
-	
-	private void calcNormal(){
-		//TODO: implement
+
+	private void calcNormal() {
+		// TODO: implement
 	}
 
-	private void calcSwap(){
-		//TODO: implement
+	private void calcSwap() {
+		// TODO: implement
 	}
 
-	
 	public float[] getX() {
 		return x;
 	}
@@ -59,7 +59,7 @@ public class Square {
 	public int getIndexX() {
 		return indexX;
 	}
-	
+
 	public int getIndexY() {
 		return indexY;
 	}

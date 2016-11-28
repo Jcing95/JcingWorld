@@ -73,7 +73,7 @@ public class DisplayManager {
 		// Setup a key callback. It will be called every time a key is pressed,
 		// repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			
+
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 			if (action == GLFW.GLFW_PRESS) {
@@ -85,16 +85,15 @@ public class DisplayManager {
 			// System.out.println("win: " +window + " key: " + key + " scancode:
 			// " + scancode + " action: " + action + " mods: " + mods);
 		});
-		
+
 		GLFW.glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
-			if(action == GLFW.GLFW_PRESS){
+			if (action == GLFW.GLFW_PRESS) {
 				Mouse.button[button] = true;
 			}
-			if(action == GLFW.GLFW_RELEASE){
+			if (action == GLFW.GLFW_RELEASE) {
 				Mouse.button[button] = false;
 			}
 		});
-		
 
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 
@@ -115,14 +114,14 @@ public class DisplayManager {
 		// Make the window visible
 		glfwShowWindow(window);
 		lastFrameTime = getCurrentTime();
-		
+
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 		GL.createCapabilities();
-		
+
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		return window;
 	}
