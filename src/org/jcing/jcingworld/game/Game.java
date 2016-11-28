@@ -47,10 +47,10 @@ public class Game {
 		cam = new Camera();
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("minecraft/grass_top", false));
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("minecraft/grass_top", false));
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("minecraft/grass_top", false));
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("minecraft/grass_top", false));
-        TerrainTexture blackTexture = new TerrainTexture(loader.loadTexture("minecraft/grass_top", false));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
+        TerrainTexture blackTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
         
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("terrain/blendmap", false));
@@ -64,12 +64,6 @@ public class Game {
 		stemtex.useFakeLighting(true);
 		TexturedModel stem = new TexturedModel(stemobj, stemtex);
 
-		RawModel fernobj = OBJLoader.loadObjModel("tut/fern", loader);
-		ModelTexture ferntex = new ModelTexture(loader.loadTexture("tut/fern", true));
-		ferntex.setHasTransparency(true);
-		ferntex.useFakeLighting(true);
-		TexturedModel fern = new TexturedModel(fernobj, ferntex);
-
 		RawModel rockobj = OBJLoader.loadObjModel("rock", loader);
 		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
@@ -81,13 +75,6 @@ public class Game {
 			float z = terrain.getZ() + Terrain.SIZE * random.nextFloat();
 			float y = terrain.getHeight(x, z);
 			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
-		}
-
-		for (int i = 0; i < entitynr; i++) {
-			float x = terrain.getX() + Terrain.SIZE * random.nextFloat();
-			float z = terrain.getZ() + Terrain.SIZE * random.nextFloat();
-			float y = terrain.getHeight(x, z);
-			flora.add(new Entity(fern, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f + 0.5f * random.nextFloat()));
 		}
 
 		for (int i = 0; i < entitynr; i++) {

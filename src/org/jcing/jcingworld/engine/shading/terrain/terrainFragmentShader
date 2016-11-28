@@ -36,28 +36,8 @@ void main(void){
 	vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColor.b*blendMapColor.a;
 	vec4 blackTextureColor = texture(blackTexture, tiledCoords) * blackTextureAmount*blendMapColor.a;
 	vec4 totalColor;
-	if(blendMapColor.r == blendMapColor.g){
-		if(blendMapColor.g == blendMapColor.b){
-			totalColor = backgroundTextureColor + blackTextureColor;
-		} else {
-			totalColor = backgroundTextureColor + (rTextureColor + bTextureColor);
-		}
-	}else if(blendMapColor.g == blendMapColor.b){
-		totalColor = backgroundTextureColor + (gTextureColor + bTextureColor);
-	}else if(blendMapColor.r == blendMapColor.b){
-		totalColor = backgroundTextureColor + (rTextureColor + bTextureColor);
-	}else
-		totalColor = backgroundTextureColor + (rTextureColor + bTextureColor + gTextureColor);
-	}
 	
-	
-	//if(blendMapColor.r == blendMapColor.g && blendMapColor.g == blendMapColor.b){
-	//totalColor = backgroundTextureColor + blackTextureColor;
-	//}
-	//else if({
-	//totalColor = backgroundTextureColor + (rTextureColor + bTextureColor+ gTextureColor)*blendMapColor.a;
-	//}
-	
+	totalColor = backgroundTextureColor + (rTextureColor + bTextureColor + gTextureColor + blackTextureColor);
 	
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVector = normalize(toLightVector);
