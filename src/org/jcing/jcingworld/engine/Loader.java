@@ -26,14 +26,17 @@ public class Loader {
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 
+	private List<VAOData> VAODatas = new ArrayList<VAOData>();
+	
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
-		storeDataInAttributeList(0, 3, positions);
-		storeDataInAttributeList(1, 2, textureCoords);
-		storeDataInAttributeList(2, 3, normals);
+		int verticesPointer = storeDataInAttributeList(0, 3, positions);
+		int textureCoordsPointer = storeDataInAttributeList(1, 2, textureCoords);
+		int normalsPointer = storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
-		return new RawModel(vaoID, indices.length);
+		VAOData data = new VAOData(vaoID,verticesPointer, textureCoordsPointer,normalsPointer);
+		return new RawModel(data, indices.length);
 	}
 
 	public int loadToVAO(float[] positions, float[] textureCoords) {
@@ -46,9 +49,10 @@ public class Loader {
 
 	public RawModel loadToVAO(float[] positions) {
 		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, 2, positions);
+		int posPointer = storeDataInAttributeList(0, 2, positions);
 		unbindVAO();
-		return new RawModel(vaoID, positions.length / 2);
+		VAOData data = new VAOData(vaoID, posPointer, -1, -1);
+		return new RawModel(data, positions.length / 2);
 	}
 
 	@Deprecated
@@ -133,7 +137,7 @@ public class Loader {
 		return vaoID;
 	}
 
-	private void storeDataInAttributeList(int attributeNumber, int attributeSize, float[] data) {
+	private int storeDataInAttributeList(int attributeNumber, int attributeSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
@@ -141,6 +145,7 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, attributeSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		return vboID;
 	}
 
 	private void unbindVAO() {

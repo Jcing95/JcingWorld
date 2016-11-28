@@ -48,11 +48,11 @@ public class TerrainShader extends ShaderProgram {
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
 		location_lightPosition = super.getUniformLocation("lightPosition");
-		location_lightColour = super.getUniformLocation("lightColour");
+		location_lightColour = super.getUniformLocation("lightColor");
 		location_ambient = super.getUniformLocation("ambient");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
-		location_skyColour = super.getUniformLocation("skyColour");
+		location_skyColour = super.getUniformLocation("skyColor");
 		location_backgroundTexture = super.getUniformLocation("backgroundTexture");
 		location_rTexture = super.getUniformLocation("rTexture");
 		location_gTexture = super.getUniformLocation("gTexture");

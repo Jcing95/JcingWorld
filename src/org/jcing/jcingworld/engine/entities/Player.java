@@ -17,12 +17,13 @@ public class Player extends Entity {
 
 	private static final float SPEED = 17.5f;
 	private static final float TURN = 7.5f;
-	private static final float SPEEDMOD = 7.5f;
-	private static final float HEADOFFSET = 3.5f;
+	private static final float BOOSTSPEEDMOD = 7.5f;
+	private static final float CAMERA_HEADOFFSET = 3.5f;
 
 	private static final float GRAVITY = -70;
 	private static final float JUMP_POWER = 40;
 
+	
 	private float currSpeed = 0;
 
 	private boolean flying =false;
@@ -39,7 +40,7 @@ public class Player extends Entity {
 
 		// SPEED
 		if (KeyBoard.key(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-			currSpeed = SPEED * SPEEDMOD;
+			currSpeed = SPEED * BOOSTSPEEDMOD;
 		} else {
 			currSpeed = SPEED;
 		}
@@ -142,7 +143,7 @@ public class Player extends Entity {
 
 	public void moveCamera(Camera cam) {
 		// System.out.println("Y: " + getPosition().y);
-		cam.setPosition(new Vector3f(getPosition().x, getPosition().y + HEADOFFSET, getPosition().z));
+		cam.setPosition(new Vector3f(getPosition().x, getPosition().y + CAMERA_HEADOFFSET, getPosition().z));
 
 		cam.setPitch(getRotX());
 		cam.setYaw(getRotY());

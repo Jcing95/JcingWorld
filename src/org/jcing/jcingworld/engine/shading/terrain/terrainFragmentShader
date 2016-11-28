@@ -15,33 +15,48 @@ uniform sampler2D bTexture;
 uniform sampler2D blackTexture;
 uniform sampler2D blendMap;
 
-uniform vec3 lightColour;
+uniform vec3 lightColor;
 uniform float ambient;
 uniform float shineDamper;
 uniform float reflectivity;
-uniform vec3 skyColour;
+uniform vec3 skyColor;
 uniform float terrainSize;
 
 void main(void){
 	vec2 tiledCoords = pass_textureCoords*terrainSize;
 	
-	vec4 blendMapColour = texture(blendMap, tiledCoords);
+	vec4 blendMapColor = texture(blendMap, tiledCoords);
 	
-	float backGroundTextureAmount = 1-blendMapColour.a;
-	float blackTextureAmount = 1 - (blendMapColour.r + blendMapColour.g + blendMapColour.b);
+	float backGroundTextureAmount = 1-blendMapColor.a;
+	float blackTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 
-	vec4 backgroundTextureColour = texture(backgroundTexture, tiledCoords) * backGroundTextureAmount;
-	vec4 rTextureColour = texture(rTexture, tiledCoords) * blendMapColour.r*blendMapColour.a;
-	vec4 gTextureColour = texture(gTexture, tiledCoords) * blendMapColour.g*blendMapColour.a;
-	vec4 bTextureColour = texture(bTexture, tiledCoords) * blendMapColour.b*blendMapColour.a;
-	vec4 blackTextureColour = texture(blackTexture, tiledCoords) * blackTextureAmount *blendMapColour.a;
-	vec4 totalColour;
-	if(blendMapColour.r == blendMapColour.g && blendMapColour.g == blendMapColour.b){
-	totalColour = backgroundTextureColour + blackTextureColour;
+	vec4 backgroundTextureColor = texture(backgroundTexture, tiledCoords) * backGroundTextureAmount;
+	vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColor.r*blendMapColor.a;
+	vec4 gTextureColor = texture(gTexture, tiledCoords) * blendMapColor.g*blendMapColor.a;
+	vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColor.b*blendMapColor.a;
+	vec4 blackTextureColor = texture(blackTexture, tiledCoords) * blackTextureAmount*blendMapColor.a;
+	vec4 totalColor;
+	if(blendMapColor.r == blendMapColor.g){
+		if(blendMapColor.g == blendMapColor.b){
+			totalColor = backgroundTextureColor + blackTextureColor;
+		} else {
+			totalColor = backgroundTextureColor + (rTextureColor + bTextureColor);
+		}
+	}else if(blendMapColor.g == blendMapColor.b){
+		totalColor = backgroundTextureColor + (gTextureColor + bTextureColor);
+	}else if(blendMapColor.r == blendMapColor.b){
+		totalColor = backgroundTextureColor + (rTextureColor + bTextureColor);
+	}else
+		totalColor = backgroundTextureColor + (rTextureColor + bTextureColor + gTextureColor);
 	}
-	else{
-	totalColour = backgroundTextureColour + rTextureColour + bTextureColour+ gTextureColour;
-	}
+	
+	
+	//if(blendMapColor.r == blendMapColor.g && blendMapColor.g == blendMapColor.b){
+	//totalColor = backgroundTextureColor + blackTextureColor;
+	//}
+	//else if({
+	//totalColor = backgroundTextureColor + (rTextureColor + bTextureColor+ gTextureColor)*blendMapColor.a;
+	//}
 	
 	
 	vec3 unitNormal = normalize(surfaceNormal);
@@ -49,7 +64,7 @@ void main(void){
 	
 	float nDot1 = dot(unitNormal, unitLightVector);
 	float brightness = max(nDot1,ambient);
-	vec3 diffuse = brightness * lightColour;
+	vec3 diffuse = brightness * lightColor;
 	
 	vec3 unitVectorToCamera = normalize(toCameraVector);
 	vec3 lightDirection = -unitLightVector;
@@ -58,8 +73,8 @@ void main(void){
 	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
 	specularFactor = max(specularFactor,0.0);
 	float dampedFactor = pow(specularFactor, shineDamper);
-	vec3 finalSpecular = dampedFactor * reflectivity*  lightColour;
+	vec3 finalSpecular = dampedFactor * reflectivity*  lightColor;
 	
-	out_Color = vec4(diffuse,1.0)* totalColour + vec4(finalSpecular,1.0);
-	out_Color = mix(vec4(skyColour, 1.0),out_Color, visibility);
+	out_Color = vec4(diffuse,1.0)* totalColor + vec4(finalSpecular,1.0);
+	out_Color = mix(vec4(skyColor, 1.0),out_Color, visibility);
 }
