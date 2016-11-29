@@ -15,6 +15,9 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
+uniform mat2 TERRAINBOUNDS;
+uniform float TILESIZE;
+
 
 const float density = 0.0015;
 const float gradient = 3.75;

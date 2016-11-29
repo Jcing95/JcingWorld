@@ -46,7 +46,7 @@ public class Renderer {
 				entity.getScale());
 		shader.loadTransformationMatrix(transformationMatrix);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
 		GL11.glDrawElements(GL11.GL_TRIANGLES, rawModel.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 		// GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, model.getVertexCount());
 		GL20.glDisableVertexAttribArray(0);

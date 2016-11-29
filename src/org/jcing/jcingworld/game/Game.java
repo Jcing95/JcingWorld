@@ -17,8 +17,8 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.engine.textures.BaseTexture;
 import org.jcing.jcingworld.engine.textures.ModelTexture;
-import org.jcing.jcingworld.engine.textures.TerrainTexture;
 import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;
@@ -46,14 +46,14 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 
-		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("minecraft/grass_top", false));
-		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
-		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
-		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
-		TerrainTexture blackTexture = new TerrainTexture(loader.loadTexture("minecraft/sand", false));
+		BaseTexture backgroundTexture = (loader.loadTexture("minecraft/grass_top", false));
+		BaseTexture rTexture = loader.loadTexture("minecraft/sand", false);
+		BaseTexture gTexture = loader.loadTexture("minecraft/sand", false);
+		BaseTexture bTexture = loader.loadTexture("minecraft/sand", false);
+		BaseTexture blackTexture = loader.loadTexture("minecraft/sand", false);
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
-		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("terrain/blendmapX", false));
+		BaseTexture blendMap = loader.loadTexture("terrain/blendmapX", false);
 
 		terrain = new Terrain(0f, 0f, loader, texturePack, blendMap);
 

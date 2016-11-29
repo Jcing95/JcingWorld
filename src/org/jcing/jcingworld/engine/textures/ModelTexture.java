@@ -1,8 +1,6 @@
 package org.jcing.jcingworld.engine.textures;
 
-public class ModelTexture {
-
-	private int TextureID;
+public class ModelTexture extends BaseTexture{
 
 	private float shineDamper = 1;
 	private float reflectivity = 0;
@@ -10,12 +8,14 @@ public class ModelTexture {
 	private boolean hasTransparency = false;
 	private boolean useFakeLighting = false;
 
-	public ModelTexture(int id) {
-		this.TextureID = id;
+	
+	public ModelTexture(int width, int height, int iD) {
+		super(width, height, iD);
 	}
+	
 
-	public int getID() {
-		return TextureID;
+	public ModelTexture(BaseTexture baseTexture) {
+		super(baseTexture);
 	}
 
 	public float getShineDamper() {

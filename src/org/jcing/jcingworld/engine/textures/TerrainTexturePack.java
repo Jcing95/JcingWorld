@@ -2,14 +2,14 @@ package org.jcing.jcingworld.engine.textures;
 
 public class TerrainTexturePack {
 
-	private TerrainTexture backgroundTexture;
-	private TerrainTexture rTexture;
-	private TerrainTexture gTexture;
-	private TerrainTexture bTexture;
-	private TerrainTexture blackTexture;
+	private BaseTexture backgroundTexture;
+	private BaseTexture rTexture;
+	private BaseTexture gTexture;
+	private BaseTexture bTexture;
+	private BaseTexture blackTexture;
 
-	public TerrainTexturePack(TerrainTexture backgroundTexture, TerrainTexture rTexture, TerrainTexture gTexture, TerrainTexture bTexture,
-			TerrainTexture blackTexture) {
+	public TerrainTexturePack(BaseTexture backgroundTexture, BaseTexture rTexture, BaseTexture gTexture, BaseTexture bTexture,
+			BaseTexture blackTexture) {
 		this.backgroundTexture = backgroundTexture;
 		this.rTexture = rTexture;
 		this.gTexture = gTexture;
@@ -17,23 +17,23 @@ public class TerrainTexturePack {
 		this.blackTexture = blackTexture;
 	}
 
-	public TerrainTexture getBackgroundTexture() {
+	public BaseTexture getBackgroundTexture() {
 		return backgroundTexture;
 	}
 
-	public TerrainTexture getrTexture() {
+	public BaseTexture getrTexture() {
 		return rTexture;
 	}
 
-	public TerrainTexture getgTexture() {
+	public BaseTexture getgTexture() {
 		return gTexture;
 	}
 
-	public TerrainTexture getbTexture() {
+	public BaseTexture getbTexture() {
 		return bTexture;
 	}
 
-	public TerrainTexture getblackTexture() {
+	public BaseTexture getblackTexture() {
 		return blackTexture;
 	}
 

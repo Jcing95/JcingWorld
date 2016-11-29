@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.textures.BaseTexture;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -99,7 +100,7 @@ public class Loader {
 		return textureID;
 	}
 
-	public int loadTexture(String fileName, boolean linear) {
+	public BaseTexture loadTexture(String fileName, boolean linear) {
 		System.out.println("loading image");
 
 		IntBuffer w = BufferUtils.createIntBuffer(1);
@@ -130,7 +131,7 @@ public class Loader {
 
 		textures.add(textureID);
 
-		return textureID;
+		return new BaseTexture(width,height,textureID);
 	}
 
 	public void cleanUp() {

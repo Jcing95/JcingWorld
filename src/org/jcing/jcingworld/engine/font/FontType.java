@@ -2,6 +2,8 @@ package org.jcing.jcingworld.engine.font;
 
 import java.io.File;
 
+import org.jcing.jcingworld.engine.textures.BaseTexture;
+
 /**
  * Represents a font. It holds the font's texture atlas as well as having the
  * ability to create the quad vertices for any text using this font.
@@ -11,7 +13,7 @@ import java.io.File;
  */
 public class FontType {
 
-	private int textureAtlas;
+	private BaseTexture textureAtlas;
 	private TextMeshCreator loader;
 
 	/**
@@ -24,7 +26,7 @@ public class FontType {
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.
 	 */
-	public FontType(int textureAtlas, File fontFile) {
+	public FontType(BaseTexture textureAtlas, File fontFile) {
 		this.textureAtlas = textureAtlas;
 		this.loader = new TextMeshCreator(fontFile);
 	}
@@ -32,7 +34,7 @@ public class FontType {
 	/**
 	 * @return The font texture atlas.
 	 */
-	public int getTextureAtlas() {
+	public BaseTexture getTextureAtlas() {
 		return textureAtlas;
 	}
 
