@@ -73,8 +73,8 @@ public class Terrain {
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
-				textureCoords[vertexPointer * 2] = tiles[i][j].textureOffsetX;
-				textureCoords[vertexPointer * 2 + 1] = tiles[i][j].textureOffsetX;
+				textureCoords[vertexPointer * 2] = (float) (j + 0f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE TOPLEFT
@@ -99,8 +99,8 @@ public class Terrain {
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
 				
-				textureIndices[i*j] = tiles[i][j].textureOffsetX;
-				textureIndices[i*j+1] = tiles[i][j].textureOffsetY;
+//				textureIndices[i*j] = tiles[i][j].textureOffsetX;
+//				textureIndices[i*j+1] = tiles[i][j].textureOffsetY;
 			}
 		}
 
