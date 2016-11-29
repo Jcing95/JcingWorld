@@ -52,6 +52,15 @@ public class Maths {
 	public static float getFloatColor(int color) {
 		return (float) (color / 255.0);
 	}
+	
+	public static Vector2f calculateTextureOffset(int index, int width, int rows){
+		int offsetX=0, offsetY=0;
+		int textureSize = width/rows;
+		
+		offsetX = index%rows;
+		offsetY = index/rows;
+		return new Vector2f(offsetX*textureSize, offsetY*textureSize);
+	}
 
 	public static Vector2f calcOrigSizeScale(int width, int height) {
 		return new Vector2f((float) width / DisplayManager.width, (float) height / DisplayManager.height);

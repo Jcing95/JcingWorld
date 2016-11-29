@@ -7,10 +7,11 @@ public class Tile {
 	private float[] x;
 	private float[] y;
 	private float[] z;
-
+	
 	private Vector3f normal;
 	private boolean swapTriangles; // false wenn oben/rechts nicht tiefste
-	int textureID;
+	int textureOffsetX, textureOffsetY;
+	int textureIndex;
 	int indexX, indexY;
 
 	public Tile(float[] x, float[] y, float[] z, int indexX, int indexY) {

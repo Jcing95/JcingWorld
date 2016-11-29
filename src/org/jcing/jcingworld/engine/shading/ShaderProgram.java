@@ -32,10 +32,6 @@ public abstract class ShaderProgram {
 		getAllUniformLocations();
 	}
 
-	protected int getUniformLocation(String uniformName) {
-		return GL20.glGetUniformLocation(programID, uniformName);
-	}
-
 	protected abstract void getAllUniformLocations();
 
 	public void start() {
@@ -53,6 +49,10 @@ public abstract class ShaderProgram {
 		GL20.glDeleteShader(vertexShaderID);
 		GL20.glDeleteShader(fragmentShaderID);
 		GL20.glDeleteProgram(programID);
+	}
+
+	protected int getUniformLocation(String uniformName) {
+		return GL20.glGetUniformLocation(programID, uniformName);
 	}
 
 	protected abstract void bindAttributes();

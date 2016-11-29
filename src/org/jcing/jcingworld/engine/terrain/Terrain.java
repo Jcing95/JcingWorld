@@ -1,6 +1,5 @@
 package org.jcing.jcingworld.engine.terrain;
 
-import java.nio.FloatBuffer;
 import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
@@ -8,19 +7,16 @@ import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.textures.TerrainTexture;
 import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
 import org.jcing.jcingworld.toolbox.Maths;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Terrain {
 
-	public static final float SQUARE_SIZE = 4;
+	public static final float TILE_SIZE = 4;
 
-	public static final int SQUARE_COUNT = 128;
-	private static final int VERTEX_COUNT = (SQUARE_COUNT) * 2;
-	public static final float SIZE = SQUARE_SIZE * SQUARE_COUNT;
+	public static final int TILE_COUNT = 128;
+	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
+	public static final float SIZE = TILE_SIZE * TILE_COUNT;
 
 	private static float maxDelta = 1f;
 	private float[][] heightMap;
@@ -43,7 +39,7 @@ public class Terrain {
 		this.z = gridZ * SIZE;
 		this.model = generateTerrain(loader);
 	}
-
+	
 	private RawModel generateTerrain(Loader loader) {
 		loadheightMap();
 		generateSquares();
@@ -51,12 +47,13 @@ public class Terrain {
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count * 2];
-		int[] indices = new int[4 * 6 * (SQUARE_COUNT) * (SQUARE_COUNT)];
+		int[] indices = new int[4 * 6 * TILE_COUNT * TILE_COUNT];
+		float[] textureIndices = new float[2*TILE_COUNT*TILE_COUNT];
 		int vertexPointer = 0;
 
 		// VERTICES NORMALS TEXTURECOORDS
-		for (int j = 0; j < SQUARE_COUNT; j++) { // i == z
-			for (int i = 0; i < SQUARE_COUNT; i++) { // j == x;
+		for (int j = 0; j < TILE_COUNT; j++) { // i == z
+			for (int i = 0; i < TILE_COUNT; i++) { // j == x;
 				// TODO: NORMALS
 				// SQUARE BOTTOMLEFT
 				vertices[vertexPointer * 3] = tiles[i][j].getX()[0];
@@ -65,8 +62,8 @@ public class Terrain {
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
-				textureCoords[vertexPointer * 2] = (float) j / ((float) SQUARE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = 1 - (float) i / ((float) SQUARE_COUNT);
+				textureCoords[vertexPointer * 2] = (float) j / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1 - (float) i / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE BOTTOMRIGHT
@@ -76,8 +73,8 @@ public class Terrain {
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
-				textureCoords[vertexPointer * 2] = (float) (j + 0f) / ((float) SQUARE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) SQUARE_COUNT);
+				textureCoords[vertexPointer * 2] = (float) (j + 0f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE TOPLEFT
@@ -87,8 +84,8 @@ public class Terrain {
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
-				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) SQUARE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0f) / ((float) SQUARE_COUNT);
+				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0f) / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE TOPRIGHT
@@ -98,18 +95,21 @@ public class Terrain {
 				normals[vertexPointer * 3] = 0;
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
-				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) SQUARE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) SQUARE_COUNT);
+				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
+				
+				textureIndices[i*j] = tiles[i][j].textureOffsetX;
+				textureIndices[i*j+1] = tiles[i][j].textureOffsetY;
 			}
 		}
 
 		// INDICES
 		int topStep = 2 * VERTEX_COUNT;
 		int pointer = 0;
-		for (int gz = 0; gz < SQUARE_COUNT; gz++) {
+		for (int gz = 0; gz < TILE_COUNT; gz++) {
 			int square = 0;
-			for (int gx = 0; gx < SQUARE_COUNT; gx++) {
+			for (int gx = 0; gx < TILE_COUNT; gx++) {
 				square = ((gz) * VERTEX_COUNT * 2) + gx * 4;
 
 				/**/ // 2t##3t##6t##7t
@@ -133,7 +133,7 @@ public class Terrain {
 				/**/indices[pointer++] = square + 2;
 				/**/indices[pointer++] = square + 3;
 
-				if (gx < SQUARE_COUNT - 1) {
+				if (gx < TILE_COUNT - 1) {
 					// PSEUDO RIGHT
 					/**/// TRI 1
 					/**/indices[pointer++] = square + 3;
@@ -144,7 +144,7 @@ public class Terrain {
 					/**/indices[pointer++] = square + 3;
 					/**/indices[pointer++] = square + 6;
 
-					if (gz < SQUARE_COUNT - 1) {
+					if (gz < TILE_COUNT - 1) {
 						// PSEUDO PSEUDO
 						/**/// TRI 1
 						/**/indices[pointer++] = square + 1 + topStep;
@@ -157,7 +157,7 @@ public class Terrain {
 					}
 				}
 
-				if (gz < SQUARE_COUNT - 1) {
+				if (gz < TILE_COUNT - 1) {
 					// PSEUDO TOP
 					/**/// TRI 1
 					/**/indices[pointer++] = square + topStep;
@@ -171,7 +171,7 @@ public class Terrain {
 
 			}
 		}
-		return loader.loadToVAO(vertices, textureCoords, normals, indices);
+		return loader.loadToVAO(vertices, textureCoords, normals, indices, textureIndices);
 	}
 
 	private void loadheightMap() {
@@ -200,8 +200,8 @@ public class Terrain {
 	}
 
 	private void generateSquares() {
-		tiles = new Tile[SQUARE_COUNT][SQUARE_COUNT];
-		float SQUARE_SIZE = Terrain.SQUARE_SIZE / 2;
+		tiles = new Tile[TILE_COUNT][TILE_COUNT];
+		float SQUARE_SIZE = Terrain.TILE_SIZE / 2;
 		for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
 			for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
 
@@ -227,7 +227,7 @@ public class Terrain {
 		if (z + 1 < heightMap.length)
 			heightU = heightMap[x][z + 1];
 
-		Vector3f normal = new Vector3f(heightL - heightR, SQUARE_SIZE, heightD - heightU);
+		Vector3f normal = new Vector3f(heightL - heightR, TILE_SIZE, heightD - heightU);
 		normal.normalise();
 		return normal;
 	}
@@ -249,7 +249,7 @@ public class Terrain {
 		if (!inTerrain(x, z)) {
 			return 0;
 		}
-		float squareNumber = SQUARE_SIZE / 2;// SIZE / (float) (SQUARE_COUNT);
+		float squareNumber = TILE_SIZE / 2;// SIZE / (float) (SQUARE_COUNT);
 		float terrainX = (x - this.x);
 		float terrainZ = (z - this.z);
 		int gridX = (int) Math.floor(terrainX / squareNumber);

@@ -40,6 +40,7 @@ public class TerrainShader extends ShaderProgram {
 		super.bindAttribute(0, "position");
 		super.bindAttribute(1, "textureCoords");
 		super.bindAttribute(2, "normal");
+		super.bindAttribute(3, "textureOffset");
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class TerrainShader extends ShaderProgram {
 		super.loadInt(location_bTexture, 3);
 		super.loadInt(location_blackTexture, 4);
 		super.loadInt(location_blendMap, 5);
-		super.loadFloat(location_terrainSize, Terrain.SQUARE_COUNT);
+		super.loadFloat(location_terrainSize, Terrain.TILE_COUNT);
 	}
 
 	public void loadShineVariables(float damper, float reflectivity) {

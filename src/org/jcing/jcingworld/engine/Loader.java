@@ -5,7 +5,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.lwjgl.BufferUtils;
@@ -30,7 +29,7 @@ public class Loader {
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 
-	private List<VAOData> VAODatas = new ArrayList<VAOData>();
+//	private List<VAOData> VAODatas = new ArrayList<VAOData>();
 
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
@@ -40,6 +39,18 @@ public class Loader {
 		int normalsPointer = storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		VAOData data = new VAOData(vaoID, verticesPointer, textureCoordsPointer, normalsPointer);
+		return new RawModel(data, indices.length);
+	}
+	
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices,float[] textureOffsets) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		int verticesPointer = storeDataInAttributeList(0, 3, positions);
+		int textureCoordsPointer = storeDataInAttributeList(1, 2, textureCoords);
+		int normalsPointer = storeDataInAttributeList(2, 3, normals);
+		int texOffsetPointer = storeDataInAttributeList(3, 2, textureOffsets);
+		unbindVAO();
+		VAOData data = new VAOData(vaoID, verticesPointer, textureCoordsPointer, normalsPointer, texOffsetPointer);
 		return new RawModel(data, indices.length);
 	}
 
