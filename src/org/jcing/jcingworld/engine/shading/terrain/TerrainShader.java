@@ -26,10 +26,11 @@ public class TerrainShader extends ShaderProgram {
 	private int location_mainTexture;
 	private int location_topTexture;
 	private int location_leftTexture;
-	private int location_bTexture;
-	private int location_blackTexture;
+	private int location_bottomTexture;
+	private int location_rightTexture;
 	private int location_blendMap;
 	private int location_terrainSize;
+	private int location_textureIndices;
 
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -56,18 +57,19 @@ public class TerrainShader extends ShaderProgram {
 		location_mainTexture = super.getUniformLocation("backgroundTexture");
 		location_topTexture = super.getUniformLocation("rTexture");
 		location_leftTexture = super.getUniformLocation("gTexture");
-		location_bTexture = super.getUniformLocation("bTexture");
-		location_blackTexture = super.getUniformLocation("blackTexture");
+		location_bottomTexture = super.getUniformLocation("bTexture");
+		location_rightTexture = super.getUniformLocation("blackTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
 		location_terrainSize = super.getUniformLocation("terrainSize");
+		location_textureIndices = super.getUniformBufferIndex("textureIndicesBuffer");
 	}
 
 	public void connectTextureUnits() {
 		super.loadInt(location_mainTexture, 0);
 		super.loadInt(location_topTexture, 1);
 		super.loadInt(location_leftTexture, 2);
-		super.loadInt(location_bTexture, 3);
-		super.loadInt(location_blackTexture, 4);
+		super.loadInt(location_bottomTexture, 3);
+		super.loadInt(location_rightTexture, 4);
 		super.loadInt(location_blendMap, 5);
 		super.loadFloat(location_terrainSize, Terrain.TILE_COUNT);
 	}

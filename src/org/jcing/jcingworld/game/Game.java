@@ -55,7 +55,7 @@ public class Game {
 
 		BaseTexture blendMap = loader.loadTexture("terrain/blendmapX", false);
 
-		terrain = new Terrain(0f, 0f, loader, texturePack, blendMap);
+		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), texturePack, blendMap);
 
 		flora = new ArrayList<Entity>();
 

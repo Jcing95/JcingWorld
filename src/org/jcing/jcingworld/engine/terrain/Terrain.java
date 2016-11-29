@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.engine.textures.BaseTexture;
 import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
 import org.jcing.jcingworld.toolbox.Maths;
@@ -15,6 +16,8 @@ public class Terrain {
 	public static final float TILE_SIZE = 4;
 
 	public static final int TILE_COUNT = 128;
+	// TODO: Tile MUST be a square at the Moment due to Texture Coordinate
+	// calculation in Vertex shader: Try to fix this later!
 	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
 	public static final float SIZE = TILE_SIZE * TILE_COUNT;
 
@@ -32,15 +35,15 @@ public class Terrain {
 
 	public static final float TEXTURES_PER_SQUARE = 1f;
 
-	public Terrain(float gridX, float gridZ, Loader loader, TerrainTexturePack texturePack, BaseTexture blendMap) {
+	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TerrainTexturePack texturePack, BaseTexture blendMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-		this.model = generateTerrain(loader);
+		this.model = generateTerrain(loader,shader);
 	}
-	
-	private RawModel generateTerrain(Loader loader) {
+
+	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
 		loadheightMap();
 		generateSquares();
 		int count = VERTEX_COUNT * VERTEX_COUNT;
@@ -48,7 +51,7 @@ public class Terrain {
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count * 2];
 		int[] indices = new int[4 * 6 * TILE_COUNT * TILE_COUNT];
-		float[] textureIndices = new float[2*TILE_COUNT*TILE_COUNT];
+		float[] textureIndices = new float[2 * TILE_COUNT * TILE_COUNT];
 		int vertexPointer = 0;
 
 		// VERTICES NORMALS TEXTURECOORDS
@@ -98,9 +101,9 @@ public class Terrain {
 				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
-				
-//				textureIndices[i*j] = tiles[i][j].textureOffsetX;
-//				textureIndices[i*j+1] = tiles[i][j].textureOffsetY;
+
+				// textureIndices[i*j] = tiles[i][j].textureOffsetX;
+				// textureIndices[i*j+1] = tiles[i][j].textureOffsetY;
 			}
 		}
 
@@ -305,7 +308,5 @@ public class Terrain {
 	public BaseTexture getBlendMap() {
 		return blendMap;
 	}
-
-	
 
 }
