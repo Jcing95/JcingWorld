@@ -10,7 +10,6 @@ public class Tile {
 	
 	private Vector3f normal;
 	private boolean swapTriangles; // false wenn oben/rechts nicht tiefste
-	int textureOffsetX, textureOffsetY;
 	int textureIndex;
 	int indexX, indexY;
 
