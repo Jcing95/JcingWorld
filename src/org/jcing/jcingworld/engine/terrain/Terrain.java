@@ -16,7 +16,7 @@ public class Terrain {
 	public static final float TILE_SIZE = 4;
 
 	public static final int TILE_COUNT = 128;
-	// TODO: Tile MUST be a square at the Moment due to Texture Coordinate
+	// TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
 	// calculation in Vertex shader: Try to fix this later!
 	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
 	public static final float SIZE = TILE_SIZE * TILE_COUNT;
@@ -40,7 +40,7 @@ public class Terrain {
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-		this.model = generateTerrain(loader,shader);
+		this.model = generateTerrain(loader, shader);
 	}
 
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
