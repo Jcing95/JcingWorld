@@ -1,6 +1,6 @@
 package org.jcing.jcingworld.engine.entities.models;
 
-import org.jcing.jcingworld.engine.textures.ModelTexture;
+import org.jcing.jcingworld.engine.imagery.ModelTexture;
 
 public class TexturedModel {
 

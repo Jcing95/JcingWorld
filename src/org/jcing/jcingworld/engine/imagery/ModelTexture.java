@@ -1,6 +1,6 @@
-package org.jcing.jcingworld.engine.textures;
+package org.jcing.jcingworld.engine.imagery;
 
-public class ModelTexture extends BaseTexture{
+public class ModelTexture extends BaseImage{
 
 	private float shineDamper = 1;
 	private float reflectivity = 0;
@@ -14,7 +14,7 @@ public class ModelTexture extends BaseTexture{
 	}
 	
 
-	public ModelTexture(BaseTexture baseTexture) {
+	public ModelTexture(BaseImage baseTexture) {
 		super(baseTexture);
 	}
 

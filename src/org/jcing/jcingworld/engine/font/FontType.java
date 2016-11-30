@@ -2,7 +2,7 @@ package org.jcing.jcingworld.engine.font;
 
 import java.io.File;
 
-import org.jcing.jcingworld.engine.textures.BaseTexture;
+import org.jcing.jcingworld.engine.imagery.BaseImage;
 
 /**
  * Represents a font. It holds the font's texture atlas as well as having the
@@ -13,7 +13,7 @@ import org.jcing.jcingworld.engine.textures.BaseTexture;
  */
 public class FontType {
 
-	private BaseTexture textureAtlas;
+	private BaseImage textureAtlas;
 	private TextMeshCreator loader;
 
 	/**
@@ -26,7 +26,7 @@ public class FontType {
 	 *            - the font file containing information about each character in
 	 *            the texture atlas.
 	 */
-	public FontType(BaseTexture textureAtlas, File fontFile) {
+	public FontType(BaseImage textureAtlas, File fontFile) {
 		this.textureAtlas = textureAtlas;
 		this.loader = new TextMeshCreator(fontFile);
 	}
@@ -34,7 +34,7 @@ public class FontType {
 	/**
 	 * @return The font texture atlas.
 	 */
-	public BaseTexture getTextureAtlas() {
+	public BaseImage getTextureAtlas() {
 		return textureAtlas;
 	}
 

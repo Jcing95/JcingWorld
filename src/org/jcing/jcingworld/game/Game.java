@@ -11,15 +11,15 @@ import org.jcing.jcingworld.engine.entities.Entity;
 import org.jcing.jcingworld.engine.entities.Player;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
+import org.jcing.jcingworld.engine.imagery.BaseImage;
+import org.jcing.jcingworld.engine.imagery.ModelTexture;
+import org.jcing.jcingworld.engine.imagery.TerrainTexturePack;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
 import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.engine.terrain.Terrain;
-import org.jcing.jcingworld.engine.textures.BaseTexture;
-import org.jcing.jcingworld.engine.textures.ModelTexture;
-import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
@@ -46,14 +46,14 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 
-		BaseTexture backgroundTexture = (loader.loadTexture("minecraft/grass_top", false));
-		BaseTexture rTexture = loader.loadTexture("minecraft/sand", false);
-		BaseTexture gTexture = loader.loadTexture("minecraft/sand", false);
-		BaseTexture bTexture = loader.loadTexture("minecraft/sand", false);
-		BaseTexture blackTexture = loader.loadTexture("minecraft/sand", false);
+		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top", false));
+		BaseImage rTexture = loader.loadTexture("minecraft/sand", false);
+		BaseImage gTexture = loader.loadTexture("minecraft/sand", false);
+		BaseImage bTexture = loader.loadTexture("minecraft/sand", false);
+		BaseImage blackTexture = loader.loadTexture("minecraft/sand", false);
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
-		BaseTexture blendMap = loader.loadTexture("terrain/blendmapX", false);
+		BaseImage blendMap = loader.loadTexture("terrain/blendmapX", false);
 
 		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), texturePack, blendMap);
 

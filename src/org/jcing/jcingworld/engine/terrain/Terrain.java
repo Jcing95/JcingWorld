@@ -4,9 +4,9 @@ import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.imagery.BaseImage;
+import org.jcing.jcingworld.engine.imagery.TerrainTexturePack;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
-import org.jcing.jcingworld.engine.textures.BaseTexture;
-import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -29,13 +29,13 @@ public class Terrain {
 	private float z;
 	private RawModel model;
 	private TerrainTexturePack texturePack;
-	private BaseTexture blendMap;
+	private BaseImage blendMap;
 
 	private static final boolean FLAT = false;
 
 	public static final float TEXTURES_PER_SQUARE = 1f;
 
-	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TerrainTexturePack texturePack, BaseTexture blendMap) {
+	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TerrainTexturePack texturePack, BaseImage blendMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
@@ -305,7 +305,7 @@ public class Terrain {
 		return texturePack;
 	}
 
-	public BaseTexture getBlendMap() {
+	public BaseImage getBlendMap() {
 		return blendMap;
 	}
 

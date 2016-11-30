@@ -35,7 +35,7 @@ public class Player extends Entity {
 
 	public void move() {
 
-		flying = !KeyBoard.toggled(GLFW.GLFW_KEY_F);
+		flying = KeyBoard.toggled(GLFW.GLFW_KEY_F);
 
 		// SPEED
 		if (KeyBoard.key(GLFW.GLFW_KEY_LEFT_SHIFT)) {

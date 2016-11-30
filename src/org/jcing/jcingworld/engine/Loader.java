@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
-import org.jcing.jcingworld.engine.textures.BaseTexture;
+import org.jcing.jcingworld.engine.imagery.BaseImage;
+import org.jcing.jcingworld.logging.LogManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -73,7 +74,7 @@ public class Loader {
 
 	@Deprecated
 	public int loadTexture(String fileName) {
-		System.out.println("loading image");
+		LogManager.TextureLoader.println("loading Texture" + fileName);
 
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
@@ -96,12 +97,12 @@ public class Loader {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
 		textures.add(textureID);
-
+		LogManager.TextureLoader.println("succesfully loaded Texture" + fileName);
 		return textureID;
 	}
 
-	public BaseTexture loadTexture(String fileName, boolean linear) {
-		System.out.println("loading image");
+	public BaseImage loadTexture(String fileName, boolean linear) {
+		LogManager.TextureLoader.println("loading Texture" + fileName);
 
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
@@ -130,8 +131,8 @@ public class Loader {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
 		textures.add(textureID);
-
-		return new BaseTexture(width,height,textureID);
+		LogManager.TextureLoader.println("succesfully loaded Texture" + fileName);
+		return new BaseImage(width,height,textureID);
 	}
 
 	public void cleanUp() {

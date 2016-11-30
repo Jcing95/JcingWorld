@@ -1,16 +1,16 @@
-package org.jcing.jcingworld.engine.textures;
+package org.jcing.jcingworld.engine.imagery;
 
-public class BaseTexture {
+public class BaseImage {
 	protected int width, height;
 	protected final int ID;	
 	
-	public BaseTexture(int width, int height, int iD) {
+	public BaseImage(int width, int height, int iD) {
 		this.width = width;
 		this.height = height;
 		ID = iD;
 	}
 	
-	public BaseTexture(BaseTexture base) {
+	public BaseImage(BaseImage base) {
 		this.width = base.width;
 		this.height = base.height;
 		this.ID = base.ID;
