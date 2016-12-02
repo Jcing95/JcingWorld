@@ -7,7 +7,7 @@ Actually I have only copied the font classes (I will change them too - _eventual
 For project management and editing I am using the Eclipse IDE. My personal project settings are pushed just to my personal comfort, I might remove them soon.<br>
 Side fact: I probably learned about 95 percent of my modest OpenGL knowledge through this project.
 
-**JcingWorld** currently is in an *extremely* early creation phase and is not ready to be effictively tested yet and *wont be for quite a while*. This means the engine itself is not finished by far.<br>
+**JcingWorld** currently is in an *extremely* early creation phase and is not ready to be effictively tested yet and *wont be for quite a while*. This means the engine itself is by far not finished.<br>
 If you find sloppy mistakes or even critical errors I would appreciate it if you [contact](jasin95@googlemail.com) me, or create an [issue](https://github.com/Jcing95/JcingWorld/issues/new) on this repository.<br>
 _Obviously improvement-tipps are also very welcome._
 
@@ -15,7 +15,7 @@ _Obviously improvement-tipps are also very welcome._
 
 #####My Goals are:
 - simple and smooth ingame World Editing
-- leveling and fighting including many skills as:
+- leveling and fighting including many skills such as:
   - mining
   - fishing
   - woodcutting
