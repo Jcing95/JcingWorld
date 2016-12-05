@@ -22,8 +22,11 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.PrintStream;
+
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
+import org.jcing.jcingworld.logging.Logs;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -46,7 +49,8 @@ public class DisplayManager {
 	public static int fps;
 
 	public static long init() {
-		System.out.println("Initializing Window using LWJGL " + Version.getVersion() + "!");
+	    PrintStream out = Logs.display;
+		out.println("Initializing Window using LWJGL " + Version.getVersion() + "!");
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
 		GLFWErrorCallback.createPrint(System.err).set();
@@ -65,6 +69,7 @@ public class DisplayManager {
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		width = vidmode.width();
 		height = vidmode.height();
+		out.println("set width/height: " + width + "/" + height);
 		// Create the window
 		window = glfwCreateWindow(width, height, "Hello World!", GLFW.glfwGetPrimaryMonitor(), NULL);
 		if (window == NULL)
@@ -94,6 +99,8 @@ public class DisplayManager {
 				Mouse.button[button] = false;
 			}
 		});
+		
+		
 
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 
@@ -101,7 +108,7 @@ public class DisplayManager {
 			DisplayManager.width = width;
 			DisplayManager.height = height;
 		});
-
+		out.println("Callbacks set!");
 		// Center our window
 		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 
@@ -123,6 +130,7 @@ public class DisplayManager {
 		GL.createCapabilities();
 
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		out.println("Window succesfully created!");
 		return window;
 	}
 

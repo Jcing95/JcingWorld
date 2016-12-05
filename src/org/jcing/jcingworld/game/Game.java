@@ -46,26 +46,26 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 
-		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top", false));
-		BaseImage rTexture = loader.loadTexture("minecraft/sand", false);
-		BaseImage gTexture = loader.loadTexture("minecraft/sand", false);
-		BaseImage bTexture = loader.loadTexture("minecraft/sand", false);
-		BaseImage blackTexture = loader.loadTexture("minecraft/sand", false);
+		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top.png", false));
+		BaseImage rTexture = loader.loadTexture("minecraft/sand.png", false);
+		BaseImage gTexture = loader.loadTexture("minecraft/sand.png", false);
+		BaseImage bTexture = loader.loadTexture("minecraft/sand.png", false);
+		BaseImage blackTexture = loader.loadTexture("minecraft/sand.png", false);
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
-		BaseImage blendMap = loader.loadTexture("terrain/blendmapX", false);
+		BaseImage blendMap = loader.loadTexture("terrain/blendmapX.png", false);
 
 		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), texturePack, blendMap);
 
 		flora = new ArrayList<Entity>();
 
-		RawModel stemobj = OBJLoader.loadObjModel("stem", loader);
-		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem", true));
+		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
+		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
 		stemtex.useFakeLighting(true);
 		TexturedModel stem = new TexturedModel(stemobj, stemtex);
 
-		RawModel rockobj = OBJLoader.loadObjModel("rock", loader);
-		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock", true));
+		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
+		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
 		int entitynr = 300 / 3;
@@ -88,7 +88,7 @@ public class Game {
 
 		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
 
-		pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("circle", loader), new ModelTexture(loader.loadTexture("red", true))),
+		pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader), new ModelTexture(loader.loadTexture("red.png", true))),
 				new Vector3f(0, 0, 0), 0, 0, 0, 2);
 	}
 

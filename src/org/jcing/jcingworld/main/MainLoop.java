@@ -77,7 +77,7 @@ public class MainLoop {
 
 		DecimalFormat dec = new DecimalFormat("#.##");
 		dec.setMinimumFractionDigits(2);
-		FontType font = new FontType(loader.loadTexture("fonts/immortal", true), new File("res/fonts/immortal.fnt"));
+		FontType font = new FontType(loader.loadTexture("fonts/immortal.png", true), new File("res/fonts/immortal.fnt"));
 		fpsText = new GUIText("FPS: ", 1, font, new Vector2f(0.1f, 0.1f), 0.3f, false);
 		fpsText.setColour(1f, 0.25f, 0.4f);
 

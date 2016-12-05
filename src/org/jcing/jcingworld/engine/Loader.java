@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
-import org.jcing.jcingworld.logging.LogManager;
+import org.jcing.jcingworld.logging.Logs;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -74,7 +74,7 @@ public class Loader {
 
 	@Deprecated
 	public int loadTexture(String fileName) {
-		LogManager.TextureLoader.println("loading Texture" + fileName);
+		Logs.textureLoader.println("loading Texture" + fileName);
 
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
@@ -97,20 +97,20 @@ public class Loader {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
 		textures.add(textureID);
-		LogManager.TextureLoader.println("succesfully loaded Texture" + fileName);
+		Logs.textureLoader.println("succesfully loaded Texture" + fileName);
 		return textureID;
 	}
 
 	public BaseImage loadTexture(String fileName, boolean linear) {
-		LogManager.TextureLoader.println("loading Texture" + fileName);
+		Logs.textureLoader.println("loading Texture [" + fileName + "]");
 
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
 		// STBImage.stbi_set_flip_vertically_on_load(1);
-		ByteBuffer image = STBImage.stbi_load("res/" + fileName + ".png", w, h, comp, 4);
+		ByteBuffer image = STBImage.stbi_load("res/" + fileName, w, h, comp, 4);
 		if (image == null) {
-			throw new RuntimeException("Failed to load a texture file!" + System.lineSeparator() + STBImage.stbi_failure_reason());
+			throw new RuntimeException("Failed to load [" + fileName + "]!" + System.lineSeparator() + STBImage.stbi_failure_reason());
 		}
 		int width = w.get();
 		int height = h.get();
@@ -131,7 +131,7 @@ public class Loader {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 
 		textures.add(textureID);
-		LogManager.TextureLoader.println("succesfully loaded Texture" + fileName);
+		Logs.textureLoader.println("succesfully loaded Texture [" + fileName + "]");
 		return new BaseImage(width,height,textureID);
 	}
 
