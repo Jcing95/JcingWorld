@@ -30,7 +30,6 @@ public class TerrainShader extends ShaderProgram {
 	private int location_rightTexture;
 	private int location_blendMap;
 	private int location_terrainSize;
-	private int location_textureIndices;
 
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -61,7 +60,6 @@ public class TerrainShader extends ShaderProgram {
 		location_rightTexture = super.getUniformLocation("blackTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
 		location_terrainSize = super.getUniformLocation("terrainSize");
-		location_textureIndices = super.getUniformBufferIndex("textureIndicesBuffer");
 	}
 
 	public void connectTextureUnits() {
