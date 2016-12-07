@@ -9,8 +9,7 @@ public class TextureAtlas extends BaseImage {
 	public TextureAtlas(BaseImage base, int textureSize) {
 		super(base);
 		rows = width/textureSize;
-		this.textureSize = textureSize;
-		
+		this.textureSize = textureSize;	
 	}
 
 

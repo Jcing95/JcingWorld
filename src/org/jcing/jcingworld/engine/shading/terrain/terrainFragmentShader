@@ -9,10 +9,10 @@ in float visibility;
 out vec4 out_Color;
 
 uniform sampler2D backgroundTexture;
-uniform sampler2D rTexture;
-uniform sampler2D gTexture;
-uniform sampler2D bTexture;
-uniform sampler2D blackTexture;
+uniform sampler2D topTextue;
+uniform sampler2D leftTexture;
+uniform sampler2D bottomTexture;
+uniform sampler2D rightTexture;
 uniform sampler2D blendMap;
 
 uniform vec3 lightColor;
@@ -28,16 +28,16 @@ void main(void){
 	vec4 blendMapColor = texture(blendMap, tiledCoords);
 	
 	float backGroundTextureAmount = 1-blendMapColor.a;
-	float blackTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
+	float rightTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 
 	vec4 backgroundTextureColor = texture(backgroundTexture, tiledCoords) * backGroundTextureAmount;
-	vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColor.r*blendMapColor.a;
-	vec4 gTextureColor = texture(gTexture, tiledCoords) * blendMapColor.g*blendMapColor.a;
-	vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColor.b*blendMapColor.a;
-	vec4 blackTextureColor = texture(blackTexture, tiledCoords) * blackTextureAmount*blendMapColor.a;
+	vec4 topTextueColor = texture(topTextue, tiledCoords) * blendMapColor.r*blendMapColor.a;
+	vec4 leftTextureColor = texture(leftTexture, tiledCoords) * blendMapColor.g*blendMapColor.a;
+	vec4 bottomTextureColor = texture(bottomTexture, tiledCoords) * blendMapColor.b*blendMapColor.a;
+	vec4 rightTextureColor = texture(rightTexture, tiledCoords) * rightTextureAmount*blendMapColor.a;
 	vec4 totalColor;
 	
-	totalColor = backgroundTextureColor + (rTextureColor + bTextureColor + gTextureColor + blackTextureColor);
+	totalColor = backgroundTextureColor + (topTextueColor + bottomTextureColor + leftTextureColor + rightTextureColor);
 	
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVector = normalize(toLightVector);
