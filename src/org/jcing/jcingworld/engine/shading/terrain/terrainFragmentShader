@@ -4,8 +4,7 @@ in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
 in vec3 toLightVector;
 in vec3 toCameraVector;
-in mat4 texIndices;
-in float locIndicator;
+in float texIndices[6];
 in float visibility;
 
 out vec4 out_Color;
@@ -27,7 +26,6 @@ uniform float terrainSize;
 void main(void){
 
 	vec2 tiledCoords = pass_textureCoords*terrainSize;
-	
 	vec4 blendMapColor = texture(blendMap, tiledCoords);
 	
 	float backGroundTextureAmount = 1-blendMapColor.a;

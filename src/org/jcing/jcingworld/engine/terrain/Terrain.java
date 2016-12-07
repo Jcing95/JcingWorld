@@ -15,7 +15,7 @@ public class Terrain {
 
 	public static final float TILE_SIZE = 4;
 
-	public static final int TILE_COUNT = 128;
+	public static final int TILE_COUNT = 8;
 	// TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
 	// calculation in Vertex shader: Try to fix this later!
 	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
@@ -31,9 +31,9 @@ public class Terrain {
 	private TerrainTexturePack texturePack;
 	private BaseImage blendMap;
 
-	private static final boolean FLAT = true;
+	private static final boolean FLAT = false;
 
-	public static final float TEXTURES_PER_SQUARE = 1f;
+	public static final float TEXTURES_PER_SQUARE = 2f;
 
 	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TerrainTexturePack texturePack, BaseImage blendMap) {
 		this.texturePack = texturePack;
@@ -51,7 +51,7 @@ public class Terrain {
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count * 2];
 		int[] indices = new int[4 * 6 * TILE_COUNT * TILE_COUNT];
-		float[] textureIndices = new float[2 * TILE_COUNT * TILE_COUNT];
+		float[] textureIndices = new float[count*7]; //MAIN + 6 Neighbors;
 		int vertexPointer = 0;
 
 		// VERTICES NORMALS TEXTURECOORDS
