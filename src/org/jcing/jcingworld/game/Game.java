@@ -68,7 +68,7 @@ public class Game {
 		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		int entitynr = 300 / 3;
+		int entitynr = 0 / 3;
 		Random random = new Random();
 		for (int i = 0; i < entitynr; i++) {
 			float x = terrain.getX() + Terrain.SIZE * random.nextFloat();

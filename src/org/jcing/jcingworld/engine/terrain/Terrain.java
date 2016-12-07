@@ -31,7 +31,7 @@ public class Terrain {
 	private TerrainTexturePack texturePack;
 	private BaseImage blendMap;
 
-	private static final boolean FLAT = false;
+	private static final boolean FLAT = true;
 
 	public static final float TEXTURES_PER_SQUARE = 1f;
 
