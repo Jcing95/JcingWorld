@@ -44,7 +44,7 @@ public class MainLoop {
 
 	private GUIText fpsText;
 
-	private static final boolean WIRE = true;
+	private static final boolean WIRE = false;
 
 	public static void main(String[] args) {
 		new MainLoop();

@@ -72,70 +72,52 @@ public class Loader {
 		return new RawModel(data, positions.length / 2);
 	}
 
-	@Deprecated
-	public int loadTexture(String fileName) {
-		Logs.textureLoader.println("loading Texture" + fileName);
-
-		IntBuffer w = BufferUtils.createIntBuffer(1);
-		IntBuffer h = BufferUtils.createIntBuffer(1);
-		IntBuffer comp = BufferUtils.createIntBuffer(1);
-		// STBImage.stbi_set_flip_vertically_on_load(1);
-		ByteBuffer image = STBImage.stbi_load("res/" + fileName + ".png", w, h, comp, 4);
-		if (image == null) {
-			throw new RuntimeException("Failed to load a texture file!" + System.lineSeparator() + STBImage.stbi_failure_reason());
-		}
-		int width = w.get();
-		int height = h.get();
-
-		int textureID = GL11.glGenTextures();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
-		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-
-		textures.add(textureID);
-		Logs.textureLoader.println("succesfully loaded Texture" + fileName);
-		return textureID;
-	}
-
 	public BaseImage loadTexture(String fileName, boolean linear) {
-		Logs.textureLoader.println("loading Texture [" + fileName + "]");
+    	Logs.textureLoader.println("loading Texture [" + fileName + "]");
+    
+    	IntBuffer w = BufferUtils.createIntBuffer(1);
+    	IntBuffer h = BufferUtils.createIntBuffer(1);
+    	IntBuffer comp = BufferUtils.createIntBuffer(1);
+    	// STBImage.stbi_set_flip_vertically_on_load(1);
+    	ByteBuffer image = STBImage.stbi_load("res/" + fileName, w, h, comp, 4);
+    	if (image == null) {
+    		throw new RuntimeException("Failed to load [" + fileName + "]!" + System.lineSeparator() + STBImage.stbi_failure_reason());
+    	}
+    	int width = w.get();
+    	int height = h.get();
+    	int textureID = GL11.glGenTextures();
+    	// image.flip();
+    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+    	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+    	GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+    	if (linear) {
+    		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+    		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+    	} else {
+    		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+    		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
+    	}
+    
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+    
+    	textures.add(textureID);
+    	Logs.textureLoader.println("succesfully loaded Texture [" + fileName + "]");
+    	return new BaseImage(width,height,textureID);
+    }
 
-		IntBuffer w = BufferUtils.createIntBuffer(1);
-		IntBuffer h = BufferUtils.createIntBuffer(1);
-		IntBuffer comp = BufferUtils.createIntBuffer(1);
-		// STBImage.stbi_set_flip_vertically_on_load(1);
-		ByteBuffer image = STBImage.stbi_load("res/" + fileName, w, h, comp, 4);
-		if (image == null) {
-			throw new RuntimeException("Failed to load [" + fileName + "]!" + System.lineSeparator() + STBImage.stbi_failure_reason());
-		}
-		int width = w.get();
-		int height = h.get();
-		int textureID = GL11.glGenTextures();
-		// image.flip();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
-		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-		if (linear) {
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
-		} else {
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
-		}
+    public void updateVBOfloat(int vaoID, int vboID,int offset, float[] data) {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        GL30.glBindVertexArray(vaoID);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+        GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, (long)(offset * Float.BYTES), buffer);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        GL30.glBindVertexArray(0);
+    }
 
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-
-		textures.add(textureID);
-		Logs.textureLoader.println("succesfully loaded Texture [" + fileName + "]");
-		return new BaseImage(width,height,textureID);
-	}
-
-	public void cleanUp() {
+    public void cleanUp() {
 		for (int vao : vaos) {
 			GL30.glDeleteVertexArrays(vao);
 		}
@@ -169,17 +151,6 @@ public class Loader {
 		GL30.glBindVertexArray(0);
 	}
 	
-	public void updateVBOfloat(int vaoID, int vboID, float[] data) {
-	    FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
-	    buffer.put(data);
-	    buffer.flip();
-	    GL30.glBindVertexArray(vaoID);
-	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
-	    GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, (long)(1 * Float.BYTES), buffer);
-	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-	    GL30.glBindVertexArray(0);
-	}
-	
 	private void bindIndicesBuffer(int[] indices) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
@@ -201,4 +172,33 @@ public class Loader {
 		buffer.flip();
 		return buffer;
 	}
+
+    @Deprecated
+    public int loadTexture(String fileName) {
+    	Logs.textureLoader.println("loading Texture" + fileName);
+    
+    	IntBuffer w = BufferUtils.createIntBuffer(1);
+    	IntBuffer h = BufferUtils.createIntBuffer(1);
+    	IntBuffer comp = BufferUtils.createIntBuffer(1);
+    	// STBImage.stbi_set_flip_vertically_on_load(1);
+    	ByteBuffer image = STBImage.stbi_load("res/" + fileName + ".png", w, h, comp, 4);
+    	if (image == null) {
+    		throw new RuntimeException("Failed to load a texture file!" + System.lineSeparator() + STBImage.stbi_failure_reason());
+    	}
+    	int width = w.get();
+    	int height = h.get();
+    
+    	int textureID = GL11.glGenTextures();
+    	GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+    	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
+    	GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+    	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
+    
+    	textures.add(textureID);
+    	Logs.textureLoader.println("succesfully loaded Texture" + fileName);
+    	return textureID;
+    }
 }

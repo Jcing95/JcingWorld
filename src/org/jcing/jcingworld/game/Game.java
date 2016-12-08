@@ -46,14 +46,14 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 
-		BaseImage backgroundTexture = (loader.loadTexture("colors/white.png", false));
-		BaseImage rTexture = loader.loadTexture("colors/red.png", false);
+		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top.png", false));
+		BaseImage rTexture = loader.loadTexture("colors/blue.png", false);
 		BaseImage gTexture = loader.loadTexture("colors/green.png", false);
 		BaseImage bTexture = loader.loadTexture("colors/blue.png", false);
-		BaseImage blackTexture = loader.loadTexture("colors/black.png", false);
+		BaseImage blackTexture = loader.loadTexture("colors/green.png", false);
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
-		BaseImage blendMap = loader.loadTexture("terrain/blendmapFine.png", false);
+		BaseImage blendMap = loader.loadTexture("terrain/blendmapGood.png", false);
 
 		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), texturePack, blendMap);
 
