@@ -13,7 +13,7 @@ public class Tile {
 	int textureIndex;
 	int indexX, indexY;
 
-	public Tile(float[] x, float[] y, float[] z, int indexX, int indexY) {
+	public Tile(float[] x, float[] y, float[] z, int indexX, int indexY, int textureIndex) {
 		this.x = new float[4];
 		this.y = new float[4];
 		this.z = new float[4];
@@ -24,6 +24,7 @@ public class Tile {
 		}
 		this.indexX = indexX;
 		this.indexY = indexY;
+		this.textureIndex = textureIndex;
 		calcSwap();
 		calcNormal();
 	}

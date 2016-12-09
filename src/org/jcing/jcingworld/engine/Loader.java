@@ -73,7 +73,8 @@ public class Loader {
 	}
 
 	public BaseImage loadTexture(String fileName, boolean linear) {
-    	Logs.textureLoader.println("loading Texture [" + fileName + "]");
+	    Logs.textureLoader.println("");
+	    Logs.textureLoader.println("loading Texture [" + fileName + "]");
     
     	IntBuffer w = BufferUtils.createIntBuffer(1);
     	IntBuffer h = BufferUtils.createIntBuffer(1);
@@ -86,6 +87,7 @@ public class Loader {
     	int width = w.get();
     	int height = h.get();
     	int textureID = GL11.glGenTextures();
+    	Logs.textureLoader.println("width: " + width + " height: " + height + " + ID: " + textureID);
     	// image.flip();
     	GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
     	GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
@@ -95,7 +97,7 @@ public class Loader {
     		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
     	} else {
     		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-    		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
+    		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
     	}
     
     	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);

@@ -13,7 +13,7 @@ import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.ModelTexture;
-import org.jcing.jcingworld.engine.imagery.TerrainTexturePack;
+import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
 import org.jcing.jcingworld.engine.lighting.Ambient;
@@ -46,16 +46,19 @@ public class Game {
 		ambient = new Ambient(0.25f);
 		cam = new Camera();
 
-		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top.png", false));
-		BaseImage rTexture = loader.loadTexture("colors/blue.png", false);
-		BaseImage gTexture = loader.loadTexture("colors/green.png", false);
-		BaseImage bTexture = loader.loadTexture("colors/blue.png", false);
-		BaseImage blackTexture = loader.loadTexture("colors/green.png", false);
-		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
+//		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top.png", false));
+//		BaseImage rTexture = loader.loadTexture("colors/blue.png", false);
+//		BaseImage gTexture = loader.loadTexture("colors/green.png", false);
+//		BaseImage bTexture = loader.loadTexture("colors/blue.png", false);
+//		BaseImage blackTexture = loader.loadTexture("colors/green.png", false);
+//		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		BaseImage blendMap = loader.loadTexture("terrain/blendmapGood.png", false);
-
-		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), texturePack, blendMap);
+		BaseImage texMap = loader.loadTexture("terrain/testMap.png", false);
+		TextureAtlas atlas = new TextureAtlas(texMap,16);
+		
+		
+		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), atlas, blendMap);
 
 		flora = new ArrayList<Entity>();
 

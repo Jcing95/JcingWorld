@@ -1,12 +1,14 @@
 package org.jcing.jcingworld.engine.terrain;
 
+import java.io.PrintStream;
 import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
-import org.jcing.jcingworld.engine.imagery.TerrainTexturePack;
+import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
+import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -24,34 +26,40 @@ public class Terrain {
 	private static float maxDelta = 1f;
 	private float[][] heightMap;
 	private Tile[][] tiles;
-
+	private float[] textureIndices;
+	
+	
 	private float x;
 	private float z;
 	private RawModel model;
-	private TerrainTexturePack texturePack;
+	private TextureAtlas textureAtlas;
 	private BaseImage blendMap;
 
 	private static final boolean FLAT = false;
 
 	public static final float TEXTURES_PER_SQUARE = 2f;
+	private PrintStream out = Logs.terrain;
 
-	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TerrainTexturePack texturePack, BaseImage blendMap) {
-		this.texturePack = texturePack;
+	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap) {
+		this.textureAtlas = textureAtlas;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
+		out.println("generating Terrain["+gridX+"]["+gridZ+"] "+ SIZE +"² ...");
 		this.model = generateTerrain(loader, shader);
 	}
 
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
 		loadheightMap();
-		generateSquares();
+		out.println("generated random Heightmap");
+		generateTiles();
+		out.println("generated Tiles");
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count * 2];
 		int[] indices = new int[4 * 6 * TILE_COUNT * TILE_COUNT];
-		float[] textureIndices = new float[count*7]; //MAIN + 6 Neighbors;
+//		textureIndices = new float[TILE_COUNT * TILE_COUNT]; //MAIN + 6 Neighbors;
 		int vertexPointer = 0;
 
 		// VERTICES NORMALS TEXTURECOORDS
@@ -101,9 +109,6 @@ public class Terrain {
 				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
-
-				// textureIndices[i*j] = tiles[i][j].textureOffsetX;
-				// textureIndices[i*j+1] = tiles[i][j].textureOffsetY;
 			}
 		}
 
@@ -174,6 +179,7 @@ public class Terrain {
 
 			}
 		}
+		out.println("loaded Mesh!");
 		return loader.loadToVAO(vertices, textureCoords, normals, indices, textureIndices);
 	}
 
@@ -202,18 +208,29 @@ public class Terrain {
 		}
 	}
 
-	private void generateSquares() {
+	private void generateTiles() {
 		tiles = new Tile[TILE_COUNT][TILE_COUNT];
+		textureIndices = new float[TILE_COUNT*TILE_COUNT];
 		float SQUARE_SIZE = Terrain.TILE_SIZE / 2;
+		out.println("PRINTING TERRAIN:");
 		for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
+		    
 			for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
-
 				float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE };
 				float y[] = { heightMap[j][i], heightMap[j + 1][i], heightMap[j][i + 1], heightMap[j + 1][i + 1] };
 				float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE, (i + 1) * SQUARE_SIZE };
-				tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2);
+				tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,(int)(Math.random()*9));			
 			}
+			
 		}
+		for (int i = 0; i < tiles.length; i++) {
+		    String t = "";
+            for (int j = 0; j < tiles[0].length; j++) {
+                textureIndices[i*tiles.length+j] = tiles[i][j].textureIndex;
+                t += "["+ tiles[i][j].textureIndex + "]";
+            }
+            out.println(t);
+        }
 		// System.out.println(squares.length + " last: "+
 		// squares[squares.length-1][squares.length-1].getX()[3]);
 	}
@@ -288,7 +305,11 @@ public class Terrain {
 		}
 		return globalCoordinate;
 	}
-
+	
+	public float[] getTextureIndices(){
+	    return textureIndices;
+	}
+		
 	public float getX() {
 		return x;
 	}
@@ -301,8 +322,8 @@ public class Terrain {
 		return model;
 	}
 
-	public TerrainTexturePack getTexturePack() {
-		return texturePack;
+	public TextureAtlas getTexturePack() {
+		return textureAtlas;
 	}
 
 	public BaseImage getBlendMap() {

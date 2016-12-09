@@ -9,8 +9,6 @@ out vec3 surfaceNormal;
 out vec3 toLightVector;
 out vec3 toCameraVector;
 out float visibility;
-flat out mat4 texIndices;
-
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
@@ -19,9 +17,6 @@ uniform vec3 lightPosition;
 
 const float density = 0.0015;
 const float gradient = 3.75;
-
-const float numTiles = 8;
-const float tileSize = 4;
 
 void main(void){
 

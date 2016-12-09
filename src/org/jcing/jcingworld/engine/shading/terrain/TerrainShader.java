@@ -4,7 +4,6 @@ import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.shading.ShaderProgram;
-import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -23,13 +22,10 @@ public class TerrainShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skyColour;
-	private int location_mainTexture;
-	private int location_topTexture;
-	private int location_leftTexture;
-	private int location_bottomTexture;
-	private int location_rightTexture;
+	private int location_textureAtlas;
 	private int location_blendMap;
-	private int location_terrainSize;
+	private int location_numTextures;
+	private int location_textureIndices;
 
 	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -53,23 +49,15 @@ public class TerrainShader extends ShaderProgram {
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColor");
-		location_mainTexture = super.getUniformLocation("backgroundTexture");
-		location_topTexture = super.getUniformLocation("topTexture");
-		location_leftTexture = super.getUniformLocation("leftTexture");
-		location_bottomTexture = super.getUniformLocation("bottomTexture");
-		location_rightTexture = super.getUniformLocation("rightTexture");
+		location_textureAtlas = super.getUniformLocation("textureAtlas");
 		location_blendMap = super.getUniformLocation("blendMap");
-		location_terrainSize = super.getUniformLocation("terrainSize");
+		location_numTextures = super.getUniformLocation("numTextures");
+		location_textureIndices = super.getUniformLocation("textureIndices");
 	}
 
 	public void connectTextureUnits() {
-		super.loadInt(location_mainTexture, 0);
-		super.loadInt(location_topTexture, 1);
-		super.loadInt(location_leftTexture, 2);
-		super.loadInt(location_bottomTexture, 3);
-		super.loadInt(location_rightTexture, 4);
-		super.loadInt(location_blendMap, 5);
-		super.loadFloat(location_terrainSize, Terrain.TILE_COUNT);
+	    super.loadInt(location_blendMap, 0);
+		super.loadInt(location_textureAtlas, 1);
 	}
 
 	public void loadShineVariables(float damper, float reflectivity) {
@@ -84,7 +72,12 @@ public class TerrainShader extends ShaderProgram {
 	public void loadTransformationMatrix(Matrix4f matrix) {
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
-
+	
+	public void loadTerrainData(float[] textureIndices, float numTextures){
+	    super.loadFloatArray(location_textureIndices, textureIndices);
+	    super.loadFloat(location_numTextures, numTextures);
+	}
+	
 	public void loadProjectionMatrix(Matrix4f projection) {
 		super.loadMatrix(location_projectionMatrix, projection);
 	}
