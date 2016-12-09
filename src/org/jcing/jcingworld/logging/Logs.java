@@ -14,7 +14,7 @@ public final class Logs {
     
     public static PrintStream display = logs.create("Display");
     
-    public static PrintStream engine = logs.create("Eng");
+    public static PrintStream engine = logs.create("Engine");
         public static PrintStream loader = logs.create("Loader", engine);
             public static PrintStream textureLoader = logs.create("tex",loader,true);
                 public static PrintStream atlas = logs.create("atlas", textureLoader);

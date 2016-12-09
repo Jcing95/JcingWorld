@@ -29,7 +29,7 @@ public class Game {
 	private Ambient ambient;
 	private Camera cam;
 
-	private Terrain terrain;
+	private Terrain terrain[];
 
 	private List<Entity> flora;
 
@@ -57,8 +57,11 @@ public class Game {
 		BaseImage texMap = loader.loadTexture("terrain/testMap.png", false);
 		TextureAtlas atlas = new TextureAtlas(texMap,16);
 		
+		terrain = new Terrain[9];
+		for(int i=0;i<terrain.length;i++){
+		    terrain[i] = new Terrain(i, 0f, loader, renderer.getTerrainShader(), atlas, blendMap);
+		}
 		
-		terrain = new Terrain(0f, 0f, loader, renderer.getTerrainShader(), atlas, blendMap);
 
 		flora = new ArrayList<Entity>();
 
@@ -74,34 +77,31 @@ public class Game {
 		int entitynr = 0 / 3;
 		Random random = new Random();
 		for (int i = 0; i < entitynr; i++) {
-			float x = terrain.getX() + Terrain.SIZE * random.nextFloat();
-			float z = terrain.getZ() + Terrain.SIZE * random.nextFloat();
-			float y = terrain.getHeight(x, z);
+			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
+			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
+			float y = terrain[0].getHeight(x, z);
 			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
 		}
 
 		for (int i = 0; i < entitynr; i++) {
-			float x = terrain.getX() + Terrain.SIZE * random.nextFloat();
-			float z = terrain.getZ() + Terrain.SIZE * random.nextFloat();
-			float y = terrain.getHeight(x, z);
+			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
+			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
+			float y = terrain[0].getHeight(x, z);
 			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 5f * random.nextFloat()));
 		}
 
 		player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1);
 
-		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
+		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain[0]);
 
 		pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader), new ModelTexture(loader.loadTexture("red.png", true))),
 				new Vector3f(0, 0, 0), 0, 0, 0, 2);
 	}
 
 	public float getTerrainHeight(float x, float z) {
-		if (terrain.inTerrain(x, z)) {
-			return terrain.getHeight(x, z);
+		if (terrain[0].inTerrain(x, z)) {
+			return terrain[0].getHeight(x, z);
 		}
-		// if (terrain2.inTerrain(x, z)) {
-		// return terrain2.getHeight(x, z);
-		// }
 		return 0;
 	}
 
@@ -109,7 +109,8 @@ public class Game {
 		if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
 			player.reset();
 		}
-
+		terrain[0].getTextureIndices()[0] ++;
+		terrain[0].getTextureIndices()[0] %=9;
 		picker.update();
 		pickTest.setPosition(picker.getCurrentTerrainPoint());
 		pickTest.increasePosition(0, 0.1f, 0);
@@ -120,7 +121,9 @@ public class Game {
 		}
 		if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
 			renderer.processEntity(pickTest);
-		renderer.processTerrain(terrain);
+		for (int i = 0; i < terrain.length; i++) {
+            renderer.processTerrain(terrain[i]);
+        }
 
 	}
 
@@ -137,7 +140,7 @@ public class Game {
 	}
 
 	public Terrain getTerrain() {
-		return terrain;
+		return terrain[0];
 	}
 
 	public Player getPlayer() {
