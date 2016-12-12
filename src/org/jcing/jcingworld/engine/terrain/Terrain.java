@@ -24,7 +24,7 @@ public class Terrain {
 
 	public static final float TILE_SIZE = 4;
 
-	public static final int TILE_COUNT = 32;
+	public static final int TILE_COUNT = 16;
 	// TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
 	// calculation in Vertex shader: Try to fix this later!
 	// IDEA: 4 per Vertex coordinates + calculation in Geometry shader.
@@ -344,7 +344,7 @@ public class Terrain {
 	}
 
     public void makeRandom() {
-        for(int i=0;i<1000;i++){
+        for(int i=0;i<10;i++){
             textureIndices[(int)(Math.random()*(textureIndices.length-1))] = (int)(Math.random()*9);
         }
     }
