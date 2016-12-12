@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class MasterRenderer {
 	private TerrainShader terrainShader = new TerrainShader();
 
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private List<Terrain> terrains = new LinkedList<Terrain>();
 
 	public MasterRenderer() {
 		createProjectionMatrix();

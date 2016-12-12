@@ -20,6 +20,7 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.engine.terrain.TerrainManager;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
@@ -29,7 +30,7 @@ public class Game {
 	private Ambient ambient;
 	private Camera cam;
 
-	private Terrain terrain[];
+//	private Terrain terrain[];
 
 	private List<Entity> flora;
 
@@ -38,6 +39,7 @@ public class Game {
 
 	private MousePicker picker;
 	private Entity pickTest;
+    private TerrainManager terrainManager;
 
 	public Game(Loader loader, MasterRenderer renderer) {
 		this.renderer = renderer;
@@ -53,15 +55,11 @@ public class Game {
 //		BaseImage blackTexture = loader.loadTexture("colors/green.png", false);
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
-		BaseImage blendMap = loader.loadTexture("terrain/blendmapGood.png", false);
-		BaseImage texMap = loader.loadTexture("terrain/testMap.png", false);
-		TextureAtlas atlas = new TextureAtlas(texMap,16);
-		
-		terrain = new Terrain[9];
-		int sqrTerr = (int)Math.sqrt(terrain.length);
-		for(int i=0;i<sqrTerr;i++){
-		    for(int j=0; j<sqrTerr;j++){
-		        terrain[i*sqrTerr+j] = new Terrain(i, j, loader, renderer.getTerrainShader(), atlas, blendMap);
+		terrainManager = new TerrainManager(loader,renderer);
+		int terrSize = 24;
+		for(int i=0;i<terrSize;i++){
+		    for(int j=0; j<terrSize;j++){
+		        terrainManager.addTerain(i, j);;
 		    }
 		}
 		
@@ -79,31 +77,31 @@ public class Game {
 
 		int entitynr = 0 / 3;
 		Random random = new Random();
-		for (int i = 0; i < entitynr; i++) {
-			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
-			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
-			float y = terrain[0].getHeight(x, z);
-			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
-		}
-
-		for (int i = 0; i < entitynr; i++) {
-			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
-			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
-			float y = terrain[0].getHeight(x, z);
-			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 5f * random.nextFloat()));
-		}
+//		for (int i = 0; i < entitynr; i++) {
+//			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
+//			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
+//			float y = terrain[0].getHeight(x, z);
+//			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
+//		}
+//
+//		for (int i = 0; i < entitynr; i++) {
+//			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
+//			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
+//			float y = terrain[0].getHeight(x, z);
+//			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 5f * random.nextFloat()));
+//		}
 
 		player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1);
 
-		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain[0]);
+		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrainManager.getTerrain(0, 0));
 
 		pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader), new ModelTexture(loader.loadTexture("red.png", true))),
 				new Vector3f(0, 0, 0), 0, 0, 0, 2);
 	}
 
 	public float getTerrainHeight(float x, float z) {
-		if (terrain[0].inTerrain(x, z)) {
-			return terrain[0].getHeight(x, z);
+		if (terrainManager.getTerrain(0, 0).inTerrain(x, z)) {
+			return terrainManager.getTerrain(0, 0).getHeight(x, z);
 		}
 		return 0;
 	}
@@ -112,9 +110,10 @@ public class Game {
 		if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
 			player.reset();
 		}
-		for (int i = 0; i < terrain.length; i++) {
-            terrain[i].makeRandom();
-        }
+//		for (int i = 0; i < terrain.length; i++) {
+//            terrain[i].makeRandom();
+//        }
+		terrainManager.makeRandom();
 		picker.update();
 		pickTest.setPosition(picker.getCurrentTerrainPoint());
 		pickTest.increasePosition(0, 0.1f, 0);
@@ -125,9 +124,7 @@ public class Game {
 		}
 		if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
 			renderer.processEntity(pickTest);
-		for (int i = 0; i < terrain.length; i++) {
-            renderer.processTerrain(terrain[i]);
-        }
+		terrainManager.processActives();
 
 	}
 
@@ -144,7 +141,7 @@ public class Game {
 	}
 
 	public Terrain getTerrain() {
-		return terrain[0];
+		return terrainManager.getTerrain(0, 0);
 	}
 
 	public Player getPlayer() {

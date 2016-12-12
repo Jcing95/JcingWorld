@@ -40,20 +40,25 @@ public class Terrain {
 	
 	private float x;
 	private float z;
+	private float gridX,gridZ;
 	private RawModel model;
 	private TextureAtlas textureAtlas;
 	private BaseImage blendMap;
+	private Terrain[] neighbors;
 
 	private static final boolean FLAT = false;
 
 	public static final float TEXTURES_PER_SQUARE = 2f;
 	private PrintStream out = Logs.terrain;
 
-	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap) {
+	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap, Terrain[] neighbors) {
 		this.textureAtlas = textureAtlas;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
+		this.gridX = gridX;
+		this.gridZ = gridZ;
+		this.neighbors = neighbors;
 		out.println("generating Terrain["+gridX+"]["+gridZ+"] "+ SIZE +"² ...");
 		this.model = generateTerrain(loader, shader);
 	}
@@ -86,6 +91,8 @@ public class Terrain {
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) i / ((float) TILE_COUNT);
 				vertexPointer++;
 
+				
+//				if(i<TILE_COUNT-1){
 				// SQUARE BOTTOMRIGHT
 				vertices[vertexPointer * 3] = tiles[i][j].getX()[1];
 				vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[1];
@@ -96,6 +103,7 @@ public class Terrain {
 				textureCoords[vertexPointer * 2] = (float) (j + 0f) / ((float) TILE_COUNT);
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
+//				}
 
 				// SQUARE TOPLEFT
 				vertices[vertexPointer * 3] = tiles[i][j].getX()[2];
@@ -107,7 +115,8 @@ public class Terrain {
 				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0f) / ((float) TILE_COUNT);
 				vertexPointer++;
-
+				
+//				if(i<TILE_COUNT-1){
 				// SQUARE TOPRIGHT
 				vertices[vertexPointer * 3] = tiles[i][j].getX()[3];
 				vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[3];
@@ -118,6 +127,7 @@ public class Terrain {
 				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
 				textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
+//				}
 			}
 		}
 
@@ -220,7 +230,7 @@ public class Terrain {
 	private void generateTiles() {
 		tiles = new Tile[TILE_COUNT][TILE_COUNT];
 		textureIndices = new float[TILE_COUNT*TILE_COUNT];
-		float SQUARE_SIZE = Terrain.TILE_SIZE / 2;
+		float SQUARE_SIZE = Terrain.TILE_SIZE / 2 ;
 		out.println("PRINTING TERRAIN:");
 		for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
 		    
@@ -228,7 +238,7 @@ public class Terrain {
 				float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE };
 				float y[] = { heightMap[j][i], heightMap[j + 1][i], heightMap[j][i + 1], heightMap[j + 1][i + 1] };
 				float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE, (i + 1) * SQUARE_SIZE };
-				tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,(int)(Math.random()*9));			
+				tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,(int)(Math.random()*(16*16)));			
 			}
 			
 		}
@@ -244,6 +254,10 @@ public class Terrain {
 		// squares[squares.length-1][squares.length-1].getX()[3]);
 	}
 
+	public void connectRight(){
+	    
+	}
+	
 	private Vector3f calculateNormal(int x, int z) {
 		// TODO: Implement
 		float heightL = 0, heightR = 0, heightD = 0, heightU = 0;
@@ -343,9 +357,17 @@ public class Terrain {
 		return blendMap;
 	}
 
+    public float getGridX() {
+        return gridX;
+    }
+
+    public float getGridZ() {
+        return gridZ;
+    }
+
     public void makeRandom() {
         for(int i=0;i<10;i++){
-            textureIndices[(int)(Math.random()*(textureIndices.length-1))] = (int)(Math.random()*9);
+            textureIndices[(int)(Math.random()*(textureIndices.length-1))] = (int)(Math.random()*(16*16));
         }
     }
 
