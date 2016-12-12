@@ -27,7 +27,7 @@ uniform vec3 skyColor;
 
 uniform float numTextures;
 
-const int TILECOUNT = 8;/*CHANGE WITH TERRAINSIZE*/
+const int TILECOUNT = 32;/*CHANGE WITH TERRAINSIZE*/
 uniform float textureIndices[TILECOUNT*TILECOUNT]; 
 
 vec2 texOffset(float texIndex){

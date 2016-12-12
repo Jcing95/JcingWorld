@@ -16,7 +16,9 @@ public class TerrainManager {
 	}
 
 	public Terrain getTerrain(int x, int y) {
+	    if(terrains.containsKey(x) && terrains.get(x).containsKey(y))
 		return terrains.get(x).get(y);
+	    return null;
 	}
 
 	public void addTerain(int x, int y, Terrain terrain) {

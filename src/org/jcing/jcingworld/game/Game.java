@@ -58,8 +58,11 @@ public class Game {
 		TextureAtlas atlas = new TextureAtlas(texMap,16);
 		
 		terrain = new Terrain[9];
-		for(int i=0;i<terrain.length;i++){
-		    terrain[i] = new Terrain(i, 0f, loader, renderer.getTerrainShader(), atlas, blendMap);
+		int sqrTerr = (int)Math.sqrt(terrain.length);
+		for(int i=0;i<sqrTerr;i++){
+		    for(int j=0; j<sqrTerr;j++){
+		        terrain[i*sqrTerr+j] = new Terrain(i, j, loader, renderer.getTerrainShader(), atlas, blendMap);
+		    }
 		}
 		
 
@@ -109,8 +112,9 @@ public class Game {
 		if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
 			player.reset();
 		}
-		terrain[0].getTextureIndices()[0] ++;
-		terrain[0].getTextureIndices()[0] %=9;
+		for (int i = 0; i < terrain.length; i++) {
+            terrain[i].makeRandom();
+        }
 		picker.update();
 		pickTest.setPosition(picker.getCurrentTerrainPoint());
 		pickTest.increasePosition(0, 0.1f, 0);

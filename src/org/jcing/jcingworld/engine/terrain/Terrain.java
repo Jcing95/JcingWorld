@@ -13,13 +13,22 @@ import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+/**
+ * 
+ * 
+ * 
+ * @author Jcing 
+ *
+ */
 public class Terrain {
 
 	public static final float TILE_SIZE = 4;
 
-	public static final int TILE_COUNT = 8;
+	public static final int TILE_COUNT = 32;
 	// TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
 	// calculation in Vertex shader: Try to fix this later!
+	// IDEA: 4 per Vertex coordinates + calculation in Geometry shader.
+	
 	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
 	public static final float SIZE = TILE_SIZE * TILE_COUNT;
 
@@ -306,6 +315,10 @@ public class Terrain {
 		return globalCoordinate;
 	}
 	
+	public void connectSouth(Terrain terrain){
+	    
+	}
+	
 	public float[] getTextureIndices(){
 	    return textureIndices;
 	}
@@ -329,5 +342,11 @@ public class Terrain {
 	public BaseImage getBlendMap() {
 		return blendMap;
 	}
+
+    public void makeRandom() {
+        for(int i=0;i<1000;i++){
+            textureIndices[(int)(Math.random()*(textureIndices.length-1))] = (int)(Math.random()*9);
+        }
+    }
 
 }
