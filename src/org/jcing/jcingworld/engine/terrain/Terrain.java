@@ -30,7 +30,7 @@ public class Terrain {
 	// IDEA: 4 per Vertex coordinates + calculation in Geometry shader.
 	
 	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
-	public static final float SIZE = TILE_SIZE * TILE_COUNT;
+	public static final float SIZE = TILE_SIZE * (TILE_COUNT-1);
 
 	private static float maxDelta = 1f;
 	private float[][] heightMap;
