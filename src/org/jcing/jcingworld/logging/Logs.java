@@ -20,7 +20,7 @@ public final class Logs {
                 public static PrintStream atlas = logs.create("atlas", textureLoader);
                 
             public static PrintStream objLoader = logs.create("obj", loader, false);
-    
+            public static PrintStream fileLoader = logs.create("files",loader);
             
    public static PrintStream game = logs.create("Game");
        public static PrintStream terrain = logs.create("terrain", game);

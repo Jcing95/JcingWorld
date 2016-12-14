@@ -44,21 +44,19 @@ public class Terrain {
 	private RawModel model;
 	private TextureAtlas textureAtlas;
 	private BaseImage blendMap;
-	private Terrain[] neighbors;
 
 	private static final boolean FLAT = false;
 
 	public static final float TEXTURES_PER_SQUARE = 2f;
 	private PrintStream out = Logs.terrain;
 
-	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap, Terrain[] neighbors) {
+	public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap) {
 		this.textureAtlas = textureAtlas;
 		this.blendMap = blendMap;
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
 		this.gridX = gridX;
 		this.gridZ = gridZ;
-		this.neighbors = neighbors;
 		out.println("generating Terrain["+gridX+"]["+gridZ+"] "+ SIZE +"² ...");
 		this.model = generateTerrain(loader, shader);
 	}
@@ -79,7 +77,6 @@ public class Terrain {
 		// VERTICES NORMALS TEXTURECOORDS
 		for (int j = 0; j < TILE_COUNT; j++) { // i == z
 			for (int i = 0; i < TILE_COUNT; i++) { // j == x;
-				// TODO: NORMALS
 				// SQUARE BOTTOMLEFT
 				vertices[vertexPointer * 3] = tiles[i][j].getX()[0];
 				vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[0];
@@ -258,8 +255,11 @@ public class Terrain {
 	    
 	}
 	
-	private Vector3f calculateNormal(int x, int z) {
-		// TODO: Implement
+	
+	
+	@SuppressWarnings("unused")
+    private Vector3f calculateNormal(int x, int z) {
+		// TODO: Tile? Implement normalCalculation
 		float heightL = 0, heightR = 0, heightD = 0, heightU = 0;
 		if (x - 1 >= 0)
 			heightL = heightMap[x - 1][z];

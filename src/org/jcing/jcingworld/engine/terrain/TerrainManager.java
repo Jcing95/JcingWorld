@@ -38,13 +38,7 @@ public class TerrainManager {
 	}
 
 	public void addTerain(int x, int z) {
-	    Terrain neighbors[] = new Terrain[4];
-	    neighbors[0] = getTerrain(x-1, z);
-	    neighbors[1] = getTerrain(x, z+1);
-	    neighbors[2] = getTerrain(x+1, z);
-	    neighbors[3] = getTerrain(x, z+1);
-	    
-	    Terrain terrain = new Terrain(x, z, loader, renderer.getTerrainShader(), atlas, blendMap,neighbors);
+	    Terrain terrain = new Terrain(x, z, loader, renderer.getTerrainShader(), atlas, blendMap);
 		if (terrains.containsKey(x)) {
 			terrains.get(x).put(z, terrain);
 		} else {

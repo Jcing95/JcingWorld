@@ -30,11 +30,11 @@ public class Tile {
 	}
 
 	private void calcNormal() {
-		// TODO: implement
+		// TODO: TileNormalCalculation
 	}
 
 	private void calcSwap() {
-		// TODO: implement
+		// TODO: TileCalcSwap
 	}
 
 	public float[] getX() {

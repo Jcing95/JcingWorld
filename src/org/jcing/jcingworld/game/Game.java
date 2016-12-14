@@ -2,18 +2,14 @@ package org.jcing.jcingworld.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.OBJLoader;
 import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.entities.Entity;
 import org.jcing.jcingworld.engine.entities.Player;
-import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
-import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.ModelTexture;
-import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
 import org.jcing.jcingworld.engine.lighting.Ambient;
@@ -66,17 +62,17 @@ public class Game {
 
 		flora = new ArrayList<Entity>();
 
-		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
-		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
-		stemtex.useFakeLighting(true);
-		TexturedModel stem = new TexturedModel(stemobj, stemtex);
-
-		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
-		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
-		TexturedModel rock = new TexturedModel(rockobj, rocktex);
-
-		int entitynr = 0 / 3;
-		Random random = new Random();
+//		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
+//		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
+//		stemtex.useFakeLighting(true);
+//		TexturedModel stem = new TexturedModel(stemobj, stemtex);
+//
+//		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
+//		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
+//		TexturedModel rock = new TexturedModel(rockobj, rocktex);
+//
+//		int entitynr = 0 / 3;
+//		Random random = new Random();
 //		for (int i = 0; i < entitynr; i++) {
 //			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
 //			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();

@@ -42,7 +42,7 @@ public class TextMaster {
 	public static void removeText(GUIText text) {
 		List<GUIText> textBatch = texts.get(text.getFont());
 		textBatch.remove(text);
-		// TODO: remove VAO and VBOS
+		// TODO: TEXT remove VAO and VBOS
 		if (textBatch.isEmpty()) {
 			texts.remove(text.getFont());
 		}

@@ -3,8 +3,10 @@ package org.jcing.jcingworld.engine.entities;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+@SuppressWarnings(value = { "unused" })
 public class Hitbox {
-
+    
+    //TODO: implement Hitboxes
 	public Vector3f diagonal;
 	public Vector3f offset;
 	public Vector3f rotation;

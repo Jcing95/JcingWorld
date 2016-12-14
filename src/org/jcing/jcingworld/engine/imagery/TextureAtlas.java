@@ -14,6 +14,10 @@ public class TextureAtlas extends BaseImage {
 		Logs.atlas.println("creating TextureAtlas: " + rows + " rows x " + textureSize +"px");
 		this.textureSize = textureSize;	
 	}
+	
+	protected TextureAtlas(BaseImage base){
+	    super(base);
+	}
 
     public int getTextureSize() {
         return textureSize;
