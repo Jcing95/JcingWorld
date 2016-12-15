@@ -27,7 +27,7 @@ uniform vec3 skyColor;
 
 uniform float numTextures;
 
-const int TILECOUNT = 16;/*CHANGE WITH TERRAINSIZE*/
+const int TILECOUNT = 16;/*CHANGE WITH TERRAINSIZE Terrain.TILECOUNT+1*/
 uniform float textureIndices[TILECOUNT*TILECOUNT]; 
 
 vec2 texOffset(float texIndex){
@@ -35,7 +35,6 @@ vec2 texOffset(float texIndex){
 }
 
 void main(void){
-	
 	vec2 tiledCoords = pass_textureCoords*TILECOUNT;
 	vec4 blendMapColor = texture(blendMap, tiledCoords);
 	float backGroundTextureAmount = 1-blendMapColor.a;

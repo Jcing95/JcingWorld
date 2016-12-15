@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
-import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.jcing.jcingworld.logging.Logs;
 
@@ -17,14 +18,14 @@ public class FolderLoader {
     public static final String FOLDER_INDEX_FILENAME = "iidx.jll";
 
     
-    private PrintStream out = Logs.fileLoader;
+    private static PrintStream out = Logs.fileLoader;
     
     /**
      * loads all Images in a Folder and indexes them.<br>
      * Not yet indexed images will be added at the end.
      */
     @SuppressWarnings("unchecked")
-    public List<BufferedImage> indexedLoad(String folderPath) {
+    public LinkedList<BufferedImage> indexedLoad(String folderPath) {
         out.println("loading images of Folder [" + folderPath + "]");
         LinkedList<String> filepaths;
         File imageIndex = new File(folderPath + "/loadata.Jdta");
@@ -54,14 +55,59 @@ public class FolderLoader {
             filepaths = new LinkedList<String>();
         }
         indexedLoad = false;
-        LinkedList<BufferedImage> imgs = indexSubLoad(new LinkedList<BufferedImage>(), filepaths, folderPath);
+        LinkedList<BufferedImage> imgs = indexSubLoad(new LinkedList<BufferedImage>(), filepaths, "res/"+folderPath);
         
         indexedLoad = false;
         return imgs;
     }
 
-    public BufferedImage loadImage(String path){
-        
+    public static Object loadFile(File file) {
+        Object obj = null;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            obj = ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            System.err.println("Could not load Object at: " + file.getPath());
+            e.printStackTrace();
+            return null;
+        }
+        return obj;
+    }
+    
+    public static Object loadFileInJar(String path) {
+        Object obj = null;
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FolderLoader().getClass().getClassLoader().getResourceAsStream(path));
+            obj = ois.readObject();
+            ois.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            System.err.println("Could not load injar Object at: " + path);
+            e.printStackTrace();
+            return null;
+        }
+        return obj;
+    }
+    
+    public static BufferedImage loadImage(File file) {
+        BufferedImage img = null;
+        try {
+           out.println("loading: " + file);
+           img = ImageIO.read(file);
+        } catch (IOException e) {
+            System.err.println("Could not Load Image: " + file.getPath());
+            e.printStackTrace();
+            return null;
+        }
+        return img;
     }
     
     
@@ -78,13 +124,13 @@ public class FolderLoader {
                     if (file.exists()) {
                         out.println("Indexed img: ");
                         if (file.isDirectory()) {
-                            imgs.add(new JCImage(file.getPath(), true));
+                            
                         } else {
-                            imgs.add(new JCImage(file.getPath()));
+                            imgs.add(loadImage(file));
                         }
                     } else {
                         out.println("Missing: " + file.getPath());
-                        imgs.add(new JCImage("gfx/tilesets/MISSINGTILE.png"));
+                        imgs.add(imgs.getFirst());
                     }
                 }
             }
@@ -100,9 +146,9 @@ public class FolderLoader {
                         filepaths.add(file.getPath());
                         out.println("Adding new file index: " + file.getPath());
                         if (file.isDirectory()) {
-                            imgs.add(new JCImage(file.getPath(), true));
+//                            imgs.add(new JCImage(file.getPath(), true));
                         } else {
-                            imgs.add(new JCImage(file.getPath()));
+                            imgs.add(loadImage(file));
                         }
 
                         out.println("loaded file!");
