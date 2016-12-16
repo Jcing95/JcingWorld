@@ -25,17 +25,26 @@ public class Terrain {
     public static final float TILE_SIZE = 6;
 
     public static final int TILE_COUNT = 16;
+
+    public static final float SIZE = TILE_SIZE * (TILE_COUNT - 1);
+
+    public static final float TEXTURES_PER_SQUARE = 2f;
+
     // TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
     // calculation in Vertex shader: Try to fix this later!
     // IDEA: 4 per Vertex coordinates + calculation in Geometry shader.
-
+    
     private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
-    public static final float SIZE = TILE_SIZE * (TILE_COUNT - 1);
 
-    private static float maxDelta = 1f;
+    private static final boolean FLAT = false;
+
+    private static float maxDelta = 4f;
+    private static int texdex = 0;
+
     private float[][] heightMap;
     private Tile[][] tiles;
     private float[] textureIndices;
+    private Terrain[] borders;
 
     private float x;
     private float z;
@@ -44,9 +53,6 @@ public class Terrain {
     private TextureAtlas textureAtlas;
     private BaseImage blendMap;
 
-    private static final boolean FLAT = true;
-
-    public static final float TEXTURES_PER_SQUARE = 2f;
     private PrintStream out = Logs.terrain;
 
     public Terrain(float gridX, float gridZ, Loader loader, TerrainShader shader,
@@ -213,45 +219,6 @@ public class Terrain {
         }
     }
 
-    private static int texdex = 0;
-
-    private void generateTiles() {
-        tiles = new Tile[TILE_COUNT][TILE_COUNT];
-        textureIndices = new float[TILE_COUNT * TILE_COUNT];
-        float SQUARE_SIZE = Terrain.TILE_SIZE / 2;
-        out.println("PRINTING TERRAIN:");
-        for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
-
-            for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
-                float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE,
-                        (j + 1) * SQUARE_SIZE };
-                float y[] = { heightMap[j][i], heightMap[j + 1][i], heightMap[j][i + 1],
-                        heightMap[j + 1][i + 1] };
-                float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE,
-                        (i + 1) * SQUARE_SIZE };
-                //                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,
-                //                        (int) (Math.random() * textureAtlas.getNumTextures()));
-                texdex = (texdex + 1) % textureAtlas.getNumTextures();
-                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2, texdex);
-            }
-
-        }
-        for (int i = 0; i < tiles.length; i++) {
-            String t = "";
-            for (int j = 0; j < tiles[0].length; j++) {
-                textureIndices[i * tiles.length + j] = tiles[i][j].textureIndex;
-                t += "[" + tiles[i][j].textureIndex + "]";
-            }
-            out.println(t);
-        }
-        // System.out.println(squares.length + " last: "+
-        // squares[squares.length-1][squares.length-1].getX()[3]);
-    }
-
-    public void connectRight() {
-
-    }
-
     @SuppressWarnings("unused")
     private Vector3f calculateNormal(int x, int z) {
         // TODO: Tile? Implement normalCalculation
@@ -268,6 +235,44 @@ public class Terrain {
         Vector3f normal = new Vector3f(heightL - heightR, TILE_SIZE, heightD - heightU);
         normal.normalise();
         return normal;
+    }
+
+    private void generateTiles() {
+        tiles = new Tile[TILE_COUNT][TILE_COUNT];
+        textureIndices = new float[TILE_COUNT * TILE_COUNT];
+        float SQUARE_SIZE = Terrain.TILE_SIZE / 2;
+        out.println("PRINTING TERRAIN:");
+        for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
+    
+            for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
+                float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE,
+                        (j + 1) * SQUARE_SIZE };
+                float y[] = { heightMap[j][i], heightMap[j + 1][i], heightMap[j][i + 1],
+                        heightMap[j + 1][i + 1] };
+                float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE,
+                        (i + 1) * SQUARE_SIZE };
+                //                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,
+                //                        (int) (Math.random() * textureAtlas.getNumTextures()));
+                texdex = (texdex + 1) % textureAtlas.getNumTextures();
+                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2, texdex);
+            }
+        }
+    }
+
+    public void constructTileTextureMap() {
+        
+        for (int i = 0; i < tiles.length; i++) {
+            String t = "";
+            for (int j = 0; j < tiles[0].length; j++) {
+                textureIndices[i * tiles.length + j] = tiles[i][j].textureIndex;
+                t += "[" + tiles[i][j].textureIndex + "]";
+            }
+            out.println(t);
+        }
+    }
+
+    public void gatherTiles(Terrain terrain, int index) {
+        borders[index] = terrain;
     }
 
     public boolean inTerrain(float globalX, float globalZ) {
@@ -324,10 +329,6 @@ public class Terrain {
             globalCoordinate += Math.abs(this.x);
         }
         return globalCoordinate;
-    }
-
-    public void connectSouth(Terrain terrain) {
-
     }
 
     public float[] getTextureIndices() {
