@@ -64,6 +64,7 @@ public class TextureAtlas extends BaseImage {
         this.textureSize = width;
         this.rows = size;
         imgs.clear();
+        FolderLoader.saveImage("map.png", base);
         out.println("succesfully constructed atlas: " + numTextures + " textures in " + rows +" rows (" + this.width +"px²)");
     }
 	

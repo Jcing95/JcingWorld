@@ -1,6 +1,7 @@
 package org.jcing.filesystem;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -108,6 +109,18 @@ public class FolderLoader {
             return null;
         }
         return img;
+    }
+    
+    public static void saveImage(String path, RenderedImage img) {
+        File file = new File(path);
+        if(file.getParentFile() != null)
+            file.getParentFile().mkdirs();
+        try {
+            ImageIO.write(img, "png", file);
+        } catch (IOException e) {
+            System.err.println("Could not save img at: " + path);
+            e.printStackTrace();
+        }
     }
     
     

@@ -27,15 +27,16 @@ uniform vec3 skyColor;
 
 uniform float numTextures;
 
-const int TILECOUNT = 16;/*CHANGE WITH TERRAINSIZE Terrain.TILECOUNT+1*/
-uniform float textureIndices[TILECOUNT*TILECOUNT]; 
+const int TILECOUNT = 15; /*CHANGE WITH TERRAINSIZE Terrain.TILECOUNT-1*/
+const int INDICELENGTH = TILECOUNT+2;
+uniform float textureIndices[(INDICELENGTH)*(INDICELENGTH)]; 
 
 vec2 texOffset(float texIndex){
 	return vec2(mod(texIndex,numTextures)/numTextures,floor(texIndex/numTextures)/numTextures);	
 }
 
 void main(void){
-	vec2 tiledCoords = pass_textureCoords*TILECOUNT;
+	vec2 tiledCoords = pass_textureCoords*(TILECOUNT);
 	vec4 blendMapColor = texture(blendMap, tiledCoords);
 	float backGroundTextureAmount = 1-blendMapColor.a;
 	float rightTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
@@ -44,11 +45,21 @@ void main(void){
 	
 	tiledCoords = mod(tiledCoords,1)/numTextures;
 	
-	vec4 backgroundTextureColor = texture(textureAtlas, tiledCoords+texOffset(textureIndices[int(pos.y*		TILECOUNT+pos.x)])) * backGroundTextureAmount;
-	vec4 topTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y-1)*	TILECOUNT+pos.x)])) * blendMapColor.r*blendMapColor.a;
-	vec4 leftTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int(pos.y*		TILECOUNT+pos.x-1)])) * blendMapColor.g*blendMapColor.a;
-	vec4 bottomTextureColor = texture(textureAtlas, 	tiledCoords+texOffset(textureIndices[int((pos.y+1)*	TILECOUNT+pos.x)])) * blendMapColor.b*blendMapColor.a;
-	vec4 rightTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int(pos.y*		TILECOUNT+pos.x+1)])) * rightTextureAmount*blendMapColor.a;
+	/*
+	vec4 backgroundTextureColor = texture(textureAtlas, tiledCoords+texOffset(textureIndices[int((pos.y)*	INDICELENGTH+pos.x)])) * backGroundTextureAmount;
+	vec4 topTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y-1)*	INDICELENGTH+pos.x)])) * blendMapColor.r*blendMapColor.a;
+	vec4 leftTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y)*	INDICELENGTH+pos.x-1)])) * blendMapColor.g*blendMapColor.a;
+	vec4 bottomTextureColor = texture(textureAtlas, 	tiledCoords+texOffset(textureIndices[int((pos.y+1)*	INDICELENGTH+pos.x)])) * blendMapColor.b*blendMapColor.a;
+	vec4 rightTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y)*	INDICELENGTH+pos.x+1)])) * rightTextureAmount*blendMapColor.a;
+	*/
+	
+	//INCREMENTED:
+	vec4 backgroundTextureColor = texture(textureAtlas, tiledCoords+texOffset(textureIndices[int((pos.y+1)*	INDICELENGTH+pos.x+1)])) * backGroundTextureAmount;
+	vec4 topTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y)*	INDICELENGTH+pos.x+1)])) * blendMapColor.r*blendMapColor.a;
+	vec4 leftTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y+1)*	INDICELENGTH+pos.x)])) * blendMapColor.g*blendMapColor.a;
+	vec4 bottomTextureColor = texture(textureAtlas, 	tiledCoords+texOffset(textureIndices[int((pos.y+2)*	INDICELENGTH+pos.x+1)])) * blendMapColor.b*blendMapColor.a;
+	vec4 rightTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y+1)*	INDICELENGTH+pos.x+2)])) * rightTextureAmount*blendMapColor.a;
+	
 	
 	vec4 totalColor = backgroundTextureColor + (topTextureColor + bottomTextureColor + leftTextureColor + rightTextureColor);
 	
