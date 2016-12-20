@@ -106,9 +106,6 @@ public class Game {
 		if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
 			player.reset();
 		}
-//		for (int i = 0; i < terrain.length; i++) {
-//            terrain[i].makeRandom();
-//        }
 		terrainManager.makeRandom();
 		picker.update();
 		pickTest.setPosition(picker.getCurrentTerrainPoint());

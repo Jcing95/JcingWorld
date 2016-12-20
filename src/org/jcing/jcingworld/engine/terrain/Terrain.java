@@ -38,7 +38,7 @@ public class Terrain {
 
     private static final boolean FLAT = false;
 
-    private static float maxDelta = 4f;
+    private static float maxDelta = 2f;
 //    private static int texdex = 0;
 
     private float[][] heightMap;
@@ -367,14 +367,14 @@ public class Terrain {
         return rights;
     }
 
-//    private int txtindex = 0;
+    private int txtindex = 0;
 
     public void makeRandom() {
-//        for (int i = 0; i < TILE_COUNT+1; i++) {
-//            textureIndices[txtindex] = (textureIndices[txtindex] + 1)
-//                    % textureAtlas.getNumTextures();
-//            txtindex = (txtindex + 1) % (textureIndices.length);
-//        }
+        for (int i = 0; i < TILE_COUNT+1; i++) {
+            textureIndices[txtindex] = (textureIndices[txtindex] + 1)
+                    % textureAtlas.getNumTextures();
+            txtindex = (txtindex + 1) % (textureIndices.length);
+        }
     }
 
     public boolean inTerrain(float globalX, float globalZ) {
