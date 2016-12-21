@@ -27,7 +27,7 @@ uniform vec3 skyColor;
 
 uniform float numTextures;
 
-const int TILECOUNT = 15; /*CHANGE WITH TERRAINSIZE Terrain.TILECOUNT-1*/
+const int TILECOUNT = 14; /*CHANGE WITH TERRAINSIZE Terrain.TILECOUNT-2*/
 const int INDICELENGTH = TILECOUNT+2;
 uniform float textureIndices[(INDICELENGTH)*(INDICELENGTH)]; 
 

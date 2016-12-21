@@ -38,8 +38,9 @@ public class Terrain {
 
     private static final boolean FLAT = false;
 
-    private static float maxDelta = 2f;
-//    private static int texdex = 0;
+    private static float maxDelta = 2.9f;
+    //TODO: terrain generation y Interpolation
+
 
     private float[][] heightMap;
     private Tile[][] tiles;
@@ -252,7 +253,7 @@ public class Terrain {
                         (i + 1) * SQUARE_SIZE };
                 //                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,
                 //                        (int) (Math.random() * textureAtlas.getNumTextures()));
-                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2, ((j / 2))%4);
+                tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2, ((j / 2))%textureAtlas.getNumTextures());
             }
         }
         constructTileTextureMap();
@@ -263,17 +264,17 @@ public class Terrain {
     }
 
     public void constructTileTextureMap() {
-        int texCount = TILE_COUNT+1;
+        int texCount = TILE_COUNT;
         textureIndices = new float[texCount * texCount];
-        
+        //TODO: Check why the fuck there are only (TILECOUNT-2)² Tiles...
         //setting 5
         for (int i = 0; i < textureIndices.length; i++) {
             textureIndices[i] = 5;
         }
         
         //constructing
-        for (int i = 1; i < TILE_COUNT; i++) {
-            for (int j = 1; j < TILE_COUNT; j++) {
+        for (int i = 1; i < TILE_COUNT-1; i++) {
+            for (int j = 1; j < TILE_COUNT-1; j++) {
                 textureIndices[(i) * texCount + (j)] = tiles[j-1][i-1].textureIndex;
             }
         }

@@ -52,7 +52,7 @@ public class Game {
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		terrainManager = new TerrainManager(loader,renderer);
-		int terrSize = 24;
+		int terrSize = 10;
 		for(int i=0;i<terrSize;i++){
 		    for(int j=0; j<terrSize;j++){
 		        terrainManager.addTerain(i, j);;
