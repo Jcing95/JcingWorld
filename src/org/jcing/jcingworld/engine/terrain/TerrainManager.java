@@ -27,8 +27,8 @@ public class TerrainManager {
 		actives = new LinkedList<Point>();
 		this.loader =loader;
 		this.renderer = renderer;
-		blendMap = loader.loadTexture("terrain/blendmapGood.png", false);
-        atlas = new TextureAtlas(loader.loadTexture("terrain/100Square.png",false),16);//"terrain/dirt",loader);
+		blendMap = loader.loadTexture("terrain/blend/32.png", false);
+        atlas = new TextureAtlas("terrain/dirt",loader);
 	}
 	
 	public Terrain getTerrain(int x, int z) {
