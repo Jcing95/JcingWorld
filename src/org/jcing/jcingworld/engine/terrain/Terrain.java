@@ -91,7 +91,7 @@ public class Terrain {
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
 				textureCoords[vertexPointer * 2] = (float) j / ((float) TILE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] =1- (float) i / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE BOTTOMRIGHT
@@ -102,7 +102,7 @@ public class Terrain {
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
 				textureCoords[vertexPointer * 2] = (float) (j + 0f) / ((float) TILE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = (float) (i + 0.5f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1-(float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE TOPLEFT
@@ -113,7 +113,7 @@ public class Terrain {
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
 				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = (float) (i + 0f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] = 1-(float) (i + 0f) / ((float) TILE_COUNT);
 				vertexPointer++;
 
 				// SQUARE TOPRIGHT
@@ -124,7 +124,7 @@ public class Terrain {
 				normals[vertexPointer * 3 + 1] = 1;
 				normals[vertexPointer * 3 + 2] = 0;
 				textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
-				textureCoords[vertexPointer * 2 + 1] = (float) (i + 0.5f) / ((float) TILE_COUNT);
+				textureCoords[vertexPointer * 2 + 1] =1- (float) (i + 0.5f) / ((float) TILE_COUNT);
 				vertexPointer++;
 			}
 		}
