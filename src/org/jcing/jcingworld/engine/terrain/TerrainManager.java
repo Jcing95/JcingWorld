@@ -10,6 +10,7 @@ import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.lwjgl.util.Point;
+import org.lwjgl.util.vector.Vector2f;
 
 public class TerrainManager {
 
@@ -27,7 +28,7 @@ public class TerrainManager {
 		actives = new LinkedList<Point>();
 		this.loader =loader;
 		this.renderer = renderer;
-		blendMap = loader.loadTexture("terrain/blend/32.png", false);
+		blendMap = loader.loadTexture("terrain/blend/256.png", false);
         atlas = new TextureAtlas("terrain/dirt",loader);
 	}
 	
@@ -47,6 +48,10 @@ public class TerrainManager {
 			terrains.put(x, newMap);
 		}
 		actives.add(new Point(x,z));
+	}
+	
+	public Terrain getTerrain(Vector2f gridPos){
+	    return getTerrain((int)gridPos.x, (int)gridPos.y);
 	}
 
 	public List<Point> getActives() {
