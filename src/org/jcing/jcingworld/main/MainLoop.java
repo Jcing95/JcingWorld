@@ -52,6 +52,7 @@ public class MainLoop {
 
 	public MainLoop() {
 		try {
+		    System.setProperty("org.lwjgl.librarypath", new File("lib/lwjgl3/native").getAbsolutePath());
 			loader = new Loader();
 			window = DisplayManager.init();
 			renderer = new MasterRenderer();

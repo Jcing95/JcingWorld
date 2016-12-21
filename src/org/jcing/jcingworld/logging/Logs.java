@@ -23,7 +23,7 @@ public final class Logs {
             public static PrintStream fileLoader = logs.create("files",loader,false);
             
    public static PrintStream game = logs.create("Game");
-       public static PrintStream terrain = logs.create("terrain", game);
+       public static PrintStream terrain = logs.create("terrain", game,false);
     
     
 }

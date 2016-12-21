@@ -54,7 +54,7 @@ public class Game {
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		terrainManager = new TerrainManager(loader,renderer);
-		int terrSize = 10;
+		int terrSize = 30;
 		for(int i=0;i<terrSize;i++){
 		    for(int j=0; j<terrSize;j++){
 		        terrainManager.addTerain(i, j);;
@@ -73,14 +73,14 @@ public class Game {
 		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		int entitynr = 500;
+		int entitynr = 5000;
 		Random random = new Random();
-		for (int i = 0; i < entitynr; i++) {
-			float x = terrSize * Terrain.SIZE * random.nextFloat();
-			float z = terrSize * Terrain.SIZE * random.nextFloat();
-			float y = getTerrainHeight(x, z);
-			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
-		}
+//		for (int i = 0; i < entitynr; i++) {
+//			float x = terrSize * Terrain.SIZE * random.nextFloat();
+//			float z = terrSize * Terrain.SIZE * random.nextFloat();
+//			float y = getTerrainHeight(x, z);
+//			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
+//		}
 
 		for (int i = 0; i < entitynr; i++) {
 		    float x = terrSize * Terrain.SIZE * random.nextFloat();

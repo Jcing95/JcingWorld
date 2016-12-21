@@ -42,7 +42,7 @@ public class Terrain {
     private static final boolean FLAT = false;
 
     private static float heightDelta = 7.25f;
-    private static float interpolation = 12.75f;
+    private static float interpolation = 22.75f;
     private static float continentalHeightDelta = 75;
     private static float continentalInterpolation = 275;
     // TODO: terrain generation y Interpolation
@@ -73,30 +73,6 @@ public class Terrain {
         this.model = generateTerrain(loader, shader);
     }
     
-    public void register(Terrain terrain){
-        switch(checkSide(terrain)){
-        case 0: //0 = x | 1 = y | 2 = -x | 3 = -y
-         terrain.getTileBorder(0);
-         for (int j = 1; j < mapSize-1; j++) {
-             textureIndices[j * (mapSize) + mapSize-1] =
-             tiles[j][tiles[j].length-1].textureIndex;
-             }
-        }
-    }
-    
-    private int checkSide(Terrain terrain) {
-        // L T R B
-        if(terrain.getGridX() < this.getGridX())
-            return 0;
-        if(terrain.getGridZ() < this.getGridZ())
-            return 1;
-        if(terrain.getGridX() > this.getGridX())
-            return 2;
-        if(terrain.getGridZ() > this.getGridZ())
-            return 3;
-        return -1;
-    }
-
     private RawModel generateTerrain(Loader loader, TerrainShader shader) {
         loadheightMap();
         out.println("generated random Heightmap");
@@ -300,10 +276,6 @@ public class Terrain {
         constructTileTextureMap();
     }
 
-    public float[] getTextureIndices() {
-        return tileTextureIndices;
-    }
-
     public void constructTileTextureMap() {
         tileTextureIndices = new float[TILE_TEX_INDICE_COUNT * TILE_TEX_INDICE_COUNT];
         // TODO: Check why the fuck there are only (TILECOUNT-2)² Tiles...
@@ -349,6 +321,30 @@ public class Terrain {
         // }
     }
 
+    public void register(Terrain terrain){
+        switch(checkSide(terrain)){
+//        case 0: //0 = x | 1 = y | 2 = -x | 3 = -y
+//         terrain.getTileBorder(0);
+//         for (int j = 1; j < -1; j++) {
+//             textureIndices[j * (mapSize) + mapSize-1];
+//             tiles[j][tiles[j].length-1].textureIndex;
+//             }
+        }
+    }
+
+    private int checkSide(Terrain terrain) {
+        // L T R B
+        if(terrain.getGridX() < this.getGridX())
+            return 0;
+        if(terrain.getGridZ() < this.getGridZ())
+            return 1;
+        if(terrain.getGridX() > this.getGridX())
+            return 2;
+        if(terrain.getGridZ() > this.getGridZ())
+            return 3;
+        return -1;
+    }
+
     public Tile[] getTileBorder(int index) {
         switch (index) {
         case 0:
@@ -363,21 +359,40 @@ public class Terrain {
             return null;
         }
     }
+    
+    public Tile[] setTileBorder(int index) {
+        switch (index) {
+        case 0:
+            return tiles[0];
+        case 1:
+            return tiles[tiles.length - 1];
+        case 2:
+            return getTopTiles();
+        case 3:
+            return getBottomTiles();
+        default:
+            return null;
+        }
+    }
+
+    public float[] getTextureIndices() {
+        return tileTextureIndices;
+    }
 
     private Tile[] getTopTiles() {
-        Tile[] rights = new Tile[tiles[0].length];
+        Tile[] top = new Tile[tiles[0].length];
         for (int i = 0; i < tiles.length; i++) {
-            rights[i] = tiles[i][0];
+            top[i] = tiles[i][0];
         }
-        return rights;
+        return top;
     }
 
     private Tile[] getBottomTiles() {
-        Tile[] rights = new Tile[tiles[0].length];
+        Tile[] bottom = new Tile[tiles[0].length];
         for (int i = 0; i < tiles.length; i++) {
-            rights[i] = tiles[i][tiles[i].length - 1];
+            bottom[i] = tiles[i][tiles[i].length - 1];
         }
-        return rights;
+        return bottom;
     }
 
     private int txtindex = 0;
