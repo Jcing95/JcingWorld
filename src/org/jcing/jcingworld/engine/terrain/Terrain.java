@@ -24,13 +24,13 @@ import org.openSimplex.OpenSimplexNoise;
 public class Terrain {
 
     public static final float TILE_SIZE = 4;
-    
+
     public static final int TILE_COUNT = 16;
     public static final int TILE_TEX_INDICE_COUNT = TILE_COUNT + 1;
     public static final float SIZE = TILE_SIZE * (TILE_COUNT - 1);
 
     public static OpenSimplexNoise noise = new OpenSimplexNoise(1337);
-    
+
     // public static final float TEXTURES_PER_SQUARE = 2f;
 
     // TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
@@ -41,8 +41,10 @@ public class Terrain {
 
     private static final boolean FLAT = false;
 
-    private static float heightDelta = 13.25f;
-    private static float interpol = 17.75f;
+    private static float heightDelta = 7.25f;
+    private static float interpolation = 12.75f;
+    private static float continentalHeightDelta = 75;
+    private static float continentalInterpolation = 275;
     // TODO: terrain generation y Interpolation
 
     private float[][] heightMap;
@@ -69,6 +71,30 @@ public class Terrain {
         out.println("generating Terrain[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at "
                 + TILE_COUNT + " Tiles");
         this.model = generateTerrain(loader, shader);
+    }
+    
+    public void register(Terrain terrain){
+        switch(checkSide(terrain)){
+        case 0: //0 = x | 1 = y | 2 = -x | 3 = -y
+         terrain.getTileBorder(0);
+         for (int j = 1; j < mapSize-1; j++) {
+             textureIndices[j * (mapSize) + mapSize-1] =
+             tiles[j][tiles[j].length-1].textureIndex;
+             }
+        }
+    }
+    
+    private int checkSide(Terrain terrain) {
+        // L T R B
+        if(terrain.getGridX() < this.getGridX())
+            return 0;
+        if(terrain.getGridZ() < this.getGridZ())
+            return 1;
+        if(terrain.getGridX() > this.getGridX())
+            return 2;
+        if(terrain.getGridZ() > this.getGridZ())
+            return 3;
+        return -1;
     }
 
     private RawModel generateTerrain(Loader loader, TerrainShader shader) {
@@ -200,35 +226,39 @@ public class Terrain {
     }
 
     private void loadheightMap() {
-//        Random random = new Random();
+        //        Random random = new Random();
         heightMap = new float[VERTEX_COUNT][VERTEX_COUNT];
         if (!FLAT) {
             for (int i = 0; i < heightMap.length; i++) {
                 for (int j = 0; j < heightMap[i].length; j++) {
-                    heightMap[j][i] = getNoiseHeight(i,j);
-//                    if (i == 0 && j == 0) {
-//                        heightMap[j][i] = 1 + random.nextFloat();
-//                    } else {
-//                        float delta = random.nextFloat() * maxDelta;
-//                        if (j == 0) {
-//                            heightMap[j][i] = heightMap[j][i - 1] - maxDelta / 2 + delta;
-//                        } else if (i == 0) {
-//                            heightMap[j][i] = heightMap[j - 1][i] - maxDelta / 2 + delta;
-//                        } else {
-//                            heightMap[j][i] = (heightMap[j][i - 1] + heightMap[j - 1][i]) / 2.0f
-//                                    - maxDelta / 2 + delta;
-//                        }
-//                    }
+                    heightMap[j][i] = getNoiseHeight(i, j);
+                    //                    if (i == 0 && j == 0) {
+                    //                        heightMap[j][i] = 1 + random.nextFloat();
+                    //                    } else {
+                    //                        float delta = random.nextFloat() * maxDelta;
+                    //                        if (j == 0) {
+                    //                            heightMap[j][i] = heightMap[j][i - 1] - maxDelta / 2 + delta;
+                    //                        } else if (i == 0) {
+                    //                            heightMap[j][i] = heightMap[j - 1][i] - maxDelta / 2 + delta;
+                    //                        } else {
+                    //                            heightMap[j][i] = (heightMap[j][i - 1] + heightMap[j - 1][i]) / 2.0f
+                    //                                    - maxDelta / 2 + delta;
+                    //                        }
+                    //                    }
                 }
             }
         }
     }
 
     private float getNoiseHeight(int i, int j) {
-        float xi= x+j/2.0f*TILE_SIZE;
-        float zi= z+i/2.0f*TILE_SIZE;
-//        out.println("xi: " + xi + "  zi: "+ zi);
-        return heightDelta*(float)(noise.eval(xi/interpol, zi/interpol))+(heightDelta/4)*(float)(noise.eval(xi/(interpol/4), zi/(interpol/4)));
+        float xi = x + j / 2.0f * TILE_SIZE;
+        float zi = z + i / 2.0f * TILE_SIZE;
+        //        out.println("xi: " + xi + "  zi: "+ zi);
+        return heightDelta * (float) (noise.eval(xi / interpolation, zi / interpolation))
+                + (heightDelta / 6)
+                        * (float) (noise.eval(xi / (interpolation / 6), zi / (interpolation / 4)))
+                + (continentalHeightDelta) * (float) (noise.eval(xi / (continentalInterpolation),
+                        zi / (continentalInterpolation)));
     }
 
     @SuppressWarnings("unused")
@@ -264,7 +294,7 @@ public class Terrain {
                 // tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,
                 // (int) (Math.random() * textureAtlas.getNumTextures()));
                 tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,
-                        (int)(Math.random()*(textureAtlas.getNumTextures())));
+                        (int) (Math.random() * (textureAtlas.getNumTextures())));
             }
         }
         constructTileTextureMap();
@@ -316,37 +346,6 @@ public class Terrain {
         // t += "[" + tiles[i][j].textureIndex + "]";
         // }
         // out.println(t);
-        // }
-
-        // if(borders[0] != null){ //0 = x | 1 = y | 2 = -x | 3 = -y
-        // borders[0].getTileBorder(0);
-        // }else{
-        // for (int j = 1; j < mapSize-1; j++) {
-        // textureIndices[j] = tiles[0][j].textureIndex;
-        // }
-        // }
-        // if(borders[1] != null){ //0 = x | 1 = y | 2 = -x | 3 = -y
-        // borders[1].getTileBorder(1);
-        // }else{
-        // for (int j = 1; j < mapSize-1; j++) {
-        // textureIndices[(mapSize-1) * (mapSize) + j] =
-        // tiles[tiles.length-1][j].textureIndex;
-        // }
-        // }
-        // if(borders[2] != null){ //0 = x | 1 = y | 2 = -x | 3 = -y
-        // borders[2].getTileBorder(2);
-        // }else{
-        // for (int j = 1; j < mapSize-1; j++) {
-        // textureIndices[j * (mapSize)] = tiles[j][0].textureIndex;
-        // }
-        // }
-        // if(borders[3] != null){ //0 = x | 1 = y | 2 = -x | 3 = -y
-        // borders[3].getTileBorder(3);
-        // }else{
-        // for (int j = 1; j < mapSize-1; j++) {
-        // textureIndices[j * (mapSize) + mapSize-1] =
-        // tiles[j][tiles[j].length-1].textureIndex;
-        // }
         // }
     }
 

@@ -70,4 +70,15 @@ public class TerrainManager {
 //        }
     }
 
+    public float getHeightAt(float x, float z) {
+        int tix = (int)Math.floor(x/Terrain.SIZE);
+        int tiz = (int)Math.floor(z/Terrain.SIZE);
+        float offx = x%Terrain.SIZE;
+        float offz = z%Terrain.SIZE;
+        if(getTerrain(tix, tiz) != null){
+            return getTerrain(tix, tiz).getHeight(x, z);
+        }
+        return 0;
+    }
+
 }

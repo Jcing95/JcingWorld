@@ -2,12 +2,14 @@ package org.jcing.jcingworld.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.OBJLoader;
 import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.entities.Entity;
 import org.jcing.jcingworld.engine.entities.Player;
+import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
 import org.jcing.jcingworld.engine.imagery.ModelTexture;
 import org.jcing.jcingworld.engine.io.KeyBoard;
@@ -52,7 +54,7 @@ public class Game {
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		terrainManager = new TerrainManager(loader,renderer);
-		int terrSize = 20;
+		int terrSize = 10;
 		for(int i=0;i<terrSize;i++){
 		    for(int j=0; j<terrSize;j++){
 		        terrainManager.addTerain(i, j);;
@@ -62,30 +64,30 @@ public class Game {
 
 		flora = new ArrayList<Entity>();
 
-//		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
-//		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
-//		stemtex.useFakeLighting(true);
-//		TexturedModel stem = new TexturedModel(stemobj, stemtex);
-//
-//		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
-//		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
-//		TexturedModel rock = new TexturedModel(rockobj, rocktex);
-//
-//		int entitynr = 0 / 3;
-//		Random random = new Random();
-//		for (int i = 0; i < entitynr; i++) {
-//			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
-//			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
-//			float y = terrain[0].getHeight(x, z);
-//			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
-//		}
-//
-//		for (int i = 0; i < entitynr; i++) {
-//			float x = terrain[0].getX() + Terrain.SIZE * random.nextFloat();
-//			float z = terrain[0].getZ() + Terrain.SIZE * random.nextFloat();
-//			float y = terrain[0].getHeight(x, z);
-//			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 5f * random.nextFloat()));
-//		}
+		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
+		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
+		stemtex.useFakeLighting(true);
+		TexturedModel stem = new TexturedModel(stemobj, stemtex);
+
+		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
+		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
+		TexturedModel rock = new TexturedModel(rockobj, rocktex);
+
+		int entitynr = 500;
+		Random random = new Random();
+		for (int i = 0; i < entitynr; i++) {
+			float x = terrSize * Terrain.SIZE * random.nextFloat();
+			float z = terrSize * Terrain.SIZE * random.nextFloat();
+			float y = getTerrainHeight(x, z);
+			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
+		}
+
+		for (int i = 0; i < entitynr; i++) {
+		    float x = terrSize * Terrain.SIZE * random.nextFloat();
+            float z = terrSize * Terrain.SIZE * random.nextFloat();
+            float y = getTerrainHeight(x, z);
+			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 5f * random.nextFloat()));
+		}
 
 		player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1);
 
@@ -96,10 +98,7 @@ public class Game {
 	}
 
 	public float getTerrainHeight(float x, float z) {
-		if (terrainManager.getTerrain(0, 0).inTerrain(x, z)) {
-			return terrainManager.getTerrain(0, 0).getHeight(x, z);
-		}
-		return 0;
+		return terrainManager.getHeightAt(x,z);
 	}
 
 	public void tick() {
