@@ -16,12 +16,12 @@ public class TextureAtlas extends BaseImage {
 	protected int numTextures;
 	private PrintStream out = Logs.atlas;
 	
-	public TextureAtlas(BaseImage base, int textureSize) {
+	public TextureAtlas(BaseImage base, int subTextureSize) {
 		super(base);
-		rows = width/textureSize;
-		this.textureSize = textureSize;
+		rows = width/subTextureSize;
+		this.textureSize = subTextureSize;
 		this.numTextures = rows*rows;
-		Logs.atlas.println("creating TextureAtlas: " + rows + " rows x " + textureSize +"px ("+numTextures+ ") Textures combined");
+		Logs.atlas.println("creating TextureAtlas: " + rows + " rows x " + subTextureSize +"px ("+numTextures+ ") Textures combined");
 		
 	}
 	

@@ -82,7 +82,8 @@ public class Loader {
         IntBuffer w = BufferUtils.createIntBuffer(1);
         IntBuffer h = BufferUtils.createIntBuffer(1);
         IntBuffer comp = BufferUtils.createIntBuffer(1);
-        // STBImage.stbi_set_flip_vertically_on_load(1);
+         STBImage.stbi_set_flip_vertically_on_load(1);
+//         STBImage.stbi_
         ByteBuffer image = STBImage.stbi_load("res/" + fileName, w, h, comp, 4);
         if (image == null) {
             throw new RuntimeException("Failed to load [" + fileName + "]!" + System.lineSeparator()

@@ -28,7 +28,7 @@ public class TerrainManager {
 		this.loader =loader;
 		this.renderer = renderer;
 		blendMap = loader.loadTexture("terrain/blendmapGood.png", false);
-        atlas = new TextureAtlas("terrain/dirt",loader);
+        atlas = new TextureAtlas(loader.loadTexture("terrain/100Square.png",false),16);//"terrain/dirt",loader);
 	}
 	
 	public Terrain getTerrain(int x, int z) {
@@ -60,9 +60,9 @@ public class TerrainManager {
     }
 
     public void makeRandom() {
-        for(Point p:actives){
-            getTerrain(p.getX(), p.getY()).makeRandom();;
-        }
+//        for(Point p:actives){
+//            getTerrain(p.getX(), p.getY()).makeRandom();;
+//        }
     }
 
 }
