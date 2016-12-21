@@ -54,7 +54,7 @@ public class Game {
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		terrainManager = new TerrainManager(loader,renderer);
-		int terrSize = 30;
+		int terrSize = 10;
 		for(int i=0;i<terrSize;i++){
 		    for(int j=0; j<terrSize;j++){
 		        terrainManager.addTerain(i, j);;
@@ -73,7 +73,7 @@ public class Game {
 		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		int entitynr = 5000;
+		int entitynr = 500;
 		Random random = new Random();
 //		for (int i = 0; i < entitynr; i++) {
 //			float x = terrSize * Terrain.SIZE * random.nextFloat();

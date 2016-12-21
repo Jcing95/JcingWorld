@@ -72,7 +72,7 @@ public class Terrain {
                 + TILE_COUNT + " Tiles");
         this.model = generateTerrain(loader, shader);
     }
-    
+
     private RawModel generateTerrain(Loader loader, TerrainShader shader) {
         loadheightMap();
         out.println("generated random Heightmap");
@@ -321,26 +321,21 @@ public class Terrain {
         // }
     }
 
-    public void register(Terrain terrain){
-        switch(checkSide(terrain)){
-//        case 0: //0 = x | 1 = y | 2 = -x | 3 = -y
-//         terrain.getTileBorder(0);
-//         for (int j = 1; j < -1; j++) {
-//             textureIndices[j * (mapSize) + mapSize-1];
-//             tiles[j][tiles[j].length-1].textureIndex;
-//             }
+    public void register(Terrain terrain) {
+        if (terrain != null) {
+            setTileBorder(terrain.getTileBorder(checkSide(terrain)), checkSide(terrain));
         }
     }
 
     private int checkSide(Terrain terrain) {
         // L T R B
-        if(terrain.getGridX() < this.getGridX())
+        if (terrain.getGridX() < this.getGridX())
             return 0;
-        if(terrain.getGridZ() < this.getGridZ())
+        if (terrain.getGridZ() < this.getGridZ())
             return 1;
-        if(terrain.getGridX() > this.getGridX())
+        if (terrain.getGridX() > this.getGridX())
             return 2;
-        if(terrain.getGridZ() > this.getGridZ())
+        if (terrain.getGridZ() > this.getGridZ())
             return 3;
         return -1;
     }
@@ -359,19 +354,30 @@ public class Terrain {
             return null;
         }
     }
-    
-    public Tile[] setTileBorder(int index) {
+
+    public void setTileBorder(Tile[] tiles, int index) {
+        // L T R B
+        PrintStream out = Logs.terrainRegistering;
+        out.println("registering " + index + "tileBorder");
         switch (index) {
         case 0:
-            return tiles[0];
+            for (int i = 0; i < tiles.length-1; i++) {
+                out.println("tile " + i + ": " + tiles[i]);
+                tileTextureIndices[(i)] = tiles[i].textureIndex;
+            }
+            break;
         case 1:
-            return tiles[tiles.length - 1];
+            for (int i = 0; i < tiles.length-1; i++) {
+                tileTextureIndices[(tiles.length - 1) * TILE_TEX_INDICE_COUNT
+                        + (i)] = tiles[i].textureIndex;
+            }
+            break;
         case 2:
-            return getTopTiles();
+            setTopTiles(tiles);
+            break;
         case 3:
-            return getBottomTiles();
-        default:
-            return null;
+            setBottomTiles(tiles);
+            break;
         }
     }
 
@@ -393,6 +399,21 @@ public class Terrain {
             bottom[i] = tiles[i][tiles[i].length - 1];
         }
         return bottom;
+    }
+
+    private void setTopTiles(Tile[] tiles) {
+        for (int i = 0; i < tiles.length-1; i++) {
+            this.tiles[i][0] = tiles[i];
+            tileTextureIndices[(i) * TILE_TEX_INDICE_COUNT] = tiles[i].textureIndex;
+        }
+    }
+
+    private void setBottomTiles(Tile[] tiles) {
+        for (int i = 0; i < tiles.length-1; i++) {
+            this.tiles[i][this.tiles[i].length - 1] = tiles[i];
+            tileTextureIndices[(i) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT
+                    - 1] = tiles[i].textureIndex;
+        }
     }
 
     private int txtindex = 0;
