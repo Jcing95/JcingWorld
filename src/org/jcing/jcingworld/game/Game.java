@@ -54,9 +54,9 @@ public class Game {
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		terrainManager = new TerrainManager(loader,renderer);
-		int terrSize = 10;
-		for(int i=0;i<terrSize;i++){
-		    for(int j=0; j<terrSize;j++){
+		int terrSize = 50;
+		for(int i=-terrSize/2;i<terrSize/2;i++){
+		    for(int j=-terrSize/2; j<terrSize/2;j++){
 		        terrainManager.addTerain(i, j);;
 		    }
 		}
@@ -70,10 +70,10 @@ public class Game {
 		TexturedModel stem = new TexturedModel(stemobj, stemtex);
 
 		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
-		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
+		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rockS.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		int entitynr = 500;
+		int entitynr = 12500;
 		Random random = new Random();
 //		for (int i = 0; i < entitynr; i++) {
 //			float x = terrSize * Terrain.SIZE * random.nextFloat();
@@ -83,8 +83,8 @@ public class Game {
 //		}
 
 		for (int i = 0; i < entitynr; i++) {
-		    float x = terrSize * Terrain.SIZE * random.nextFloat();
-            float z = terrSize * Terrain.SIZE * random.nextFloat();
+		    float x = -terrSize/2*Terrain.SIZE+terrSize * Terrain.SIZE * random.nextFloat();
+            float z = -terrSize/2*Terrain.SIZE+terrSize * Terrain.SIZE * random.nextFloat();
             float y = getTerrainHeight(x, z);
 			flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 2.0f + 5f * random.nextFloat()));
 		}

@@ -28,8 +28,8 @@ public class TerrainManager {
         actives = new LinkedList<Point>();
         this.loader = loader;
         this.renderer = renderer;
-        blendMap = loader.loadTexture("terrain/blend/256.png", false);
-        atlas = new TextureAtlas("terrain/dirt", loader);
+        blendMap = loader.loadTexture("terrain/blendmapX.png", false);
+        atlas = new TextureAtlas("colors", loader);
     }
 
     public Terrain getTerrain(int x, int z) {
@@ -47,10 +47,10 @@ public class TerrainManager {
             newMap.put(z, terrain);
             terrains.put(x, newMap);
         }
-        terrain.register(getTerrain(x + 1, z));
-        terrain.register(getTerrain(x - 1, z));
-        terrain.register(getTerrain(x, z + 1));
-        terrain.register(getTerrain(x, z - 1));
+        terrain.registerNeighbour(getTerrain(x + 1, z),true);
+        terrain.registerNeighbour(getTerrain(x - 1, z),true);
+        terrain.registerNeighbour(getTerrain(x, z + 1),true);
+        terrain.registerNeighbour(getTerrain(x, z - 1),true);
         actives.add(new Point(x, z));
     }
 
