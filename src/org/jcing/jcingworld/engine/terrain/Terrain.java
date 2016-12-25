@@ -254,6 +254,7 @@ public class Terrain {
 	private static int tex = 0;
 
 	private void generateTiles() {
+		tex=0;
 		tiles = new Tile[TILE_COUNT][TILE_COUNT];
 		float SQUARE_SIZE = Terrain.TILE_SIZE / 2;
 		//		System.err.println(textureAtlas.getNumTextures() + " here: " + ((int)getGridX()) % (textureAtlas.getNumTextures()-2));
@@ -264,10 +265,14 @@ public class Terrain {
 				float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE, (i + 1) * SQUARE_SIZE };
 				// tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,
 				// (int) (Math.random() * textureAtlas.getNumTextures()));
+				tex = (int)(Math.random()*textureAtlas.getNumTextures());
+				if(Math.random()*100<80){
+					tex %= 3;
+				}
 				tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2,tex);
 						//(int) (Math.random() * textureAtlas.getNumTextures()));
 			}
-			tex = (int) (Math.random() * textureAtlas.getNumTextures() - 1);
+//			tex = (int) (Math.random() * textureAtlas.getNumTextures() - 1);
 
 		}
 
@@ -340,7 +345,7 @@ public class Terrain {
 			int side = checkSide(terrain);
 			Logs.terrainRegistering.println("### registering " + terrain.getCoordinateString() + " at "
 					+ getCoordinateString() + "(side " + side + ")");
-//			if (side == 0)
+//			if (side == 3)
 				setTileBorder(terrain.getTileBorder(side), side);
 			if (first)
 				terrain.registerNeighbour(this, false);
@@ -379,28 +384,28 @@ public class Terrain {
 	 */
 	public Tile[] getTileBorder(int index) {
 		// R B L T
-		Tile[] border = new Tile[tiles[0].length];
+		Tile[] border = new Tile[tiles[0].length-1];
 		switch (index) {
 		case 0:
 			//+X
-			for (int i = 0; i < tiles.length; i++) {
+			for (int i = 0; i < border.length; i++) {
 				border[i] = tiles[i][0];
 			}
 			return border;
 		case 1:
-			for (int i = 0; i < tiles.length; i++) {
+			for (int i = 0; i < border.length; i++) {
 				border[i] = tiles[0][i];
 			}
 			return border;
 		case 2:
 			//left border
-			for (int i = 0; i < tiles.length; i++) {
-				border[i] = tiles[i][tiles.length-1];
+			for (int i = 0; i < border.length; i++) {
+				border[i] = tiles[i][tiles.length-2];
 			}
 			return border;
 		case 3:
-			for (int i = 0; i < tiles.length; i++) {
-				border[i] = tiles[tiles.length-1][i];
+			for (int i = 0; i < border.length; i++) {
+				border[i] = tiles[tiles.length-2][i];
 			}
 			return border;
 
@@ -418,7 +423,7 @@ public class Terrain {
 			out.println("SETTING " + getCoordinateString() + "(left side)");
 			for (int i = 0; i < tiles.length; i++) {
 				//works
-				tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT) + i] = tiles[i].textureIndex;
+				tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT) + (i+1)] = tiles[i].textureIndex;
 			}
 
 			break;
@@ -433,7 +438,7 @@ public class Terrain {
 			out.println("SETTING " + getCoordinateString() + "(right side)");
 			for (int i = 0; i < tiles.length; i++) {
 				//				this.tiles[i][this.tiles[i].length - 1] = tiles[i];
-				tileTextureIndices[i] = tiles[i].textureIndex;
+				tileTextureIndices[i+1] = tiles[i].textureIndex;
 			}
 
 			break;

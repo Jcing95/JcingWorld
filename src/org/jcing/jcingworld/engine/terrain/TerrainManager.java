@@ -28,8 +28,8 @@ public class TerrainManager {
         actives = new LinkedList<Point>();
         this.loader = loader;
         this.renderer = renderer;
-        blendMap = loader.loadTexture("terrain/blendmapX.png", false);
-        atlas = new TextureAtlas("colors", loader);
+        blendMap = loader.loadTexture("terrain/blend/32.png", false);
+        atlas = new TextureAtlas("/terrain/stone", loader);
     }
 
     public Terrain getTerrain(int x, int z) {
