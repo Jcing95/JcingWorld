@@ -70,7 +70,7 @@ public class Game {
 		TexturedModel stem = new TexturedModel(stemobj, stemtex);
 
 		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
-		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rockS.png", true));
+		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
 		int entitynr = 12500;

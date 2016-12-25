@@ -29,7 +29,7 @@ public class TerrainManager {
         this.loader = loader;
         this.renderer = renderer;
         blendMap = loader.loadTexture("terrain/blend/32.png", false);
-        atlas = new TextureAtlas("/terrain/stone", loader);
+        atlas = new TextureAtlas("/terrain/erde", loader);
     }
 
     public Terrain getTerrain(int x, int z) {
