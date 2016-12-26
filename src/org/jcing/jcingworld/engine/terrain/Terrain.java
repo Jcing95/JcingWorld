@@ -1,7 +1,6 @@
 package org.jcing.jcingworld.engine.terrain;
 
 import java.io.PrintStream;
-import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
@@ -451,22 +450,6 @@ public class Terrain {
 			}
 			break;
 		}
-	}
-
-	private Tile[] getLeftTiles() {
-		Tile[] right = new Tile[tiles[0].length];
-		for (int i = 0; i < tiles.length; i++) {
-			right[i] = tiles[i][0];
-		}
-		return right;
-	}
-
-	private Tile[] getTilesFromNegZRow() {
-		Tile[] bottom = new Tile[tiles[0].length];
-		for (int i = 0; i < tiles.length; i++) {
-			bottom[i] = tiles[i][tiles[i].length - 1];
-		}
-		return bottom;
 	}
 
 	private int txtindex = 0;

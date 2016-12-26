@@ -54,7 +54,7 @@ public class Game {
 //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
 
 		terrainManager = new TerrainManager(loader,renderer);
-		int terrSize = 50;
+		int terrSize = 20;
 		for(int i=-terrSize/2;i<terrSize/2;i++){
 		    for(int j=-terrSize/2; j<terrSize/2;j++){
 		        terrainManager.addTerain(i, j);;
@@ -64,16 +64,16 @@ public class Game {
 
 		flora = new ArrayList<Entity>();
 
-		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
-		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
-		stemtex.useFakeLighting(true);
-		TexturedModel stem = new TexturedModel(stemobj, stemtex);
+//		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
+//		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
+//		stemtex.useFakeLighting(true);
+//		TexturedModel stem = new TexturedModel(stemobj, stemtex);
 
 		RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
 		ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
 		TexturedModel rock = new TexturedModel(rockobj, rocktex);
 
-		int entitynr = 12500;
+		int entitynr = 500;
 		Random random = new Random();
 //		for (int i = 0; i < entitynr; i++) {
 //			float x = terrSize * Terrain.SIZE * random.nextFloat();
@@ -91,7 +91,7 @@ public class Game {
 
 		player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1);
 
-		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrainManager.getTerrain(0, 0));
+		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrainManager);
 
 		pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader), new ModelTexture(loader.loadTexture("red.png", true))),
 				new Vector3f(0, 0, 0), 0, 0, 0, 2);
@@ -116,6 +116,7 @@ public class Game {
 		}
 		if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
 			renderer.processEntity(pickTest);
+		terrainManager.updatePlayerPos(player);
 		terrainManager.processActives();
 
 	}

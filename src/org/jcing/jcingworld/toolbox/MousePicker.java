@@ -3,6 +3,7 @@ package org.jcing.jcingworld.toolbox;
 import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.engine.terrain.TerrainManager;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -11,7 +12,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class MousePicker {
 
 	private static final int RECURSION_COUNT = 200;
-	private static final float RAY_RANGE = 600;
+	private static final float RAY_RANGE = Terrain.SIZE*TerrainManager.RENDERDISTANCE*2;
 
 	private Vector3f currentRay = new Vector3f();
 
@@ -19,14 +20,14 @@ public class MousePicker {
 	private Matrix4f viewMatrix;
 	private Camera camera;
 
-	private Terrain terrain;
+	private TerrainManager terrains;
 	private Vector3f currentTerrainPoint;
 
-	public MousePicker(Camera cam, Matrix4f projection, Terrain terrain) {
+	public MousePicker(Camera cam, Matrix4f projection, TerrainManager terrain) {
 		camera = cam;
 		projectionMatrix = projection;
 		viewMatrix = Maths.createViewMatrix(camera);
-		this.terrain = terrain;
+		this.terrains = terrain;
 	}
 
 	public Vector3f getCurrentTerrainPoint() {
@@ -44,6 +45,7 @@ public class MousePicker {
 		viewMatrix = Maths.createViewMatrix(camera);
 		currentRay = calculateMouseRay();
 		if (intersectionInRange(0, RAY_RANGE, currentRay)) {
+//		    System.err.println("working");
 			currentTerrainPoint = binarySearch(0, 0, RAY_RANGE, currentRay);
 		} else {
 			currentTerrainPoint = null;
@@ -92,8 +94,10 @@ public class MousePicker {
 	private Vector3f binarySearch(int count, float start, float finish, Vector3f ray) {
 		float half = start + ((finish - start) / 2f);
 		if (count >= RECURSION_COUNT) {
+		   
 			Vector3f endPoint = getPointOnRay(ray, half);
 			Terrain terrain = getTerrain(endPoint.getX(), endPoint.getZ());
+//			 System.err.println("rec finished:" + endPoint.toString());
 			if (terrain != null) {
 				return endPoint;
 			} else {
@@ -121,7 +125,7 @@ public class MousePicker {
 		Terrain terrain = getTerrain(testPoint.getX(), testPoint.getZ());
 		float height = 0;
 		if (terrain != null) {
-			height = terrain.getHeight(testPoint.getX(), testPoint.getZ());
+			height = this.terrains.getHeightAt(testPoint.getX(), testPoint.getZ());
 		}
 		if (testPoint.y < height) {
 			return true;
@@ -131,7 +135,7 @@ public class MousePicker {
 	}
 
 	private Terrain getTerrain(float worldX, float worldZ) {
-		return terrain;
+		return terrains.getTerrain(terrains.chunkAtWorldPos(worldX, worldZ));
 	}
 
 }

@@ -24,7 +24,8 @@ public final class Logs {
             
    public static PrintStream game = logs.create("Game");
        public static PrintStream terrain = logs.create("terrain", game,false);
-       public static PrintStream terrainRegistering = logs.create("tileReg",terrain);
+       public static PrintStream chunkLoading = logs.create("chunkLoading",terrain);
+       public static PrintStream terrainRegistering = logs.create("tileReg",terrain,false);
     
     
 }
