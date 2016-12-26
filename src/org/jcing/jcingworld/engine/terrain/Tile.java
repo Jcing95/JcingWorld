@@ -4,64 +4,64 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Tile {
 
-	private float[] x;
-	private float[] y;
-	private float[] z;
-	
-	private Vector3f normal;
-	private boolean swapTriangles; // false wenn oben/rechts nicht tiefste
-	int textureIndex;
-	int indexX, indexY;
+    private float[] x;
+    private float[] y;
+    private float[] z;
 
-	public Tile(float[] x, float[] y, float[] z, int indexX, int indexY, int textureIndex) {
-		this.x = new float[4];
-		this.y = new float[4];
-		this.z = new float[4];
-		for (int i = 0; i < 4; i++) {
-			this.x[i] = x[i];
-			this.y[i] = y[i];
-			this.z[i] = z[i];
-		}
-		this.indexX = indexX;
-		this.indexY = indexY;
-		this.textureIndex = textureIndex;
-		calcSwap();
-		calcNormal();
-	}
+    private Vector3f normal;
+    private boolean swapTriangles; // false wenn oben/rechts nicht tiefste
+    int textureIndex;
+    int indexX, indexY;
 
-	private void calcNormal() {
-		// TODO: TileNormalCalculation
-	}
+    public Tile(float[] x, float[] y, float[] z, int indexX, int indexY, int textureIndex) {
+        this.x = new float[4];
+        this.y = new float[4];
+        this.z = new float[4];
+        for (int i = 0; i < 4; i++) {
+            this.x[i] = x[i];
+            this.y[i] = y[i];
+            this.z[i] = z[i];
+        }
+        this.indexX = indexX;
+        this.indexY = indexY;
+        this.textureIndex = textureIndex;
+        calcSwap();
+        calcNormal();
+    }
 
-	private void calcSwap() {
-		// TODO: TileCalcSwap
-	}
+    private void calcNormal() {
+        // TODO: TileNormalCalculation
+    }
 
-	public float[] getX() {
-		return x;
-	}
+    private void calcSwap() {
+        // TODO: TileCalcSwap
+    }
 
-	public float[] getY() {
-		return y;
-	}
+    public float[] getX() {
+        return x;
+    }
 
-	public float[] getZ() {
-		return z;
-	}
+    public float[] getY() {
+        return y;
+    }
 
-	public Vector3f getNormal() {
-		return normal;
-	}
+    public float[] getZ() {
+        return z;
+    }
 
-	public boolean isSwapTriangles() {
-		return swapTriangles;
-	}
+    public Vector3f getNormal() {
+        return normal;
+    }
 
-	public int getIndexX() {
-		return indexX;
-	}
+    public boolean isSwapTriangles() {
+        return swapTriangles;
+    }
 
-	public int getIndexY() {
-		return indexY;
-	}
+    public int getIndexX() {
+        return indexX;
+    }
+
+    public int getIndexY() {
+        return indexY;
+    }
 }

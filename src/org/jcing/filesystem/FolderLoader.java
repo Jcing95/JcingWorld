@@ -18,9 +18,8 @@ public class FolderLoader {
     private boolean indexedLoad = false;
     public static final String FOLDER_INDEX_FILENAME = "iidx.jll";
 
-    
     private static PrintStream out = Logs.fileLoader;
-    
+
     /**
      * loads all Images in a Folder and indexes them.<br>
      * Not yet indexed images will be added at the end.
@@ -46,8 +45,9 @@ public class FolderLoader {
                 System.err.println("Could not load " + FOLDER_INDEX_FILENAME + " - not found!");
                 e.printStackTrace();
                 return null;
-            } catch (ClassCastException e){
-                System.err.println("Could not load " + FOLDER_INDEX_FILENAME + " - probably corrupted!");
+            } catch (ClassCastException e) {
+                System.err.println(
+                        "Could not load " + FOLDER_INDEX_FILENAME + " - probably corrupted!");
                 e.printStackTrace();
                 return null;
             }
@@ -56,8 +56,9 @@ public class FolderLoader {
             filepaths = new LinkedList<String>();
         }
         indexedLoad = false;
-        LinkedList<BufferedImage> imgs = indexSubLoad(new LinkedList<BufferedImage>(), filepaths, "res/"+folderPath);
-        
+        LinkedList<BufferedImage> imgs = indexSubLoad(new LinkedList<BufferedImage>(), filepaths,
+                "res/" + folderPath);
+
         indexedLoad = false;
         return imgs;
     }
@@ -80,11 +81,12 @@ public class FolderLoader {
         }
         return obj;
     }
-    
+
     public static Object loadFileInJar(String path) {
         Object obj = null;
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FolderLoader().getClass().getClassLoader().getResourceAsStream(path));
+            ObjectInputStream ois = new ObjectInputStream(
+                    new FolderLoader().getClass().getClassLoader().getResourceAsStream(path));
             obj = ois.readObject();
             ois.close();
         } catch (IOException e) {
@@ -97,12 +99,12 @@ public class FolderLoader {
         }
         return obj;
     }
-    
+
     public static BufferedImage loadImage(File file) {
         BufferedImage img = null;
         try {
-           out.println("loading: " + file);
-           img = ImageIO.read(file);
+            out.println("loading: " + file);
+            img = ImageIO.read(file);
         } catch (IOException e) {
             System.err.println("Could not Load Image: " + file.getPath());
             e.printStackTrace();
@@ -110,10 +112,10 @@ public class FolderLoader {
         }
         return img;
     }
-    
+
     public static void saveImage(String path, RenderedImage img) {
         File file = new File(path);
-        if(file.getParentFile() != null)
+        if (file.getParentFile() != null)
             file.getParentFile().mkdirs();
         try {
             ImageIO.write(img, "png", file);
@@ -122,8 +124,7 @@ public class FolderLoader {
             e.printStackTrace();
         }
     }
-    
-    
+
     private LinkedList<BufferedImage> indexSubLoad(LinkedList<BufferedImage> imgs,
             LinkedList<String> filepaths, String folderPath) {
         File location = new File(folderPath);
@@ -137,7 +138,7 @@ public class FolderLoader {
                     if (file.exists()) {
                         out.println("Indexed img: ");
                         if (file.isDirectory()) {
-                            
+
                         } else {
                             imgs.add(loadImage(file));
                         }
@@ -159,7 +160,7 @@ public class FolderLoader {
                         filepaths.add(file.getPath());
                         out.println("Adding new file index: " + file.getPath());
                         if (file.isDirectory()) {
-//                            imgs.add(new JCImage(file.getPath(), true));
+                            //                            imgs.add(new JCImage(file.getPath(), true));
                         } else {
                             imgs.add(loadImage(file));
                         }

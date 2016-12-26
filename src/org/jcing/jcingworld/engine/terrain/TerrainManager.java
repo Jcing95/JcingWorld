@@ -16,7 +16,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class TerrainManager {
 
-    private Map<Integer, Map<Integer, Terrain>> terrains;
+    private Map<Integer, Map<Integer, Chunk>> chunks;
 
     //loading management
     public static final int RENDERDISTANCE = 5;
@@ -33,7 +33,7 @@ public class TerrainManager {
     PrintStream out = Logs.chunkLoading;
 
     public TerrainManager(Loader loader, MasterRenderer renderer) {
-        terrains = new HashMap<Integer, Map<Integer, Terrain>>();
+        chunks = new HashMap<Integer, Map<Integer, Chunk>>();
         actives = new LinkedList<Vector2f>();
         this.loader = loader;
         this.renderer = renderer;
@@ -42,17 +42,18 @@ public class TerrainManager {
         initActiveMap();
     }
 
-    private void initActiveMap(){
-        out.println("initializing Rendermap with a distance of: " + RENDERDISTANCE + " there will be " + Math.pow(RENDERDISTANCE*2,2) + " Chunks rendered");
+    private void initActiveMap() {
+        out.println("initializing Rendermap with a distance of: " + RENDERDISTANCE
+                + " there will be " + Math.pow(RENDERDISTANCE * 2, 2) + " Chunks rendered");
         for (int i = -RENDERDISTANCE; i < RENDERDISTANCE; i++) {
             for (int j = -RENDERDISTANCE; j < RENDERDISTANCE; j++) {
-                actives.add(new Vector2f(i,j));
-            } 
+                actives.add(new Vector2f(i, j));
+            }
         }
     }
 
     public Vector2f chunkAtWorldPos(float x, float z) {
-        return new Vector2f(x / Terrain.SIZE, z / Terrain.SIZE);
+        return new Vector2f(x / Chunk.SIZE, z / Chunk.SIZE);
     }
 
     public void updatePlayerPos(Player player) {
@@ -67,20 +68,20 @@ public class TerrainManager {
         }
     }
 
-    public Terrain getTerrain(int x, int z) {
-        if (terrains.containsKey(x) && terrains.get(x).containsKey(z))
-            return terrains.get(x).get(z);
+    public Chunk getTerrain(int x, int z) {
+        if (chunks.containsKey(x) && chunks.get(x).containsKey(z))
+            return chunks.get(x).get(z);
         return null;
     }
 
     public void addTerain(int x, int z) {
-        Terrain terrain = new Terrain(x, z, loader, renderer.getTerrainShader(), atlas, blendMap);
-        if (terrains.containsKey(x)) {
-            terrains.get(x).put(z, terrain);
+        Chunk terrain = new Chunk(x, z, loader, renderer.getTerrainShader(), atlas, blendMap);
+        if (chunks.containsKey(x)) {
+            chunks.get(x).put(z, terrain);
         } else {
-            Map<Integer, Terrain> newMap = new HashMap<Integer, Terrain>();
+            Map<Integer, Chunk> newMap = new HashMap<Integer, Chunk>();
             newMap.put(z, terrain);
-            terrains.put(x, newMap);
+            chunks.put(x, newMap);
         }
         terrain.registerNeighbour(getTerrain(x + 1, z), true);
         terrain.registerNeighbour(getTerrain(x - 1, z), true);
@@ -89,7 +90,7 @@ public class TerrainManager {
         //        actives.add(new Vector2f(x, z));
     }
 
-    public Terrain getTerrain(Vector2f gridPos) {
+    public Chunk getTerrain(Vector2f gridPos) {
         return getTerrain((int) gridPos.x, (int) gridPos.y);
     }
 
@@ -106,14 +107,12 @@ public class TerrainManager {
     }
 
     public void makeRandom() {
-        //        for(Vector2f p:actives){
-        //            getTerrain(p.getX(), p.getY()).makeRandom();;
-        //        }
+
     }
 
     public float getHeightAt(float x, float z) {
-        int tix = (int) Math.floor(x / Terrain.SIZE);
-        int tiz = (int) Math.floor(z / Terrain.SIZE);
+        int tix = (int) Math.floor(x / Chunk.SIZE);
+        int tiz = (int) Math.floor(z / Chunk.SIZE);
         if (getTerrain(tix, tiz) != null) {
             return getTerrain(tix, tiz).getHeight(x, z);
         }
