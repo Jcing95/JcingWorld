@@ -19,7 +19,7 @@ import org.lwjgl.util.vector.Vector2f;
  */
 public class Chunk {
 
-    public static final float TILE_SIZE = 6;
+    public static final float TILE_SIZE = 2;
 
     public static final int TILE_COUNT = 16;
     public static final int TILE_TEX_INDICE_COUNT = TILE_COUNT + 1;

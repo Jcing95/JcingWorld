@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jcing.filesystem.JHash;
+import org.jcing.filesystem.JHashManager;
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.Player;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
@@ -15,10 +15,10 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Terrain {
 
-    private JHash<JHash<Chunk>> chunks;
+    private JHashManager<JHashManager<Chunk>> chunks;
 
     //loading management
-    public static final int RENDERDISTANCE = 10;
+    public static final int RENDERDISTANCE = 20;
     private static final boolean FLAT = false;
 
     private MapGenerator gen;
@@ -34,7 +34,7 @@ public class Terrain {
     PrintStream out = Logs.chunkLoading;
 
     public Terrain(Loader loader, MasterRenderer renderer) {
-        chunks = new JHash<JHash<Chunk>>();
+        chunks = new JHashManager<JHashManager<Chunk>>();
         actives = new LinkedList<Vector2f>();
         this.loader = loader;
         this.renderer = renderer;
@@ -80,7 +80,7 @@ public class Terrain {
     public void addTerain(int x, int y) {
         Chunk terrain = new Chunk(x, y, loader, renderer.getTerrainShader(), atlas, blendMap, this);
         if (chunks.get(x) == null) {
-            JHash<Chunk> newMap = new JHash<Chunk>();
+            JHashManager<Chunk> newMap = new JHashManager<Chunk>();
             newMap.put(terrain, y);
             if(chunks.get(x) == null){
                 chunks.put(newMap, x);
