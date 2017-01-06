@@ -1,8 +1,7 @@
 package org.jcing.jcingworld.game;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.OBJLoader;
@@ -18,7 +17,7 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.engine.terrain.Chunk;
-import org.jcing.jcingworld.engine.terrain.TerrainManager;
+import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
@@ -37,7 +36,7 @@ public class Game {
 
     private MousePicker picker;
     private Entity pickTest;
-    private TerrainManager terrainManager;
+    private Terrain terrain;
 
     public Game(Loader loader, MasterRenderer renderer) {
         this.renderer = renderer;
@@ -46,81 +45,57 @@ public class Game {
         ambient = new Ambient(0.25f);
         cam = new Camera();
 
-        //		BaseImage backgroundTexture = (loader.loadTexture("minecraft/grass_top.png", false));
-        //		BaseImage rTexture = loader.loadTexture("colors/blue.png", false);
-        //		BaseImage gTexture = loader.loadTexture("colors/green.png", false);
-        //		BaseImage bTexture = loader.loadTexture("colors/blue.png", false);
-        //		BaseImage blackTexture = loader.loadTexture("colors/green.png", false);
-        //		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture, blackTexture);
-
-        terrainManager = new TerrainManager(loader, renderer);
+        terrain = new Terrain(loader, renderer);
         int terrSize = 20;
         for (int i = -terrSize / 2; i < terrSize / 2; i++) {
             for (int j = -terrSize / 2; j < terrSize / 2; j++) {
-                terrainManager.addTerain(i, j);
+                terrain.addTerain(i, j);
                 ;
             }
         }
 
-        flora = new ArrayList<Entity>();
+        RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
+        ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
+//        stemtex.useFakeLighting(true);
+        TexturedModel stem = new TexturedModel(stemobj, stemtex);
+        flora = new LinkedList<Entity>();
+        
+        
 
-        //		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
-        //		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
-        //		stemtex.useFakeLighting(true);
-        //		TexturedModel stem = new TexturedModel(stemobj, stemtex);
+        player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1, terrain);
 
-        RawModel rockobj = OBJLoader.loadObjModel("rock.obj", loader);
-        ModelTexture rocktex = new ModelTexture(loader.loadTexture("rock.png", true));
-        TexturedModel rock = new TexturedModel(rockobj, rocktex);
-
-        int entitynr = 500;
-        Random random = new Random();
-        //		for (int i = 0; i < entitynr; i++) {
-        //			float x = terrSize * Terrain.SIZE * random.nextFloat();
-        //			float z = terrSize * Terrain.SIZE * random.nextFloat();
-        //			float y = getTerrainHeight(x, z);
-        //			flora.add(new Entity(stem, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1.5f + 1.5f * random.nextFloat()));
-        //		}
-
-        for (int i = 0; i < entitynr; i++) {
-            float x = -terrSize / 2 * Chunk.SIZE + terrSize * Chunk.SIZE * random.nextFloat();
-            float z = -terrSize / 2 * Chunk.SIZE + terrSize * Chunk.SIZE * random.nextFloat();
-            float y = getTerrainHeight(x, z);
-            flora.add(new Entity(rock, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0,
-                    2.0f + 5f * random.nextFloat()));
-        }
-
-        player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1);
-
-        picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrainManager);
+        picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
 
         pickTest = new Entity(
                 new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader),
                         new ModelTexture(loader.loadTexture("red.png", true))),
                 new Vector3f(0, 0, 0), 0, 0, 0, 2);
-    }
-
-    public float getTerrainHeight(float x, float z) {
-        return terrainManager.getHeightAt(x, z);
+//        for (int i = 0; i < 500; i++) {
+//            float x = (float) (Math.random()*10f)*Chunk.SIZE;
+//            float y = (float) (Math.random()*10f)*Chunk.SIZE;
+//            flora.add(new Entity(stem, new Vector3f(x,terrain.getHeightAt(x, y),y), 0, 0, 0, 1));
+//        }   
     }
 
     public void tick() {
         if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
             player.reset();
         }
-        terrainManager.makeRandom();
+        terrain.makeRandom();
         picker.update();
         pickTest.setPosition(picker.getCurrentTerrainPoint());
         pickTest.increasePosition(0, 0.1f, 0);
         player.move();
         player.moveCamera(cam);
-        for (Entity e : flora) {
-            renderer.processEntity(e);
-        }
+
+        
+        terrain.updatePlayerPos(player);
+        terrain.processActives();
         if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
             renderer.processEntity(pickTest);
-        terrainManager.updatePlayerPos(player);
-        terrainManager.processActives();
+        for (Entity entity : flora) {
+            renderer.processEntity(entity);
+        }
 
     }
 
@@ -137,7 +112,7 @@ public class Game {
     }
 
     public Chunk getTerrain() {
-        return terrainManager.getTerrain(0, 0);
+        return terrain.getChunk(0, 0);
     }
 
     public Player getPlayer() {

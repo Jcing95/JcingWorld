@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.DoubleBuffer;
 import java.text.DecimalFormat;
 
+import org.jcing.filesystem.JHash;
 import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.font.FontType;
@@ -27,13 +28,13 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class MainLoop {
 
-    private double newMouseX;
+    private static double newMouseX;
 
-    private double newMouseY;
+    private static double newMouseY;
 
-    private double prevMouseX;
+    private static double prevMouseX;
 
-    private double prevMouseY;
+    private static double prevMouseY;
 
     private static long window;
     private static Game game;
@@ -42,11 +43,19 @@ public class MainLoop {
     private static GUIRenderer guiRenderer;
     private static GuiManager gui;
 
-    private GUIText fpsText;
+    private static GUIText fpsText;
 
     private static final boolean WIRE = false;
 
     public static void main(String[] args) {
+        
+//        JHash<String> hash = new JHash<String>();
+//        
+//        hash.put("test index 0", 0);
+//        hash.put("test 1000", 1000);
+//        System.out.println(hash.get(0));
+//        System.out.println(hash.get(1000));
+            
         new MainLoop();
     }
 
@@ -62,7 +71,7 @@ public class MainLoop {
             game = new Game(loader, renderer);
 
             TextMaster.init(loader);
-
+            MasterRenderer.enableCulling();
             loop();
 
             // Free the window callbacks and destroy the window

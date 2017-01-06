@@ -3,7 +3,7 @@ package org.jcing.jcingworld.toolbox;
 import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.terrain.Chunk;
-import org.jcing.jcingworld.engine.terrain.TerrainManager;
+import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -12,7 +12,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class MousePicker {
 
     private static final int RECURSION_COUNT = 200;
-    private static final float RAY_RANGE = Chunk.SIZE * TerrainManager.RENDERDISTANCE * 2;
+    private static final float RAY_RANGE = Chunk.SIZE * Terrain.RENDERDISTANCE * 2;
 
     private Vector3f currentRay = new Vector3f();
 
@@ -20,10 +20,10 @@ public class MousePicker {
     private Matrix4f viewMatrix;
     private Camera camera;
 
-    private TerrainManager terrains;
+    private Terrain terrains;
     private Vector3f currentTerrainPoint;
 
-    public MousePicker(Camera cam, Matrix4f projection, TerrainManager terrain) {
+    public MousePicker(Camera cam, Matrix4f projection, Terrain terrain) {
         camera = cam;
         projectionMatrix = projection;
         viewMatrix = Maths.createViewMatrix(camera);
@@ -135,7 +135,7 @@ public class MousePicker {
     }
 
     private Chunk getTerrain(float worldX, float worldZ) {
-        return terrains.getTerrain(terrains.chunkAtWorldPos(worldX, worldZ));
+        return terrains.getChunk(terrains.chunkAtWorldPos(worldX, worldZ));
     }
 
 }

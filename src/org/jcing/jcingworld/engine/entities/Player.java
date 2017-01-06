@@ -4,17 +4,11 @@ import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
-import org.jcing.jcingworld.main.MainLoop;
+import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Player extends Entity {
-
-    public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
-            float scale) {
-        super(model, position, rotX, rotY, rotZ, scale);
-        // TODO: Player Implemention / MOBS n co.
-    }
 
     private static final float SPEED = 17.5f;
     private static final float TURN = 7.5f;
@@ -33,6 +27,15 @@ public class Player extends Entity {
     private float forwardSpeed = 0;
     private float upwardsSpeed = 0;
     private float rightSpeed = 0;
+    
+    private Terrain terrain;
+
+    public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
+            float scale, Terrain terrain) {
+        super(model, position, rotX, rotY, rotZ, scale);
+        // TODO: Player Implemention / MOBS n co.
+        this.terrain = terrain;
+    }
 
     public void move() {
 
@@ -119,12 +122,12 @@ public class Player extends Entity {
 
         } else {
             // NOT FLYING
-            if (getPosition().y + speedUp < MainLoop.getGame().getTerrainHeight(getPosition().x,
+            if (getPosition().y + speedUp < terrain.getHeightAt(getPosition().x,
                     getPosition().z)) {
                 inAir = false;
                 upwardsSpeed = 0;
                 speedUp = 0;
-                getPosition().y = MainLoop.getGame().getTerrainHeight(getPosition().x,
+                getPosition().y = terrain.getHeightAt(getPosition().x,
                         getPosition().z);
             }
             distanceY = speedUp;
