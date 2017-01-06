@@ -72,12 +72,5 @@ public class JHash<O> {
     public void setObj(O obj) {
         this.obj = obj;
     }
-    
-    private class fixedHashMap<K, V> extends HashMap<K, V>{
-        
-        public boolean put(){
-            
-        }
-        
-    }
+
 }
