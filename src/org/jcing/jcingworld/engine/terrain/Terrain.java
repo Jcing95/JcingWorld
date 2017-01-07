@@ -22,7 +22,7 @@ public class Terrain {
 //	public static final int UNLOADRANGERADIUS = 10;
 	public static final int PACKAGESIZE = 10;
 	public static final int LOADEDPACKAGEDISTANCE = 5;
-	private static final boolean FLAT = false;
+//	private static final boolean FLAT = false;
 
 	private MapGenerator gen;
 	private List<Vector2f> actives;
@@ -40,8 +40,9 @@ public class Terrain {
 	PrintStream out = Logs.chunkLoading;
 
 	public Terrain(Loader loader, MasterRenderer renderer) {
-		chunks = new HashMap<Integer,HashMap<Integer,Chunk>>();
+		chunks = new HashMap<Integer,HashMap<Integer,Chunk>>(LOADEDPACKAGEDISTANCE*PACKAGESIZE+1,1);
 		actives = new LinkedList<Vector2f>();
+		loadedChunks = new LinkedList<Vector2f>();
 //		activePackages = new LinkedList<Vector2f>();
 		this.loader = loader;
 		this.renderer = renderer;
@@ -102,7 +103,7 @@ public class Terrain {
 			}
 		}
 	}
-	
+		
 	private Vector2f getPackage(Vector2f chunk){
 		return new Vector2f((int)chunk.x/PACKAGESIZE,(int)chunk.y/PACKAGESIZE);
 	}
@@ -124,7 +125,7 @@ public class Terrain {
 	public void addChunk(int x, int y) {
 		Chunk chunk = new Chunk(x, y, loader, renderer.getTerrainShader(), atlas, blendMap, this);
 		if (chunks.get(x) == null) {
-			HashMap<Integer,Chunk> newMap = new HashMap<Integer,Chunk>();
+			HashMap<Integer,Chunk> newMap = new HashMap<Integer,Chunk>(LOADEDPACKAGEDISTANCE*PACKAGESIZE+1,1);
 			newMap.put(y,chunk);
 			if (chunks.get(x) == null) {
 				chunks.put(x ,newMap);
