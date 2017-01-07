@@ -6,7 +6,7 @@ import org.jcing.jcingworld.engine.terrain.Terrain;
 
 public class ModuloTree<O> {
 
-	public static final int MODULATOR = Terrain.RENDERDISTANCE;
+	public static final int MODULATOR = Terrain.RENDERDISTANCERADIUS;
 
 	private HashMap<Integer, ModuloTree<O>> subMap;
 	private O obj;
@@ -15,7 +15,7 @@ public class ModuloTree<O> {
 
 //	private int iteration;
 
-	public static final int MAXDELTA = Terrain.RENDERDISTANCE*2+1;
+	public static final int MAXDELTA = Terrain.RENDERDISTANCERADIUS*2+1;
 
 	public ModuloTree() {
 		subMap = new HashMap<Integer, ModuloTree<O>>(MODULATOR + 2, 1);

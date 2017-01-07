@@ -12,7 +12,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class MousePicker {
 
     private static final int RECURSION_COUNT = 200;
-    private static final float RAY_RANGE = Chunk.SIZE * Terrain.RENDERDISTANCE * 2;
+    private static final float RAY_RANGE = Chunk.SIZE * Terrain.RENDERDISTANCERADIUS* 2;
 
     private Vector3f currentRay = new Vector3f();
 
