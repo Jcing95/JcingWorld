@@ -23,103 +23,102 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Game {
-    private Light sun;
-    private Ambient ambient;
-    private Camera cam;
+	private Light sun;
+	private Ambient ambient;
+	private Camera cam;
 
-    //	private Terrain terrain[];
+	//	private Terrain terrain[];
 
-    private List<Entity> flora;
+	private List<Entity> flora;
 
-    private Player player;
-    private MasterRenderer renderer;
+	private Player player;
+	private MasterRenderer renderer;
 
-    private MousePicker picker;
-    private Entity pickTest;
-    private Terrain terrain;
+	private MousePicker picker;
+	private Entity pickTest;
+	private Terrain terrain;
 
-    public Game(Loader loader, MasterRenderer renderer) {
-        this.renderer = renderer;
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	public static String saveGameName = "InDevTest";
+	//////////////////////////////////////////////////////////////////////////////////////////////
 
-        sun = new Light(new Vector3f(0, 20000, 20000), new Vector3f(1, 1, 1));
-        ambient = new Ambient(0.25f);
-        cam = new Camera();
+	public Game(Loader loader, MasterRenderer renderer) {
+		this.renderer = renderer;
 
-        terrain = new Terrain(loader, renderer);
-        int terrSize = 20;
-        for (int i = -terrSize / 2; i < terrSize / 2; i++) {
-            for (int j = -terrSize / 2; j < terrSize / 2; j++) {
-                terrain.addTerain(i, j);
-                ;
-            }
-        }
+		sun = new Light(new Vector3f(0, 20000, 20000), new Vector3f(1, 1, 1));
+		ambient = new Ambient(0.25f);
+		cam = new Camera();
 
-        RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
-        ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
-//        stemtex.useFakeLighting(true);
-        TexturedModel stem = new TexturedModel(stemobj, stemtex);
-        flora = new LinkedList<Entity>();
-        
-        
+		terrain = new Terrain(loader, renderer);
+		int terrSize = 20;
+		for (int i = -terrSize / 2; i < terrSize / 2; i++) {
+			for (int j = -terrSize / 2; j < terrSize / 2; j++) {
+				terrain.addChunk(i, j);
+				;
+			}
+		}
 
-        player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1, terrain);
+		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
+		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
+		//        stemtex.useFakeLighting(true);
+		TexturedModel stem = new TexturedModel(stemobj, stemtex);
+		flora = new LinkedList<Entity>();
 
-        picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
+		player = new Player(null, new Vector3f(0, 0, 0), 0, 90, 0, 1, terrain);
 
-        pickTest = new Entity(
-                new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader),
-                        new ModelTexture(loader.loadTexture("red.png", true))),
-                new Vector3f(0, 0, 0), 0, 0, 0, 2);
-//        for (int i = 0; i < 500; i++) {
-//            float x = (float) (Math.random()*10f)*Chunk.SIZE;
-//            float y = (float) (Math.random()*10f)*Chunk.SIZE;
-//            flora.add(new Entity(stem, new Vector3f(x,terrain.getHeightAt(x, y),y), 0, 0, 0, 1));
-//        }   
-    }
+		picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
 
-    public void tick() {
-        if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
-            player.reset();
-        }
-        terrain.makeRandom();
-        picker.update();
-        pickTest.setPosition(picker.getCurrentTerrainPoint());
-        pickTest.increasePosition(0, 0.1f, 0);
-        player.move();
-        player.moveCamera(cam);
+		pickTest = new Entity(new TexturedModel(OBJLoader.loadObjModel("circle.obj", loader),
+				new ModelTexture(loader.loadTexture("red.png", true))), new Vector3f(0, 0, 0), 0, 0, 0, 2);
+		//        for (int i = 0; i < 500; i++) {
+		//            float x = (float) (Math.random()*10f)*Chunk.SIZE;
+		//            float y = (float) (Math.random()*10f)*Chunk.SIZE;
+		//            flora.add(new Entity(stem, new Vector3f(x,terrain.getHeightAt(x, y),y), 0, 0, 0, 1));
+		//        }   
+	}
 
-        
-        terrain.updatePlayerPos(player);
-        terrain.processActives();
-        if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
-            renderer.processEntity(pickTest);
-        for (Entity entity : flora) {
-            renderer.processEntity(entity);
-        }
+	public void tick() {
+		if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
+			player.reset();
+		}
+		terrain.makeRandom();
+		picker.update();
+		pickTest.setPosition(picker.getCurrentTerrainPoint());
+		pickTest.increasePosition(0, 0.1f, 0);
+		player.move();
+		player.moveCamera(cam);
 
-    }
+		terrain.updatePlayerPos(player);
+		terrain.processActives();
+		if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
+			renderer.processEntity(pickTest);
+		for (Entity entity : flora) {
+			renderer.processEntity(entity);
+		}
 
-    public Light getSun() {
-        return sun;
-    }
+	}
 
-    public Ambient getAmbient() {
-        return ambient;
-    }
+	public Light getSun() {
+		return sun;
+	}
 
-    public Camera getCam() {
-        return cam;
-    }
+	public Ambient getAmbient() {
+		return ambient;
+	}
 
-    public Chunk getTerrain() {
-        return terrain.getChunk(0, 0);
-    }
+	public Camera getCam() {
+		return cam;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
+	public Chunk getTerrain() {
+		return terrain.getChunk(0, 0);
+	}
 
-    public Entity getPickTest() {
-        return pickTest;
-    }
+	public Player getPlayer() {
+		return player;
+	}
+
+	public Entity getPickTest() {
+		return pickTest;
+	}
 }

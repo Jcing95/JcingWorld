@@ -10,7 +10,7 @@ import java.io.File;
 import java.nio.DoubleBuffer;
 import java.text.DecimalFormat;
 
-import org.jcing.filesystem.JHashManager;
+import org.jcing.filesystem.ModuloTree;
 import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.font.FontType;

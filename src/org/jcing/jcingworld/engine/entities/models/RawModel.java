@@ -4,7 +4,7 @@ import org.jcing.jcingworld.engine.VAOData;
 
 public class RawModel {
 
-    private VAOData vaodata;
+	private VAOData vaodata;
     private int vertexCount;
 
     public RawModel(VAOData data, int vertexCount) {

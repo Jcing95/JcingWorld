@@ -1,10 +1,18 @@
 package org.jcing.jcingworld.engine.terrain;
 
+import java.io.Serializable;
+
 import org.lwjgl.util.vector.Vector3f;
 
-public class Tile {
+public class Tile implements Serializable{
 
-    private float[] x;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6529445147414158037L;
+	
+	
+	private float[] x;
     private float[] y;
     private float[] z;
     private Vector3f[] normal;

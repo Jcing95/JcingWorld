@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.LinkedList;
 
-import org.jcing.filesystem.FolderLoader;
+import org.jcing.filesystem.FileLoader;
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.logging.Logs;
 
@@ -40,7 +40,7 @@ public class TextureAtlas extends BaseImage {
     }
 
     protected void constructAtlas(String folderPath, Loader loader) {
-        LinkedList<BufferedImage> imgs = new FolderLoader().indexedLoad(folderPath);
+        LinkedList<BufferedImage> imgs = new FileLoader().indexedFolderLoad(folderPath);
         out.println("constructing atlas...");
         int size = (int) Math.ceil(Math.sqrt(imgs.size()));
         int width = imgs.getFirst().getWidth();
@@ -66,7 +66,7 @@ public class TextureAtlas extends BaseImage {
         this.textureSize = width;
         this.rows = size;
         imgs.clear();
-        FolderLoader.saveImage("map.png", base);
+        FileLoader.saveImage("map.png", base);
         out.println("succesfully constructed atlas: " + numTextures + " textures in " + rows
                 + " rows (" + this.width + "px²)");
     }

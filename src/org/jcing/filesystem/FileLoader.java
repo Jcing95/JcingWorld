@@ -4,64 +4,24 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 
 import org.jcing.jcingworld.logging.Logs;
 
-public class FolderLoader {
+public class FileLoader {
 
     private boolean indexedLoad = false;
     public static final String FOLDER_INDEX_FILENAME = "iidx.jll";
 
     private static PrintStream out = Logs.fileLoader;
-
-    /**
-     * loads all Images in a Folder and indexes them.<br>
-     * Not yet indexed images will be added at the end.
-     */
-    @SuppressWarnings("unchecked")
-    public LinkedList<BufferedImage> indexedLoad(String folderPath) {
-        out.println("loading images of Folder [" + folderPath + "]");
-        LinkedList<String> filepaths;
-        File imageIndex = new File(folderPath + "/loadata.Jdta");
-        if (imageIndex.exists()) {
-            out.println(FOLDER_INDEX_FILENAME + " exists!");
-            try {
-                FileInputStream fis = new FileInputStream(imageIndex);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                filepaths = (LinkedList<String>) ois.readObject();
-                ois.close();
-                fis.close();
-            } catch (IOException e) {
-                System.err.println("Could not load " + FOLDER_INDEX_FILENAME + " - IO problem!");
-                e.printStackTrace();
-                return null;
-            } catch (ClassNotFoundException e) {
-                System.err.println("Could not load " + FOLDER_INDEX_FILENAME + " - not found!");
-                e.printStackTrace();
-                return null;
-            } catch (ClassCastException e) {
-                System.err.println(
-                        "Could not load " + FOLDER_INDEX_FILENAME + " - probably corrupted!");
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            out.println(FOLDER_INDEX_FILENAME + " does not exist - will be created!");
-            filepaths = new LinkedList<String>();
-        }
-        indexedLoad = false;
-        LinkedList<BufferedImage> imgs = indexSubLoad(new LinkedList<BufferedImage>(), filepaths,
-                "res/" + folderPath);
-
-        indexedLoad = false;
-        return imgs;
-    }
 
     public static Object loadFile(File file) {
         Object obj = null;
@@ -82,11 +42,26 @@ public class FolderLoader {
         return obj;
     }
 
+    public static boolean saveFile(Serializable serializable, File file) {
+        file.mkdirs();
+        try {
+            FileOutputStream fis = new FileOutputStream(file);
+            ObjectOutputStream ois = new ObjectOutputStream(fis);
+            ois.writeObject(serializable);
+            ois.close();
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    
     public static Object loadFileInJar(String path) {
         Object obj = null;
         try {
             ObjectInputStream ois = new ObjectInputStream(
-                    new FolderLoader().getClass().getClassLoader().getResourceAsStream(path));
+                    new FileLoader().getClass().getClassLoader().getResourceAsStream(path));
             obj = ois.readObject();
             ois.close();
         } catch (IOException e) {
@@ -125,7 +100,51 @@ public class FolderLoader {
         }
     }
 
-    private LinkedList<BufferedImage> indexSubLoad(LinkedList<BufferedImage> imgs,
+    /**
+	 * loads all Images in a Folder and indexes them.<br>
+	 * Not yet indexed images will be added at the end.
+	 */
+	@SuppressWarnings("unchecked")
+	public LinkedList<BufferedImage> indexedFolderLoad(String folderPath) {
+	    out.println("loading images of Folder [" + folderPath + "]");
+	    LinkedList<String> filepaths;
+	    File imageIndex = new File(folderPath + FOLDER_INDEX_FILENAME);
+	    if (imageIndex.exists()) {
+	        out.println(FOLDER_INDEX_FILENAME + " exists!");
+	        try {
+	            FileInputStream fis = new FileInputStream(imageIndex);
+	            ObjectInputStream ois = new ObjectInputStream(fis);
+	            filepaths = (LinkedList<String>) ois.readObject();
+	            ois.close();
+	            fis.close();
+	        } catch (IOException e) {
+	            System.err.println("Could not load " + FOLDER_INDEX_FILENAME + " - IO problem!");
+	            e.printStackTrace();
+	            return null;
+	        } catch (ClassNotFoundException e) {
+	            System.err.println("Could not load " + FOLDER_INDEX_FILENAME + " - not found!");
+	            e.printStackTrace();
+	            return null;
+	        } catch (ClassCastException e) {
+	            System.err.println(
+	                    "Could not load " + FOLDER_INDEX_FILENAME + " - probably corrupted!");
+	            e.printStackTrace();
+	            return null;
+	        }
+	    } else {
+	        out.println(FOLDER_INDEX_FILENAME + " does not exist - will be created!");
+	        filepaths = new LinkedList<String>();
+	    }
+	    indexedLoad = false;
+	    LinkedList<BufferedImage> imgs = indexSubLoad(new LinkedList<BufferedImage>(), filepaths,
+	            "res/" + folderPath);
+	
+	    indexedLoad = false;
+	    saveFile(filepaths, imageIndex);
+	    return imgs;
+	}
+
+	private LinkedList<BufferedImage> indexSubLoad(LinkedList<BufferedImage> imgs,
             LinkedList<String> filepaths, String folderPath) {
         File location = new File(folderPath);
         if (!location.isDirectory()) {
