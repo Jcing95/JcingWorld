@@ -24,6 +24,11 @@ public class Maths {
         return l1 * p1.y + l2 * p2.y + l3 * p3.y;
     }
 
+    public static int fastFloor(double x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
+    }
+    
     public static Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry,
             float rz, float scale) {
         Matrix4f matrix = new Matrix4f();

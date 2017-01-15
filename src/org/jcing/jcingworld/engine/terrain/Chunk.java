@@ -39,8 +39,7 @@ public class Chunk {
     // TODO: terrain generation y Interpolation
 
     //    private float[][] heightMap;
-    private Tile[][] tiles;
-    private float[] tileTextureIndices;
+    ChunkData chunkdata;
 
     private float x;
     private float z;
@@ -55,6 +54,8 @@ public class Chunk {
     public Chunk(float gridX, float gridZ, Loader loader, TerrainShader shader,
             TextureAtlas textureAtlas, BaseImage blendMap, Terrain terrain) {
         //TODO: everything from manager
+        chunkData = ChunkData.load(gridX,gridZ);
+        
         this.textureAtlas = textureAtlas;
         this.blendMap = blendMap;
         this.x = gridX * SIZE;
@@ -82,46 +83,46 @@ public class Chunk {
         for (int j = 0; j < TILE_COUNT; j++) { // i == z
             for (int i = 0; i < TILE_COUNT; i++) { // j == x;
                 // SQUARE BOTTOMLEFT
-                vertices[vertexPointer * 3] = tiles[i][j].getX()[0];
-                vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[0];
-                vertices[vertexPointer * 3 + 2] = tiles[i][j].getZ()[0];
-                normals[vertexPointer * 3] = tiles[i][j].getNormal()[0].getX();
-                normals[vertexPointer * 3 + 1] = tiles[i][j].getNormal()[0].getY();
-                normals[vertexPointer * 3 + 2] = tiles[i][j].getNormal()[0].getZ();
+                vertices[vertexPointer * 3] = chunkdata.tiles[i][j].getX()[0];
+                vertices[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getY()[0];
+                vertices[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getZ()[0];
+                normals[vertexPointer * 3] = chunkdata.tiles[i][j].getNormal()[0].getX();
+                normals[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getNormal()[0].getY();
+                normals[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getNormal()[0].getZ();
                 textureCoords[vertexPointer * 2] = (float) j / ((float) TILE_COUNT);
                 textureCoords[vertexPointer * 2 + 1] = 1 - (float) i / ((float) TILE_COUNT);
                 vertexPointer++;
 
                 // SQUARE BOTTOMRIGHT
-                vertices[vertexPointer * 3] = tiles[i][j].getX()[1];
-                vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[1];
-                vertices[vertexPointer * 3 + 2] = tiles[i][j].getZ()[1];
-                normals[vertexPointer * 3] = tiles[i][j].getNormal()[1].getX();
-                normals[vertexPointer * 3 + 1] = tiles[i][j].getNormal()[1].getY();
-                normals[vertexPointer * 3 + 2] = tiles[i][j].getNormal()[1].getZ();
+                vertices[vertexPointer * 3] = chunkdata.tiles[i][j].getX()[1];
+                vertices[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getY()[1];
+                vertices[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getZ()[1];
+                normals[vertexPointer * 3] = chunkdata.tiles[i][j].getNormal()[1].getX();
+                normals[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getNormal()[1].getY();
+                normals[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getNormal()[1].getZ();
                 textureCoords[vertexPointer * 2] = (float) (j + 0f) / ((float) TILE_COUNT);
                 textureCoords[vertexPointer * 2 + 1] = 1
                         - (float) (i + 0.5f) / ((float) TILE_COUNT);
                 vertexPointer++;
 
                 // SQUARE TOPLEFT
-                vertices[vertexPointer * 3] = tiles[i][j].getX()[2];
-                vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[2];
-                vertices[vertexPointer * 3 + 2] = tiles[i][j].getZ()[2];
-                normals[vertexPointer * 3] = tiles[i][j].getNormal()[2].getX();
-                normals[vertexPointer * 3 + 1] = tiles[i][j].getNormal()[2].getY();
-                normals[vertexPointer * 3 + 2] = tiles[i][j].getNormal()[2].getZ();
+                vertices[vertexPointer * 3] = chunkdata.tiles[i][j].getX()[2];
+                vertices[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getY()[2];
+                vertices[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getZ()[2];
+                normals[vertexPointer * 3] = chunkdata.tiles[i][j].getNormal()[2].getX();
+                normals[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getNormal()[2].getY();
+                normals[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getNormal()[2].getZ();
                 textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
                 textureCoords[vertexPointer * 2 + 1] = 1 - (float) (i + 0f) / ((float) TILE_COUNT);
                 vertexPointer++;
 
                 // SQUARE TOPRIGHT
-                vertices[vertexPointer * 3] = tiles[i][j].getX()[3];
-                vertices[vertexPointer * 3 + 1] = tiles[i][j].getY()[3];
-                vertices[vertexPointer * 3 + 2] = tiles[i][j].getZ()[3];
-                normals[vertexPointer * 3] = tiles[i][j].getNormal()[3].getX();
-                normals[vertexPointer * 3 + 1] = tiles[i][j].getNormal()[3].getY();
-                normals[vertexPointer * 3 + 2] = tiles[i][j].getNormal()[3].getZ();
+                vertices[vertexPointer * 3] = chunkdata.tiles[i][j].getX()[3];
+                vertices[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getY()[3];
+                vertices[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getZ()[3];
+                normals[vertexPointer * 3] = chunkdata.tiles[i][j].getNormal()[3].getX();
+                normals[vertexPointer * 3 + 1] = chunkdata.tiles[i][j].getNormal()[3].getY();
+                normals[vertexPointer * 3 + 2] = chunkdata.tiles[i][j].getNormal()[3].getZ();
                 textureCoords[vertexPointer * 2] = (float) (j + 0.5f) / ((float) TILE_COUNT);
                 textureCoords[vertexPointer * 2 + 1] = 1
                         - (float) (i + 0.5f) / ((float) TILE_COUNT);
@@ -191,7 +192,7 @@ public class Chunk {
             }
         }
         out.println("loaded Mesh!");
-        return loader.loadToVAO(vertices, textureCoords, normals, indices, tileTextureIndices);
+        return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.tileTextureIndices);
     }
 
     //    private void loadheightMap() {
@@ -232,32 +233,12 @@ public class Chunk {
                 new File("saves/" + Game.saveGameName + "/" + x + "x" + z + "/tiles.chk"));
         tileTextureIndices = (float[]) FileLoader
                 .loadFile(new File("saves/" + Game.saveGameName + "/" + x + "x" + z + "/mat.Jmt"));
-
+        
+        
+        
         if (tiles == null || tileTextureIndices == null) {
 
-            tiles = new Tile[TILE_COUNT][TILE_COUNT];
-            float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
-            //		System.err.println(textureAtlas.getNumTextures() + " here: " + ((int)getGridX()) % (textureAtlas.getNumTextures()-2));
-            for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
-                for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
-                    float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE,
-                            (j + 1) * SQUARE_SIZE };
-                    float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE,
-                            (i + 1) * SQUARE_SIZE };
-                    float y[] = { terrain.getHeightAt(x[0] + this.x, z[0] + this.z),
-                            terrain.getHeightAt(x[1] + this.x, z[1] + this.z),
-                            terrain.getHeightAt(x[2] + this.x, z[2] + this.z),
-                            terrain.getHeightAt(x[3] + this.x, z[3] + this.z) };
-                    //                double tex = Math.floor(y[3]+MapGenerator.continentalHeightDelta)/(2.0*MapGenerator.continentalHeightDelta)*textureAtlas.getNumTextures();
-                    //                System.out.println(tex);
-
-                    //                if (Math.random() * 100 < 80) {
-                    //                    tex %= 3;
-                    //                }
-                    tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2, terrain.tex(x[3] + this.x,
-                            z[3] + this.z, textureAtlas.getNumTextures()));
-                }
-            }
+            
         }
 
         //		Logs.terrainRegistering.println("tileMap: ");
@@ -277,8 +258,34 @@ public class Chunk {
         constructTileTextureMap();
     }
 
+    private void generateTiles(){
+        chunkdata.tiles = new Tile[TILE_COUNT][TILE_COUNT];
+        float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
+        //      System.err.println(textureAtlas.getNumTextures() + " here: " + ((int)getGridX()) % (textureAtlas.getNumTextures()-2));
+        for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
+            for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
+                float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE,
+                        (j + 1) * SQUARE_SIZE };
+                float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE,
+                        (i + 1) * SQUARE_SIZE };
+                float y[] = { terrain.getHeightAt(x[0] + this.x, z[0] + this.z),
+                        terrain.getHeightAt(x[1] + this.x, z[1] + this.z),
+                        terrain.getHeightAt(x[2] + this.x, z[2] + this.z),
+                        terrain.getHeightAt(x[3] + this.x, z[3] + this.z) };
+                //                double tex = Math.floor(y[3]+MapGenerator.continentalHeightDelta)/(2.0*MapGenerator.continentalHeightDelta)*textureAtlas.getNumTextures();
+                //                System.out.println(tex);
+
+                //                if (Math.random() * 100 < 80) {
+                //                    tex %= 3;
+                //                }
+                chunkdata.tiles[j / 2][i / 2] = new Tile(x, y, z, j / 2, i / 2, terrain.tex(x[3] + this.x,
+                        z[3] + this.z, textureAtlas.getNumTextures()));
+            }
+        }
+    }
+    
     public void constructTileTextureMap() {
-        tileTextureIndices = new float[TILE_TEX_INDICE_COUNT * TILE_TEX_INDICE_COUNT];
+        chunkdata.tileTextureIndices = new float[TILE_TEX_INDICE_COUNT * TILE_TEX_INDICE_COUNT];
         //
         //        for (int i = 0; i < tileTextureIndices.length; i++) {
         //            tileTextureIndices[i] = textureAtlas.getNumTextures() - 1;
@@ -287,19 +294,19 @@ public class Chunk {
         // constructing
         for (int i = 1; i < TILE_COUNT; i++) {
             for (int j = 1; j < TILE_COUNT; j++) {
-                tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1 - j) * TILE_TEX_INDICE_COUNT
-                        + (i)] = tiles[j - 1][i - 1].textureIndex;
+                chunkdata.tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1 - j) * TILE_TEX_INDICE_COUNT
+                        + (i)] = chunkdata.tiles[j - 1][i - 1].textureIndex;
             }
         }
 
         out.println("PRINTING TERRAIN:");
 
         String t = "";
-        for (int i = 0; i < tileTextureIndices.length; i++) {
+        for (int i = 0; i < chunkdata.tileTextureIndices.length; i++) {
             if (i % TILE_TEX_INDICE_COUNT == 0) {
                 t += System.lineSeparator();
             }
-            t += "[" + (int) tileTextureIndices[i] + "]";
+            t += "[" + (int) chunkdata.tileTextureIndices[i] + "]";
         }
         out.println(t);
     }
@@ -360,31 +367,31 @@ public class Chunk {
      */
     public Tile[] getTileBorder(int index) {
         // R B L T
-        Tile[] border = new Tile[tiles[0].length - 1];
+        Tile[] border = new Tile[chunkdata.tiles[0].length - 1];
         switch (index) {
         case 0:
             //+X
             for (int i = 0; i < border.length; i++) {
-                border[i] = tiles[tiles.length - 2][i];
+                border[i] = chunkdata.tiles[chunkdata.tiles.length - 2][i];
             }
             return border;
         case 1:
 
             for (int i = 0; i < border.length; i++) {
-                border[border.length - 1 - i] = tiles[i][0];
+                border[border.length - 1 - i] = chunkdata.tiles[i][0];
             }
             return border;
         case 2:
             //left border
 
             for (int i = 0; i < border.length; i++) {
-                border[i] = tiles[0][i];
+                border[i] = chunkdata.tiles[0][i];
             }
             return border;
         case 3:
 
             for (int i = 0; i < border.length; i++) {
-                border[border.length - 1 - i] = tiles[i][tiles.length - 2];
+                border[border.length - 1 - i] = chunkdata.tiles[i][chunkdata.tiles.length - 2];
             }
             return border;
 
@@ -402,7 +409,7 @@ public class Chunk {
             out.println("SETTING " + getCoordinateString() + "(left side)");
             for (int i = 0; i < tiles.length; i++) {
                 //works
-                tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT)
+                chunkdata.tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT)
                         + (i + 1)] = tiles[i].textureIndex;
             }
 
@@ -411,7 +418,7 @@ public class Chunk {
             out.println("SETTING " + getCoordinateString() + "(top side)");
             for (int i = 0; i < tiles.length; i++) {
                 //				this.tiles[i][0] = tiles[i];
-                tileTextureIndices[(i + 1) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT
+                chunkdata.tileTextureIndices[(i + 1) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT
                         - 1] = tiles[i].textureIndex;
             }
             break;
@@ -419,7 +426,7 @@ public class Chunk {
             out.println("SETTING " + getCoordinateString() + "(right side)");
             for (int i = 0; i < tiles.length; i++) {
                 //				this.tiles[i][this.tiles[i].length - 1] = tiles[i];
-                tileTextureIndices[i + 1] = tiles[i].textureIndex;
+                chunkdata.tileTextureIndices[i + 1] = tiles[i].textureIndex;
             }
 
             break;
@@ -428,7 +435,7 @@ public class Chunk {
             out.println("SETTING " + getCoordinateString() + "(bottom side)");
             for (int i = 0; i < tiles.length; i++) {
                 //works
-                tileTextureIndices[(i + 1) * (TILE_TEX_INDICE_COUNT)] = tiles[i].textureIndex;
+                chunkdata.tileTextureIndices[(i + 1) * (TILE_TEX_INDICE_COUNT)] = tiles[i].textureIndex;
             }
             break;
         }
@@ -437,11 +444,11 @@ public class Chunk {
     private int txtindex = 0;
 
     public void makeRandom() {
-        for (int i = 0; i < TILE_COUNT + 1; i++) {
-            tileTextureIndices[txtindex] = (tileTextureIndices[txtindex] + 1)
-                    % textureAtlas.getNumTextures();
-            txtindex = (txtindex + 1) % (tileTextureIndices.length);
-        }
+//        for (int i = 0; i < TILE_COUNT + 1; i++) {
+//            tileTextureIndices[txtindex] = (tileTextureIndices[txtindex] + 1)
+//                    % textureAtlas.getNumTextures();
+//            txtindex = (txtindex + 1) % (tileTextureIndices.length);
+//        }
     }
 
     public boolean inTerrain(float globalX, float globalZ) {
@@ -456,7 +463,11 @@ public class Chunk {
     }
 
     public float[] getTextureIndices() {
-        return tileTextureIndices;
+        return chunkdata.tileTextureIndices;
+    }
+    
+    public ChunkData getChunkdata(){
+        return chunkdata;
     }
 
     @Deprecated
@@ -510,8 +521,8 @@ public class Chunk {
         return z;
     }
 
-    public Tile[][] getTiles() {
-        return tiles;
-    }
+//    public Tile[][] getTiles() {
+//        return chunkdata.tiles;
+//    }
 
 }
