@@ -17,6 +17,7 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.engine.terrain.Chunk;
+import org.jcing.jcingworld.engine.terrain.ChunkData;
 import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;
@@ -50,11 +51,11 @@ public class Game {
 		cam = new Camera();
 
 		terrain = new Terrain(loader, renderer);
-		int terrSize = 20;
-		for (int i = -terrSize / 2; i < terrSize / 2; i++) {
-			for (int j = -terrSize / 2; j < terrSize / 2; j++) {
+		int terrSize = 10;
+		for (int i = -terrSize; i <= terrSize; i++) {
+			for (int j = -terrSize; j <= terrSize; j++) {
+				System.out.println("adding" + i+ "|" + j);
 				terrain.addChunk(i, j);
-				;
 			}
 		}
 
@@ -120,5 +121,9 @@ public class Game {
 
 	public Entity getPickTest() {
 		return pickTest;
+	}
+
+	public void finish() {
+		ChunkData.saver.finish();
 	}
 }

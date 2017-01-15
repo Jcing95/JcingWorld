@@ -115,9 +115,11 @@ public class MainLoop {
 
             DisplayManager.updateDisplay();
         }
+        game.finish();
         guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();
+        
     }
 
     private void manageMouse() {
