@@ -10,10 +10,10 @@ import org.jcing.jcingworld.logging.Logs;
 
 public class DataChunk {
 
-	public HashMap<Integer, HashMap<Integer, ChunkData[][]>> loaded;
-	public static final String fileExtension = ".jdc";
+	public HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>> loaded;
+	public static final String fileExtension = ".jcf";
 
-	public static final int SIZE = 8;
+	public static final int SIZE = 2;
 
 	private HashMap<Integer, Integer> assembledKeys;
 	private boolean changed = true;
@@ -21,17 +21,17 @@ public class DataChunk {
 	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
 
 	public DataChunk() {
-		loaded = new HashMap<Integer, HashMap<Integer, ChunkData[][]>>();
+		loaded = new HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>>();
 	}
 
-	public void put(int x, int z, ChunkData dta) {
+	public void put(int x, int z, ChunkFrameData dta) {
 		int xF = makeF(x);
 		int zF = makeF(z);
 		if (!loaded(xF, zF)) {
 			if (!load(xF, zF)) {
 				if (!loaded.containsKey(xF))
-					loaded.put(xF, new HashMap<Integer, ChunkData[][]>());
-				loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
+					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
+				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
 			}
 		}
 		loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
@@ -39,7 +39,7 @@ public class DataChunk {
 		out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
 	}
 
-	public ChunkData get(int x, int z) {
+	public ChunkFrameData get(int x, int z) {
 		int xF = makeF(x);
 		int zF = makeF(z);
 		if (loaded(xF, zF)) {
@@ -57,10 +57,10 @@ public class DataChunk {
 	}
 
 	private boolean load(int xF, int zF) {
-		ChunkData[][] fromFile = (ChunkData[][]) FileLoader.loadFile(genFileName(xF, zF));
+		ChunkFrameData[][] fromFile = (ChunkFrameData[][]) FileLoader.loadFile(genFileName(xF, zF));
 		if (fromFile != null) {
 			if (!loaded.containsKey(xF)) {
-				loaded.put(xF, new HashMap<Integer, ChunkData[][]>());
+				loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
 			}
 			loaded.get(xF).put(zF, fromFile);
 			changed = true;
@@ -101,7 +101,7 @@ public class DataChunk {
 
 		for (int x : assembledKeys.keySet()) {
 			out.println("- [" + x + "][" + assembledKeys.get(x) + "]");
-			ChunkData[][] dta = loaded.get(x).get(assembledKeys.get(x));
+			ChunkFrameData[][] dta = loaded.get(x).get(assembledKeys.get(x));
 			out.println("subChunk:");
 
 			int length = (x > assembledKeys.get(x)) ? ("" + x).length() : ("" + assembledKeys.get(x)).length();
@@ -152,7 +152,7 @@ public class DataChunk {
 	}
 
 	private File genFileName(int xF, int zF) {
-		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + fileExtension);
+		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + "/frame" +fileExtension);
 	}
 
 	private int makeF(int x){

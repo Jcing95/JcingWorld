@@ -5,7 +5,6 @@ import org.openSimplex.OpenSimplexNoise;
 public class MapGenerator {
 
     private OpenSimplexNoise noise;
-    private OpenSimplexNoise misc;
 
 //    private static float heightDelta = 7.25f;
 //    private static float interpolation = 22.75f;
@@ -28,7 +27,6 @@ public class MapGenerator {
 
     public MapGenerator(long seed) {
         noise = new OpenSimplexNoise(seed);
-        misc = new OpenSimplexNoise(seed / 2);
     }
 
     private float noise(float x, float z, float delta, float interpolation) {

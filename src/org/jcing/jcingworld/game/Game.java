@@ -17,7 +17,6 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.engine.terrain.Chunk;
-import org.jcing.jcingworld.engine.terrain.ChunkData;
 import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;

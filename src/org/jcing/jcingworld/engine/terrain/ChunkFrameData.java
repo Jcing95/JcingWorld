@@ -2,7 +2,7 @@ package org.jcing.jcingworld.engine.terrain;
 
 import java.io.Serializable;
 
-public class ChunkData implements Serializable{
+public class ChunkFrameData implements Serializable{
     /**
      * 
      */
@@ -10,8 +10,8 @@ public class ChunkData implements Serializable{
     private static final long serialVersionUID = 8736427281334570040L;    
     
 	public int x, z;
-    public Tile[] tiles;
-    public float[] tileTextureIndices;
+    public Tile[] topTiles;
+    public float[] topTileTextureIndices; //TODO: keep topTileTextureIndice concurrent
     
 	public boolean initialized;
     
@@ -21,18 +21,18 @@ public class ChunkData implements Serializable{
 	}
 	
 	public Tile getTile(int x, int z){
-		return tiles[calcTilesIndex(x, z)];
+		return topTiles[calcTilesIndex(x, z)];
 	}
 	
-	public ChunkData(){
-		tiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
+	public ChunkFrameData(){
+		topTiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
 	}
 	
 	
-    public static ChunkData load(int x, int z){    
-    	ChunkData dta = Chunk.saver.get(x,z);
+    public static ChunkFrameData load(int x, int z){    
+    	ChunkFrameData dta = Chunk.saver.get(x,z);
     	if(dta == null){
-    		dta = new ChunkData();
+    		dta = new ChunkFrameData();
     		dta.x = x;
     		dta.z = z;
     		dta.initialized = false;
@@ -46,7 +46,7 @@ public class ChunkData implements Serializable{
     }
 
 	public void setTile(int x, int z, Tile tile) {
-		tiles[calcTilesIndex(x, z)] = tile;
+		topTiles[calcTilesIndex(x, z)] = tile;
 	}
     
 }

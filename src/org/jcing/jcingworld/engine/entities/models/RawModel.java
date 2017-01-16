@@ -1,6 +1,7 @@
 package org.jcing.jcingworld.engine.entities.models;
 
 import org.jcing.jcingworld.engine.VAOData;
+import org.lwjgl.opengl.GL30;
 
 public class RawModel {
 
@@ -24,4 +25,8 @@ public class RawModel {
         return vertexCount;
     }
 
+    public void delete(){
+    	GL30.glDeleteVertexArrays(vaodata.getVAO());
+    }
+    
 }

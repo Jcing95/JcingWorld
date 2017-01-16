@@ -1,6 +1,5 @@
 package org.jcing.jcingworld.engine.terrain;
 
-import java.awt.Point;
 import java.io.PrintStream;
 
 import org.jcing.jcingworld.engine.Loader;
@@ -10,7 +9,6 @@ import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
-import org.lwjgl.util.vector.Vector2f;
 
 /**
  * 
@@ -40,7 +38,7 @@ public class Chunk {
 	// TODO: terrain generation y Interpolation
 
 	// private float[][] heightMap;
-	ChunkData chunkdata;
+	ChunkFrameData chunkdata;
 
 	// private Point gridPos;
 	private RawModel model;
@@ -48,8 +46,8 @@ public class Chunk {
 	private BaseImage blendMap;
 	private Terrain terrain;
 
-	private PrintStream info = Logs.subLog(Logs.chunkLoading, "info", false);
-	private PrintStream out = Logs.subLog(Logs.chunkLoading, "Chunk", false);
+	private static PrintStream info = Logs.subLog(Logs.chunkLoading, "info", false);
+	private static PrintStream out = Logs.subLog(Logs.chunkLoading, "Chunk", false);
 	float x, z;
 
 	public Chunk(int gridX, int gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap, Terrain terrain) {
@@ -60,7 +58,7 @@ public class Chunk {
 		this.blendMap = blendMap;
 		this.terrain = terrain;
 		// gridPos = new Vector2f(gridX, gridZ);
-		chunkdata = ChunkData.load(gridX, gridZ);
+		chunkdata = ChunkFrameData.load(gridX, gridZ);
 		if (!chunkdata.initialized) {
 			out.println("CHUNK " + chunkdata.x + "|" + chunkdata.z + " WAS NOT INITIALIZED (" + Maths.fastFloor(chunkdata.x / DataChunk.SIZE) + "|"
 					+ Maths.fastFloor(chunkdata.z / DataChunk.SIZE) + ") ...");
@@ -193,75 +191,7 @@ public class Chunk {
 			}
 		}
 		info.println("loaded Mesh!");
-		return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.tileTextureIndices);
-	}
-
-	// private void loadheightMap() {
-	// // Random random = new Random();
-	// heightMap = new float[VERTEX_COUNT][VERTEX_COUNT];
-	// if (!FLAT) {
-	// for (int i = 0; i < heightMap.length; i++) {
-	// for (int j = 0; j < heightMap[i].length; j++) {
-	// heightMap[j][i] = getNoiseHeight(i, j);
-	// // if (i == 0 && j == 0) {
-	// // heightMap[j][i] = 1 + random.nextFloat();
-	// // } else {
-	// // float delta = random.nextFloat() * maxDelta;
-	// // if (j == 0) {
-	// // heightMap[j][i] = heightMap[j][i - 1] - maxDelta / 2 + delta;
-	// // } else if (i == 0) {
-	// // heightMap[j][i] = heightMap[j - 1][i] - maxDelta / 2 + delta;
-	// // } else {
-	// // heightMap[j][i] = (heightMap[j][i - 1] + heightMap[j - 1][i]) / 2.0f
-	// // - maxDelta / 2 + delta;
-	// // }
-	// // }
-	// }
-	// }
-	// }
-	// }
-
-	public boolean dismiss() {
-		return true;
-		// FileLoader.threadedSaveFile(tiles, new File("saves/" +
-		// Game.saveGameName + "/" + x + "x" + z + "/tiles.chk"));
-		// FileLoader.threadedSaveFile(tileTextureIndices, new File("saves/" +
-		// Game.saveGameName + "/" + x + "x" + z + "/mat.Jmt"));
-		// tiles = null;
-		// tileTextureIndices = null;
-		// return true;
-	}
-
-	private void fetchTiles() {
-		// tiles = (Tile[][]) FileLoader.loadFile(
-		// new File("saves/" + Game.saveGameName + "/" + x + "x" + z +
-		// "/tiles.chk"));
-		// tileTextureIndices = (float[]) FileLoader
-		// .loadFile(new File("saves/" + Game.saveGameName + "/" + x + "x" + z +
-		// "/mat.Jmt"));
-		//
-		//
-		//
-		// if (tiles == null || tileTextureIndices == null) {
-		//
-		//
-		// }
-
-		// Logs.terrainRegistering.println("tileMap: ");
-		// String t = System.lineSeparator() + "0: ";
-		// for (int i = 0; i < tiles.length; i++) {
-		// for (int j = 0; j < tiles[0].length; j++) {
-		// if(tiles[j][i] != null)
-		// t += "["+j+"]";
-		// else{
-		// t += "[X]";
-		// }
-		// }
-		// t += System.lineSeparator();
-		// t+= i + ": ";
-		// }
-		// Logs.terrainRegistering.println(t);
-
+		return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.topTileTextureIndices);
 	}
 
 	private void generateTiles() {
@@ -288,7 +218,7 @@ public class Chunk {
 	}
 
 	public void constructTileTextureMap() {
-		chunkdata.tileTextureIndices = new float[TILE_TEX_INDICE_COUNT * TILE_TEX_INDICE_COUNT];
+		chunkdata.topTileTextureIndices = new float[TILE_TEX_INDICE_COUNT * TILE_TEX_INDICE_COUNT];
 		//
 		// for (int i = 0; i < tileTextureIndices.length; i++) {
 		// tileTextureIndices[i] = textureAtlas.getNumTextures() - 1;
@@ -297,18 +227,18 @@ public class Chunk {
 		// constructing
 		for (int i = 1; i < TILE_COUNT; i++) {
 			for (int j = 1; j < TILE_COUNT; j++) {
-				chunkdata.tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1 - j) * TILE_TEX_INDICE_COUNT + (i)] = chunkdata.getTile(j - 1, i - 1).textureIndex;
+				chunkdata.topTileTextureIndices[(TILE_TEX_INDICE_COUNT - 1 - j) * TILE_TEX_INDICE_COUNT + (i)] = chunkdata.getTile(j - 1, i - 1).textureIndex;
 			}
 		}
 
 		info.println("PRINTING TERRAIN:");
 
 		String t = "";
-		for (int i = 0; i < chunkdata.tileTextureIndices.length; i++) {
+		for (int i = 0; i < chunkdata.topTileTextureIndices.length; i++) {
 			if (i % TILE_TEX_INDICE_COUNT == 0) {
 				t += System.lineSeparator();
 			}
-			t += "[" + (int) chunkdata.tileTextureIndices[i] + "]";
+			t += "[" + (int) chunkdata.topTileTextureIndices[i] + "]";
 		}
 		info.println(t);
 	}
@@ -413,7 +343,7 @@ public class Chunk {
 			out.println("SETTING " + getCoordinateString() + "(left side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// works
-				chunkdata.tileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT) + (i + 1)] = tiles[i].textureIndex;
+				chunkdata.topTileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT) + (i + 1)] = tiles[i].textureIndex;
 			}
 
 			break;
@@ -421,14 +351,14 @@ public class Chunk {
 			out.println("SETTING " + getCoordinateString() + "(top side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// this.tiles[i][0] = tiles[i];
-				chunkdata.tileTextureIndices[(i + 1) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT - 1] = tiles[i].textureIndex;
+				chunkdata.topTileTextureIndices[(i + 1) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT - 1] = tiles[i].textureIndex;
 			}
 			break;
 		case 2:
 			out.println("SETTING " + getCoordinateString() + "(right side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// this.tiles[i][this.tiles[i].length - 1] = tiles[i];
-				chunkdata.tileTextureIndices[i + 1] = tiles[i].textureIndex;
+				chunkdata.topTileTextureIndices[i + 1] = tiles[i].textureIndex;
 			}
 
 			break;
@@ -437,13 +367,11 @@ public class Chunk {
 			out.println("SETTING " + getCoordinateString() + "(bottom side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// works
-				chunkdata.tileTextureIndices[(i + 1) * (TILE_TEX_INDICE_COUNT)] = tiles[i].textureIndex;
+				chunkdata.topTileTextureIndices[(i + 1) * (TILE_TEX_INDICE_COUNT)] = tiles[i].textureIndex;
 			}
 			break;
 		}
 	}
-
-	private int txtindex = 0;
 
 	public void makeRandom() {
 		// for (int i = 0; i < TILE_COUNT + 1; i++) {
@@ -465,10 +393,10 @@ public class Chunk {
 	}
 
 	public float[] getTextureIndices() {
-		return chunkdata.tileTextureIndices;
+		return chunkdata.topTileTextureIndices;
 	}
 
-	public ChunkData getChunkdata() {
+	public ChunkFrameData getChunkdata() {
 		return chunkdata;
 	}
 
@@ -517,6 +445,10 @@ public class Chunk {
 
 	public float getZ() {
 		return this.z;
+	}
+
+	public void dismiss() {
+		model.delete();
 	}
 
 	// public Tile[][] getTiles() {
