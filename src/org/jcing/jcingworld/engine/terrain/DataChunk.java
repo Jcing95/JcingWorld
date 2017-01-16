@@ -14,12 +14,12 @@ public class DataChunk {
 	public HashMap<Integer, HashMap<Integer, ChunkData[][]>> loaded;
 	public static final String fileExtension = ".jdc";
 
-	public static final int SIZE = 4;
+	public static final int SIZE = 8;
 
 	private HashMap<Integer, Integer> assembledKeys;
 	private boolean changed = true;
 
-	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", true);
+	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
 
 	public DataChunk() {
 		loaded = new HashMap<Integer, HashMap<Integer, ChunkData[][]>>();
@@ -48,7 +48,7 @@ public class DataChunk {
 			return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 		} else {
 			if (load(xF, zF)) {
-				out.println("loading existing CD[" + x + "|" + z + "]");
+				System.out.println("loading existing CD (" + xF + "|" + zF + ")[" + x + "|" + z + "]");
 				return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 			} else {
 				out.println("tried to load CD[" + x + "|" + z + "]");
@@ -72,7 +72,7 @@ public class DataChunk {
 	}
 
 	private void save(int xF, int zF) {
-		FileLoader.saveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
+		FileLoader.threadedSaveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
 		loaded.get(xF).remove(zF);
 		if (loaded.get(xF).size() == 0) {
 			loaded.remove(xF);
@@ -97,41 +97,43 @@ public class DataChunk {
 	}
 
 	public void printStatus() {
-//		assembleKeys();
-//		out.println("Printing DataChunk status");
-//
-//		for (int x : assembledKeys.keySet()) {
-//			out.println("- [" + x + "][" + assembledKeys.get(x) + "]");
-//			ChunkData[][] dta = loaded.get(x).get(assembledKeys.get(x));
-//			out.println("subChunk:");
-//
-//			int length = (x > assembledKeys.get(x)) ? ("" + x).length() : ("" + assembledKeys.get(x)).length();
-//			String notLoaded = "[";
-//			for (int j = 0; j < length; j++) {
-//				notLoaded += "X";
-//			}
-//			notLoaded += "|";
-//			for (int j = 0; j < length; j++) {
-//				notLoaded += "X";
-//			}
-//			notLoaded += "]";
-//
-//			for (int i = 0; i < dta.length; i++) {
-//				String line = "----";
-//				for (int j = 0; j < dta.length; j++) {
-//					if (dta[i][j] != null) {
-//						line += "[" + x + i + "|" + assembledKeys.get(x) + j + "]";
-//					} else {
-//						line += notLoaded;
-//					}
-//				}
-//				out.println(line);
-//			}
-//		}
+		assembleKeys();
+		out.println("Printing DataChunk status");
+
+		for (int x : assembledKeys.keySet()) {
+			out.println("- [" + x + "][" + assembledKeys.get(x) + "]");
+			ChunkData[][] dta = loaded.get(x).get(assembledKeys.get(x));
+			out.println("subChunk:");
+
+			int length = (x > assembledKeys.get(x)) ? ("" + x).length() : ("" + assembledKeys.get(x)).length();
+			String notLoaded = "[";
+			for (int j = 0; j < length; j++) {
+				notLoaded += "X";
+			}
+			notLoaded += "|";
+			for (int j = 0; j < length; j++) {
+				notLoaded += "X";
+			}
+			notLoaded += "]";
+
+			for (int i = 0; i < dta.length; i++) {
+				String line = "----";
+				for (int j = 0; j < dta.length; j++) {
+					if (dta[i][j] != null) {
+						line += "[" + x + i + "|" + assembledKeys.get(x) + j + "]";
+					} else {
+						line += notLoaded;
+					}
+				}
+				out.println(line);
+			}
+		}
 	}
 
 	public void finish() {
-		for (int x : assembleKeys().keySet()) {
+		assembleKeys();
+		WorldSaverFrame frame = new WorldSaverFrame();
+		for (int x : assembledKeys.keySet()) {
 			save(x, assembledKeys.get(x));
 		}
 	}
@@ -141,7 +143,7 @@ public class DataChunk {
 	}
 
 	private File genFileName(int xF, int zF) {
-		return new File(Game.saveGameName + "/" + xF + "_" + zF + fileExtension);
+		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + fileExtension);
 	}
 
 	private int makeF(int x){
@@ -155,6 +157,6 @@ public class DataChunk {
 		if (x >= 0) {
 			return x % SIZE;
 		}
-		return SIZE + (x % SIZE);
+		return -(x % SIZE);
 	}
 }

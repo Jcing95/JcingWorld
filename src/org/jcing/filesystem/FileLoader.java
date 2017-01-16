@@ -64,9 +64,33 @@ public class FileLoader {
 	//    }
 
 	public static boolean saveFile(Serializable toSave, File file) {
-		if (file.getParentFile() != null)
+		if (file.getParentFile() != null && !file.getParentFile().exists())
 			file.getParentFile().mkdirs();
-		if (file.exists()) {
+//		if (file.exists()) {
+//			file.renameTo(new File(file.getPath() + ".BACKUP"));
+//		}
+		try {
+			FileOutputStream fos = new FileOutputStream(file.getPath());
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(toSave);
+			oos.close();
+			fos.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("File not found exception. Should not happen!!");
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			System.err.println("Could not save " + toSave.getClass().getName() + " at: " + file.getPath());
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public static boolean saveFile(Serializable toSave, File file, boolean backup) {
+		if (file.getParentFile() != null && !file.getParentFile().exists())
+			file.getParentFile().mkdirs();
+		if (backup && file.exists()) {
 			file.renameTo(new File(file.getPath() + ".BACKUP"));
 		}
 		try {
@@ -91,25 +115,7 @@ public class FileLoader {
 	public static void threadedSaveFile(Serializable toSave, File file) {
 		Thread th = new Thread(){
 			public void run(){
-				if (file.getParentFile() != null)
-					file.getParentFile().mkdirs();
-				if (file.exists()) {
-					file.renameTo(new File(file.getPath() + ".BACKUP"));
-				}
-				try {
-					
-					FileOutputStream fos = new FileOutputStream(file.getPath());
-					ObjectOutputStream oos = new ObjectOutputStream(fos);
-					oos.writeObject(toSave);
-					oos.close();
-					fos.close();
-				} catch (FileNotFoundException e) {
-					System.err.println("File not found exception. Should not happen!!");
-					e.printStackTrace();
-				} catch (IOException e) {
-					System.err.println("Could not save " + toSave.getClass().getName() + " at: " + file.getPath());
-					e.printStackTrace();
-				}
+				saveFile(toSave,file);
 			}
 		};
 		th.start();

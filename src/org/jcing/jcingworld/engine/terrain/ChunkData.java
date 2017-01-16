@@ -7,19 +7,29 @@ public class ChunkData implements Serializable{
      * 
      */
 	
-	public static final DataChunk saver = new DataChunk();
-	
-    private static final long serialVersionUID = 8736427281334570040L;
+    private static final long serialVersionUID = 8736427281334570040L;    
     
 	public int x, z;
-    public Tile[][] tiles;
+    public Tile[] tiles;
     public float[] tileTextureIndices;
     
 	public boolean initialized;
     
 	
+	private int calcTilesIndex(int x, int z){
+		return z*(Chunk.TILE_COUNT)+x;
+	}
+	
+	public Tile getTile(int x, int z){
+		return tiles[calcTilesIndex(x, z)];
+	}
+	
+	public ChunkData(){
+		tiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
+	}
+	
     public static ChunkData load(int x, int z){
-    	ChunkData dta = saver.get(x,z);
+    	ChunkData dta = Chunk.saver.get(x,z);
     	if(dta == null){
     		dta = new ChunkData();
     		dta.x = x;
@@ -31,7 +41,11 @@ public class ChunkData implements Serializable{
     
 	public void apply(){
     	initialized = true;
-    	saver.put(x, z, this);
+    	Chunk.saver.put(x, z, this);
     }
+
+	public void setTile(int x, int z, Tile tile) {
+		tiles[calcTilesIndex(x, z)] = tile;
+	}
     
 }

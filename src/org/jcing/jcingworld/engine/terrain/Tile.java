@@ -19,10 +19,9 @@ public class Tile implements Serializable{
 
 //    private Vector3f normal;
     private boolean swapTriangles; // false wenn oben/rechts nicht tiefste
-    int textureIndex;
-    int indexX, indexY;
+    public int textureIndex;
 
-    public Tile(float[] x, float[] y, float[] z, int indexX, int indexY, int textureIndex) {
+    public Tile(float[] x, float[] y, float[] z, int textureIndex) {
         this.x = new float[4];
         this.y = new float[4];
         this.z = new float[4];
@@ -31,8 +30,6 @@ public class Tile implements Serializable{
             this.y[i] = y[i];
             this.z[i] = z[i];
         }
-        this.indexX = indexX;
-        this.indexY = indexY;
         this.textureIndex = textureIndex;
         calcSwap();
         calcNormal();
@@ -79,13 +76,5 @@ public class Tile implements Serializable{
 
     public boolean isSwapTriangles() {
         return swapTriangles;
-    }
-
-    public int getIndexX() {
-        return indexX;
-    }
-
-    public int getIndexY() {
-        return indexY;
     }
 }

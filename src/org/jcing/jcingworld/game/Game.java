@@ -71,7 +71,7 @@ public class Game {
 		//            flora.add(new Entity(stem, new Vector3f(x,terrain.getHeightAt(x, y),y), 0, 0, 0, 1));
 		//        }   
 		
-		ChunkData.saver.printStatus();
+		Chunk.saver.printStatus();
 	}
 
 	public void tick() {
@@ -119,6 +119,6 @@ public class Game {
 	}
 
 	public void finish() {
-		ChunkData.saver.finish();
+		Chunk.saver.finish();
 	}
 }
