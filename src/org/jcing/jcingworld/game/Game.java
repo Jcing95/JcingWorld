@@ -76,6 +76,8 @@ public class Game {
 		//            float y = (float) (Math.random()*10f)*Chunk.SIZE;
 		//            flora.add(new Entity(stem, new Vector3f(x,terrain.getHeightAt(x, y),y), 0, 0, 0, 1));
 		//        }   
+		
+		ChunkData.saver.printStatus();
 	}
 
 	public void tick() {

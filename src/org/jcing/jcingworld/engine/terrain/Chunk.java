@@ -1,15 +1,13 @@
 package org.jcing.jcingworld.engine.terrain;
 
-import java.io.File;
+import java.awt.Point;
 import java.io.PrintStream;
 
-import org.jcing.filesystem.FileLoader;
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
-import org.jcing.jcingworld.game.Game;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
@@ -42,7 +40,7 @@ public class Chunk {
 	// private float[][] heightMap;
 	ChunkData chunkdata;
 
-	private Vector2f gridPos;
+//	private Point gridPos;
 	private RawModel model;
 	private TextureAtlas textureAtlas;
 	private BaseImage blendMap;
@@ -59,12 +57,12 @@ public class Chunk {
 		this.textureAtlas = textureAtlas;
 		this.blendMap = blendMap;
 		this.terrain = terrain;
-		gridPos = new Vector2f(gridX, gridZ);
+//		gridPos = new Vector2f(gridX, gridZ);
 		chunkdata = ChunkData.load(gridX, gridZ);
 		if(chunkdata == null){
 			chunkdata = new ChunkData();
-			chunkdata.x = (int)x;
-			chunkdata.z = (int)z;
+			chunkdata.x = gridX;
+			chunkdata.z = gridZ;
 			if(!chunkdata.initialized){
 				System.out.println("CHUNK " + chunkdata.x+"|"+chunkdata.z+" NOT INITIALIZED ("+Maths.fastFloor(chunkdata.x/DataChunk.SIZE)+"|"+Maths.fastFloor(chunkdata.z/DataChunk.SIZE)+") ...");
 				generateTiles();
@@ -515,16 +513,12 @@ public class Chunk {
 		return blendMap;
 	}
 
-	public Vector2f getGridPos() {
-		return gridPos;
+	public int getGridX() {
+		return chunkdata.x;
 	}
 
-	public float getGridX() {
-		return gridPos.x;
-	}
-
-	public float getGridZ() {
-		return gridPos.y;
+	public int getGridZ() {
+		return chunkdata.z;
 	}
 
 	public float getX() {
