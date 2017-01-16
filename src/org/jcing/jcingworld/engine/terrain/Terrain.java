@@ -63,52 +63,52 @@ public class Terrain {
     }
 
     public void initPosition(int x, int z) {
-		for (Point p : activesTemplate) {
-			addChunk(p.x+x,p.y+z);
-		}
-	}
+        for (Point p : activesTemplate) {
+            addChunk(p.x + x, p.y + z);
+        }
+    }
 
-	private void addChunk(int x, int z) {
-	    Chunk chunk = new Chunk(x, z, loader, renderer.getTerrainShader(), atlas, blendMap, this);
-	    if (chunks.get(x) == null) {
-	        HashMap<Integer, Chunk> newMap = new HashMap<Integer, Chunk>(
-	                RENDERDISTANCERADIUS * 2 + 1, 1);
-	        newMap.put(z, chunk);
-	        chunks.put(x, newMap);
-	    }
-	    chunks.get(x).put(z, chunk);
-	    chunk.registerNeighbour(getChunk(x + 1, z), true);
-	    chunk.registerNeighbour(getChunk(x - 1, z), true);
-	    chunk.registerNeighbour(getChunk(x, z + 1), true);
-	    chunk.registerNeighbour(getChunk(x, z - 1), true);
-	    loadedChunks.add(new Point(chunk.getGridX(), chunk.getGridZ()));
-	}
+    private void addChunk(int x, int z) {
+        Chunk chunk = new Chunk(x, z, loader, renderer.getTerrainShader(), atlas, blendMap, this);
+        if (chunks.get(x) == null) {
+            HashMap<Integer, Chunk> newMap = new HashMap<Integer, Chunk>(
+                    RENDERDISTANCERADIUS * 2 + 1, 1);
+            newMap.put(z, chunk);
+            chunks.put(x, newMap);
+        }
+        chunks.get(x).put(z, chunk);
+        chunk.registerNeighbour(getChunk(x + 1, z), true);
+        chunk.registerNeighbour(getChunk(x - 1, z), true);
+        chunk.registerNeighbour(getChunk(x, z + 1), true);
+        chunk.registerNeighbour(getChunk(x, z - 1), true);
+        loadedChunks.add(new Point(chunk.getGridX(), chunk.getGridZ()));
+    }
 
-	public void updatePlayerPos(Player player) {
-	    //		if (chunkAtWorldPos(player.getPosition().getX(), player.getPosition().getZ()) != playerPos) {
-	    //			playerPos = chunkAtWorldPos(player.getPosition().getX(), player.getPosition().getZ());
-	    //			for (Vector2f curr : actives) {
-	    //				if (getChunk((int) (curr.x + playerPos.x), (int) (curr.y + playerPos.y)) == null) {
-	    //					addChunk((int) (curr.x + playerPos.x), (int) (curr.y + playerPos.y));
-	    //				}
-	    //			}
-	    //			checkPackageChange();
-	    //		}
-	}
+    public void updatePlayerPos(Player player) {
+        if (chunkAtWorldPos(player.getPosition().getX(),
+                player.getPosition().getZ()) != playerPos) {
+            playerPos = chunkAtWorldPos(player.getPosition().getX(), player.getPosition().getZ());
+            for (Point curr : activesTemplate) {
+                if (getChunk(curr.x + playerPos.x, curr.y + playerPos.y) == null) {
+//                    System.err.println("adding chunk!");
+                    addChunk(curr.x + playerPos.x, curr.y + playerPos.y);
+                }
+            }
+        }
+    }
 
-	public void processActives() {
-	    for (Point p : activesTemplate) {
-	        renderer.processTerrain(getChunk(p));
-	    }
-	}
+    public void processActives() {
+        for (Point p : activesTemplate) {
+            renderer.processTerrain(getChunk(p.x+playerPos.x,p.y+playerPos.y));
+        }
+    }
 
-	public List<Point> getActives() {
-	    return activesTemplate;
-	}
+    public List<Point> getActives() {
+        return activesTemplate;
+    }
 
-	public Point chunkAtWorldPos(float x, float z) {
-        return new Point((int) Maths.fastFloor(x / Chunk.SIZE),
-                (int) Maths.fastFloor(z / Chunk.SIZE));
+    public Point chunkAtWorldPos(float x, float z) {
+        return new Point(Maths.fastFloor(x / Chunk.SIZE),Maths.fastFloor(z / Chunk.SIZE));
     }
 
     public Chunk getChunk(int x, int y) {
@@ -160,8 +160,6 @@ public class Terrain {
     //        }
     //        return answer;
     //    }
-
-    
 
     //	private void checkPackageChange() {
     //		if(playerPackagePos == null){

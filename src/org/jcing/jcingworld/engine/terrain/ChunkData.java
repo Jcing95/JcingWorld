@@ -28,7 +28,8 @@ public class ChunkData implements Serializable{
 		tiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
 	}
 	
-    public static ChunkData load(int x, int z){
+	
+    public static ChunkData load(int x, int z){    
     	ChunkData dta = Chunk.saver.get(x,z);
     	if(dta == null){
     		dta = new ChunkData();

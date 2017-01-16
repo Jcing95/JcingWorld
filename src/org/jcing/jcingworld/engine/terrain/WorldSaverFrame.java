@@ -15,10 +15,11 @@ public class WorldSaverFrame extends JFrame{
 	public WorldSaverFrame(){
 		setSize(300,200);
 		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
-	
+	public double percent;
 	public void paint(Graphics g){
-		
+		g.fillRect(0, 0, (int)(300*percent), 200);
 	}
 }

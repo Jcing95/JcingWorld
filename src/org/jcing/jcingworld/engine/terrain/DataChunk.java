@@ -7,7 +7,6 @@ import java.util.HashMap;
 import org.jcing.filesystem.FileLoader;
 import org.jcing.jcingworld.game.Game;
 import org.jcing.jcingworld.logging.Logs;
-import org.jcing.jcingworld.toolbox.Maths;
 
 public class DataChunk {
 
@@ -72,7 +71,7 @@ public class DataChunk {
 	}
 
 	private void save(int xF, int zF) {
-		FileLoader.threadedSaveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
+		FileLoader.saveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
 		loaded.get(xF).remove(zF);
 		if (loaded.get(xF).size() == 0) {
 			loaded.remove(xF);
@@ -132,10 +131,20 @@ public class DataChunk {
 
 	public void finish() {
 		assembleKeys();
-		WorldSaverFrame frame = new WorldSaverFrame();
-		for (int x : assembledKeys.keySet()) {
-			save(x, assembledKeys.get(x));
-		}
+		Thread th = new Thread(){
+		    public void run(){
+		        WorldSaverFrame frame = new WorldSaverFrame();
+		        int i=0;
+		        for (int x : assembledKeys.keySet()) {
+		            frame.percent = (double)i/assembledKeys.size();
+		            frame.repaint();
+		            save(x, assembledKeys.get(x));
+		            i++;
+		        }
+		        frame.dispose();
+		    }
+		};
+		th.run();
 	}
 
 	private boolean loaded(int xF, int zF) {

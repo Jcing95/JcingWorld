@@ -33,6 +33,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLCapabilities;
 
 public class DisplayManager {
 
@@ -47,6 +48,8 @@ public class DisplayManager {
     public static long window;
 
     public static int fps;
+
+    public static GLCapabilities glCapabilities;
 
     public static long init() {
         PrintStream out = Logs.display;
@@ -126,7 +129,7 @@ public class DisplayManager {
         // LWJGL detects the context that is current in the current thread,
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
-        GL.createCapabilities();
+        glCapabilities = GL.createCapabilities();
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         out.println("Window succesfully created!");
