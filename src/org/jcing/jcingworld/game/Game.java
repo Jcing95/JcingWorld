@@ -51,13 +51,7 @@ public class Game {
 		cam = new Camera();
 
 		terrain = new Terrain(loader, renderer);
-		int terrSize = 10;
-		for (int i = -terrSize; i <= terrSize; i++) {
-			for (int j = -terrSize; j <= terrSize; j++) {
-				System.out.println("adding" + i+ "|" + j);
-				terrain.addChunk(i, j);
-			}
-		}
+		terrain.initPosition(0,0);
 
 		RawModel stemobj = OBJLoader.loadObjModel("stem.obj", loader);
 		ModelTexture stemtex = new ModelTexture(loader.loadTexture("stem.png", true));
@@ -84,7 +78,6 @@ public class Game {
 		if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
 			player.reset();
 		}
-		terrain.makeRandom();
 		picker.update();
 		pickTest.setPosition(picker.getCurrentTerrainPoint());
 		pickTest.increasePosition(0, 0.1f, 0);

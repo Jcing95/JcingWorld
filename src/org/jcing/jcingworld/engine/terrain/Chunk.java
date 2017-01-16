@@ -46,7 +46,8 @@ public class Chunk {
 	private BaseImage blendMap;
 	private Terrain terrain;
 
-	private PrintStream out = Logs.terrain;
+	private PrintStream info = Logs.subLog(Logs.chunkLoading, "info", false);
+	private PrintStream out = Logs.subLog(Logs.chunkLoading, "Chunk", false);
 	float x, z;
 
 	public Chunk(int gridX, int gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas,
@@ -59,25 +60,20 @@ public class Chunk {
 		this.terrain = terrain;
 //		gridPos = new Vector2f(gridX, gridZ);
 		chunkdata = ChunkData.load(gridX, gridZ);
-		if(chunkdata == null){
-			chunkdata = new ChunkData();
-			chunkdata.x = gridX;
-			chunkdata.z = gridZ;
-			if(!chunkdata.initialized){
-				System.out.println("CHUNK " + chunkdata.x+"|"+chunkdata.z+" NOT INITIALIZED ("+Maths.fastFloor(chunkdata.x/DataChunk.SIZE)+"|"+Maths.fastFloor(chunkdata.z/DataChunk.SIZE)+") ...");
-				generateTiles();
-				chunkdata.apply();
-			}
-			System.out.println("G" + gridZ + " d" + chunkdata.z);
+		if(!chunkdata.initialized){
+			out.println("CHUNK " + chunkdata.x+"|"+chunkdata.z+" WAS NOT INITIALIZED ("+Maths.fastFloor(chunkdata.x/DataChunk.SIZE)+"|"+Maths.fastFloor(chunkdata.z/DataChunk.SIZE)+") ...");
+			info.println("generating Chunk[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
+			generateTiles();
+			chunkdata.apply();
+			out.println("G" + gridZ + " d" + chunkdata.z);
 		}
-		out.println("generating Terrain[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
 		this.model = generateTerrain(loader, shader);
 
 	}
 
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
-		out.println("generated random Heightmap");
-		out.println("generated Tiles");
+		info.println("generated random Heightmap");
+		info.println("generated Tiles");
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
@@ -194,7 +190,7 @@ public class Chunk {
 
 			}
 		}
-		out.println("loaded Mesh!");
+		info.println("loaded Mesh!");
 		return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.tileTextureIndices);
 	}
 
@@ -308,7 +304,7 @@ public class Chunk {
 			}
 		}
 
-		out.println("PRINTING TERRAIN:");
+		info.println("PRINTING TERRAIN:");
 
 		String t = "";
 		for (int i = 0; i < chunkdata.tileTextureIndices.length; i++) {
@@ -317,7 +313,7 @@ public class Chunk {
 			}
 			t += "[" + (int) chunkdata.tileTextureIndices[i] + "]";
 		}
-		out.println(t);
+		info.println(t);
 	}
 
 	public void registerNeighbour(Chunk terrain, boolean first) {

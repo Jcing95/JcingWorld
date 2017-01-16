@@ -9,6 +9,10 @@ public final class Logs {
     private Logs() {
     }
 
+    public static PrintStream subLog(PrintStream sup, String name, boolean active){
+    	return logs.create(name,sup,active);
+    }
+    
     public static final PrintStreamManager logs = new PrintStreamManager();
 
     public static PrintStream display = logs.create("Display");

@@ -1,93 +1,89 @@
 package org.jcing.jcingworld.engine.terrain;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.jcing.filesystem.FileLoader;
 import org.jcing.jcingworld.game.Game;
+import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
-import org.lwjgl.util.vector.Vector2f;
 
 public class DataChunk {
 
 	public HashMap<Integer, HashMap<Integer, ChunkData[][]>> loaded;
 	public static final String fileExtension = ".jdc";
 
-	public static final int SIZE = 10;
+	public static final int SIZE = 4;
 
 	private HashMap<Integer, Integer> assembledKeys;
-	private boolean changed;
+	private boolean changed = true;
+
+	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", true);
 
 	public DataChunk() {
 		loaded = new HashMap<Integer, HashMap<Integer, ChunkData[][]>>();
 	}
 
-	private boolean loaded(int xF, int yF) {
-		return loaded.containsKey(xF)
-				&& loaded.get(xF).containsKey(yF);
+	public void put(int x, int z, ChunkData dta) {
+		int xF = makeF(x);
+		int zF = makeF(z);
+		if (!loaded(xF, zF)) {
+			if (!load(xF, zF)) {
+				if (!loaded.containsKey(xF))
+					loaded.put(xF, new HashMap<Integer, ChunkData[][]>());
+				loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
+			}
+		}
+		loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
+		changed = true;
+		out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
 	}
 
-	private void save(int xF, int yF) {
-		FileLoader.saveFile(loaded.get(xF).get(yF), new File(Game.saveGameName + "/" + xF + "_" + yF + fileExtension));
-		loaded.get(xF).remove(yF);
+	public ChunkData get(int x, int z) {
+		int xF = makeF(x);
+		int zF = makeF(z);
+		if (loaded(xF, zF)) {
+			out.println("got loaded CD[" + x + "|" + z + "] at (" +xF + "|" + zF + ")");
+			return loaded.get(xF).get(zF)[arr(x)][arr(z)];
+		} else {
+			if (load(xF, zF)) {
+				out.println("loading existing CD[" + x + "|" + z + "]");
+				return loaded.get(xF).get(zF)[arr(x)][arr(z)];
+			} else {
+				out.println("tried to load CD[" + x + "|" + z + "]");
+				return null;
+			}
+		}
+	}
+
+	private boolean load(int xF, int zF) {
+		ChunkData[][] fromFile = (ChunkData[][]) FileLoader.loadFile(genFileName(xF, zF));
+		if (fromFile != null) {
+			if (!loaded.containsKey(xF)) {
+				loaded.put(xF, new HashMap<Integer, ChunkData[][]>());
+			}
+			loaded.get(xF).put(zF, fromFile);
+			changed = true;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private void save(int xF, int zF) {
+		FileLoader.saveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
+		loaded.get(xF).remove(zF);
 		if (loaded.get(xF).size() == 0) {
 			loaded.remove(xF);
 		}
 	}
 
-//	private void save(Vector2f vec) {
-//		save(Maths.fastFloor(vec.x), Maths.fastFloor(vec.y));
-//	}
+	// private void save(Vector2f vec) {
+	// save(Maths.fastFloor(vec.x), Maths.fastFloor(vec.y));
+	// }
 
-	private boolean load(int xF, int yF) {
-    	ChunkData[][] ldt = (ChunkData[][]) FileLoader
-    			.loadFile(new File(Game.saveGameName + "/" + xF + "_" + yF + fileExtension));
-    	if (ldt != null) {
-    		if (!loaded.containsKey(xF)) {
-    			loaded.put(xF, new HashMap<Integer, ChunkData[][]>());
-    		}
-    		loaded.get(xF).put(yF, ldt);
-    		changed = true;
-    		return true;
-    	} else {
-    		return false;
-    	}
-    }
-
-    public void put(int x, int y, ChunkData dta) {
-    	if (!loaded(Maths.fastFloor(x / SIZE), Maths.fastFloor(y / SIZE))) {
-    		if (!load(Maths.fastFloor(x / SIZE), Maths.fastFloor(y / SIZE))) {
-    			if (!loaded.containsKey(Maths.fastFloor(x / SIZE)))
-    				loaded.put(Maths.fastFloor(x / SIZE), new HashMap<Integer, ChunkData[][]>());
-    			if (!loaded.get(Maths.fastFloor(x / SIZE)).containsKey(Maths.fastFloor(y / SIZE)))
-    				loaded.get(Maths.fastFloor(x / SIZE)).put(Maths.fastFloor(y / SIZE), new ChunkData[SIZE][SIZE]);
-    		}
-    	}
-    	loaded.get(Maths.fastFloor(x / SIZE)).get(Maths.fastFloor(y / SIZE))[Math.abs(x % SIZE)][Math
-    			.abs(y % SIZE)] = dta;
-    	changed = true;
-    	System.out.println("put " + x + "|" + y + " to saver ... (" + Maths.fastFloor(x / SIZE) + "|"
-    			+ Maths.fastFloor(y / SIZE) + ")[" + Math.abs(x % SIZE) + "][" + Math.abs(y % SIZE) + "]");
-    }
-
-    public ChunkData get(int x, int y) {
-    	if (loaded(Maths.fastFloor(x / SIZE), Maths.fastFloor(y / SIZE))) {
-    		return loaded.get(Maths.fastFloor(x / SIZE)).get(Maths.fastFloor(y / SIZE))[Math.abs(x % SIZE)][Math
-    				.abs(y % SIZE)];
-    	} else {
-    		if (load(Maths.fastFloor(x / SIZE), Maths.fastFloor(y / SIZE))) {
-    			return loaded.get(Maths.fastFloor(x / SIZE)).get(Maths.fastFloor(y / SIZE))[Math.abs(x % SIZE)][Math
-    					.abs(y % SIZE)];
-    		} else {
-    			return null;
-    		}
-    	}
-    }
-
-    public HashMap<Integer, Integer> assembleKeys() {
+	public HashMap<Integer, Integer> assembleKeys() {
 		if (changed) {
 			assembledKeys = new HashMap<Integer, Integer>(loaded.size());
 			for (int x : loaded.keySet()) {
@@ -100,46 +96,65 @@ public class DataChunk {
 		return assembledKeys;
 	}
 
-	public void printStatus(){
-	    assembleKeys();
-	    System.out.println("Printing DataChunk status");
-	   
-	    for (int x : assembledKeys.keySet()) {
-            System.out.println("- ["+x+"]["+assembledKeys.get(x)+"]");
-            ChunkData[][] dta = loaded.get(x).get(assembledKeys.get(x));
-            System.out.println("subChunk:");
-            String notLoaded = "[";
-            int length = (x>assembledKeys.get(x)) ? (""+x).length() : (""+assembledKeys.get(x)).length();
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < length; j++) {
-                    notLoaded += "X";
-                }
-                notLoaded+="|";
-            }
-            notLoaded+="]";
-            for (int i = 0; i < dta.length; i++) {
-                System.out.print("----");
-                for (int j = 0; j < dta.length; j++) {
-                    if(dta[i][j] != null){
-                        System.out.print("["+x+i+"|"+assembledKeys.get(x)+j+"]");
-                    }else{
-                        System.out.print(notLoaded);
-                    }
-                }
-                System.out.println();
-            }
-        }
+	public void printStatus() {
+//		assembleKeys();
+//		out.println("Printing DataChunk status");
+//
+//		for (int x : assembledKeys.keySet()) {
+//			out.println("- [" + x + "][" + assembledKeys.get(x) + "]");
+//			ChunkData[][] dta = loaded.get(x).get(assembledKeys.get(x));
+//			out.println("subChunk:");
+//
+//			int length = (x > assembledKeys.get(x)) ? ("" + x).length() : ("" + assembledKeys.get(x)).length();
+//			String notLoaded = "[";
+//			for (int j = 0; j < length; j++) {
+//				notLoaded += "X";
+//			}
+//			notLoaded += "|";
+//			for (int j = 0; j < length; j++) {
+//				notLoaded += "X";
+//			}
+//			notLoaded += "]";
+//
+//			for (int i = 0; i < dta.length; i++) {
+//				String line = "----";
+//				for (int j = 0; j < dta.length; j++) {
+//					if (dta[i][j] != null) {
+//						line += "[" + x + i + "|" + assembledKeys.get(x) + j + "]";
+//					} else {
+//						line += notLoaded;
+//					}
+//				}
+//				out.println(line);
+//			}
+//		}
 	}
-	
+
 	public void finish() {
 		for (int x : assembleKeys().keySet()) {
 			save(x, assembledKeys.get(x));
 		}
 	}
 
-//	public void unload(List<Vector2f> vecs) {
-//		for (Vector2f vek : vecs) {
-//			save(vek);
-//		}
-//	}
+	private boolean loaded(int xF, int zF) {
+		return loaded.containsKey(xF) && loaded.get(xF).containsKey(zF);
+	}
+
+	private File genFileName(int xF, int zF) {
+		return new File(Game.saveGameName + "/" + xF + "_" + zF + fileExtension);
+	}
+
+	private int makeF(int x){
+		if (x >= 0) {
+			return x / SIZE;
+		}
+		return (x / SIZE)-1;
+	}
+	
+	private int arr(int x) {
+		if (x >= 0) {
+			return x % SIZE;
+		}
+		return SIZE + (x % SIZE);
+	}
 }
