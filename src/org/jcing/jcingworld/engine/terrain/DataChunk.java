@@ -133,18 +133,28 @@ public class DataChunk {
 		assembleKeys();
 		Thread th = new Thread(){
 		    public void run(){
-		        WorldSaverFrame frame = new WorldSaverFrame();
+//		        WorldSaverFrame frame = new WorldSaverFrame();
 		        int i=0;
 		        for (int x : assembledKeys.keySet()) {
-		            frame.percent = (double)i/assembledKeys.size();
-		            frame.repaint();
+//		            frame.percent = (double)i/assembledKeys.size();
+//		            frame.repaint();
 		            save(x, assembledKeys.get(x));
+		            System.out.println("saved " + x + "|" + assembledKeys.get(x));
 		            i++;
 		        }
-		        frame.dispose();
+//		        frame.dispose();
+		        System.out.println("finished saving!");
+		        try {
+					join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    }
 		};
 		th.run();
+		
+		
 	}
 
 	private boolean loaded(int xF, int zF) {

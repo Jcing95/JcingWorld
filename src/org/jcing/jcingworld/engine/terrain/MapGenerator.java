@@ -52,7 +52,7 @@ public class MapGenerator {
     }
 
     public float tex(float x, float z) {
-        return (height(x, z) + maxDelta) / (2.0f * maxDelta);
+    	return Math.min(Math.abs(noise(x,z,10,25)*(float) Math.sqrt(noise(x,z,10,25))),1);
     }
 
 }

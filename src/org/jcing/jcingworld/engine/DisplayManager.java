@@ -152,6 +152,10 @@ public class DisplayManager {
         lastFrameTime = currentFrameTime;
         glfwPollEvents();
     }
+    
+    public static long getLastFrameTime(){
+    	return lastFrameTime;
+    }
 
     public static float getFrameTimeSeconds() {
         return delta;

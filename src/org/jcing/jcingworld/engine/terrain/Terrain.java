@@ -136,8 +136,8 @@ public class Terrain {
 	}
 
 	public int tex(float x, float z, int max) {
-		// TODO Auto-generated method stub
-		return (int) Maths.fastFloor(gen.tex(x, z) * max);
+		System.out.println("TEX: " + (int)(gen.tex(x, z)));
+		return (int)(gen.tex(x, z) * (max-1));
 	}
 
 	boolean isSupposedToUnload(Point chunk) {
@@ -164,6 +164,16 @@ public class Terrain {
 		unloaded.clear();
 	}
 
+	
+	public void finish(){
+		ulc.setRunning(false);
+		try {
+			ulc.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	//    public float getHeight(float x, float z) {
 	//        // float z = globalZ; // switch weil faul und fehler
 	//        // float x = globalX;

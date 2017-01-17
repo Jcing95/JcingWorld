@@ -118,6 +118,7 @@ public class Game {
 	}
 
 	public void finish() {
+		terrain.finish();
 		Chunk.saver.finish();
 	}
 }
