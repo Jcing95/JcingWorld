@@ -56,8 +56,14 @@ public class MapGenerator {
 
     
     public float tex(float x, float z, float maxDelta) {
-        Random random = new Random((long) Math.abs((x+2356)*(z+7895)/100));
-        return random.nextFloat()*maxDelta;
+    	return maxDelta-1;
+//    	if((noise(x,z,1,100)) < 0){
+//    		return maxDelta/2*(noise(x,z,1,100)+1);
+//    	}else{
+//    		return maxDelta-1;
+//    	}
+//        Random random = new Random((long) Math.abs((x+2356)*(z+7895)/100));
+//        return random.nextFloat()*maxDelta;
 //        float noise1 = 0;
 //        for (int i = 0; i < maxDelta; i++) {
 //            noise1 += Maths.fastFloor(Math.abs(noise(x*i,z*i,2,100*maxDelta)));

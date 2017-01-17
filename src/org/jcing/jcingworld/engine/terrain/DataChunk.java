@@ -22,6 +22,7 @@ public class DataChunk {
 
 	public DataChunk() {
 		loaded = new HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>>();
+		assembledKeys = new HashMap<Integer,Integer>();
 	}
 
 	public void put(int x, int z, ChunkFrameData dta) {
@@ -36,6 +37,10 @@ public class DataChunk {
 		}
 		loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
 		changed = true;
+		if(true || assembledKeys.containsKey(xF)){
+			assembledKeys.put(xF, zF);
+			System.out.println("registered!" + assembledKeys.size() + "("+xF +"|"+assembledKeys.get(xF)+")");
+		}
 		System.out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
 	}
 
@@ -43,14 +48,14 @@ public class DataChunk {
 		int xF = makeF(x);
 		int zF = makeF(z);
 		if (loaded(xF, zF)) {
-			out.println("got loaded CD[" + x + "|" + z + "] at (" +xF + "|" + zF + ")");
+			out.println("got loaded CD[" + arr(x) + "|" + arr(z) + "] at (" +xF + "|" + zF + ")");
 			return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 		} else {
 			if (load(xF, zF)) {
-				System.out.println("loading existing CD (" + xF + "|" + zF + ")[" + x + "|" + z + "]");
+				System.out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "]");
 				return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 			} else {
-				System.out.println("tried to load CD from (" + xF + "|" + zF + ")[" + x + "|" + z + "]");
+				System.out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "]");
 				return null;
 			}
 		}
@@ -82,21 +87,21 @@ public class DataChunk {
 	// save(Maths.fastFloor(vec.x), Maths.fastFloor(vec.y));
 	// }
 
-	public HashMap<Integer, Integer> assembleKeys() {
-		if (changed) {
-			assembledKeys = new HashMap<Integer, Integer>(loaded.size());
-			for (int x : loaded.keySet()) {
-				for (int y : loaded.get(x).keySet()) {
-					assembledKeys.put(x, y);
-				}
-			}
-			changed = false;
-		}
-		return assembledKeys;
-	}
+//	public HashMap<Integer, Integer> assembleKeys() {
+//		if (changed) {
+//			assembledKeys = new HashMap<Integer, Integer>(loaded.size());
+//			for (int x : loaded.keySet()) {
+//				for (int y : loaded.get(x).keySet()) {
+//					assembledKeys.put(x, y);
+//				}
+//			}
+//			changed = false;
+//		}
+//		return assembledKeys;
+//	}
 
 	public void printStatus() {
-		assembleKeys();
+//		assembleKeys();
 		out.println("Printing DataChunk status");
 
 		for (int x : assembledKeys.keySet()) {
@@ -132,7 +137,7 @@ public class DataChunk {
 	public void finish() {
 //		assembleKeys();
 		int i=0;
-		for (int x : assembleKeys().keySet()) {
+		for (int x : assembledKeys.keySet()) {
 //          frame.percent = (double)i/assembledKeys.size();
 //          frame.repaint();
             save(x, assembledKeys.get(x));

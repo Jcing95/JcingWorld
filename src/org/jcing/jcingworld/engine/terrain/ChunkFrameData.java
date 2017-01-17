@@ -36,13 +36,14 @@ public class ChunkFrameData implements Serializable{
     		dta.x = x;
     		dta.z = z;
     		dta.initialized = false;
+    		Chunk.saver.put(x, z, dta);
     	}
     	return dta;
     }
     
 	public void apply(){
     	initialized = true;
-    	Chunk.saver.put(x, z, this);
+//    	Chunk.saver.put(x, z, this);
     }
 
 	public void setTile(int x, int z, Tile tile) {

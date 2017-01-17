@@ -177,7 +177,7 @@ public class Player extends Entity {
 		}else if(!doubleJumpRotation && spaceReleased && doubleJumps < MAXDOUBLEJUMPS && DisplayManager.getLastFrameTime() - lastJump >= JUMPTIMEDELTA){
 			doubleJumps++;
 			doubleJumpRotationSpeed = 0;
-			this.upwardsSpeed += JUMP_POWER*(doubleJumps+2f)/3;
+			this.upwardsSpeed += JUMP_POWER*(doubleJumps+0.3f);
 			doubleJumpRotation = true;
 		}
 		inAir = true;
