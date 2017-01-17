@@ -91,6 +91,7 @@ public class DataChunk {
 				loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
 			}
 			loaded.get(xF).put(zF, fromFile);
+			
 			changed = true;
 			return true;
 		} else {
@@ -231,5 +232,9 @@ public class DataChunk {
 				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
 			}
 		}
+		if(!assembledKeys.contains(new Point(xF,zF))){
+            assembledKeys.add(new Point(xF, zF));
+            System.out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
+        }
 	}
 }

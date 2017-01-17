@@ -58,7 +58,6 @@ public class Terrain {
 		unloaded = new LinkedList<Point>();
 		initActiveMap();
 		ulc = new UnloadCrawler(this, loadedChunks);
-		ulc.start();
 	}
 
 	private void initActiveMap() {
@@ -86,6 +85,7 @@ public class Terrain {
 		for (Point p : activesTemplate) {
 			addChunk(p.x + x, p.y + z);
 		}
+//		ulc.start();
 	}
 
 	private void addChunk(int x, int z) {
@@ -159,7 +159,8 @@ public class Terrain {
 		return false;
 	}
 	
-	public boolean checkLoad(Point chunk) {
+	public boolean checkLoad(Point ch) {
+	    Point chunk = new Point(ch.x+playerPos.x,ch.y+playerPos.y);
 		if (!loadedChunks.contains(chunk) && new Vector2f(chunk.x - playerPos.x, chunk.y - playerPos.y).length() < RENDERDISTANCERADIUS
 				+ KEEPCHUNKBUFFERLENGTH) {
 			ChunkFrameData.prepare(chunk.x, chunk.y);

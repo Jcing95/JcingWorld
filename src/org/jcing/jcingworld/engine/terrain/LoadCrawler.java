@@ -22,11 +22,12 @@ public class LoadCrawler extends Thread {
 	}
 	
 	public void run(){
+	    setPriority(MIN_PRIORITY);
 		while(running){
 //			GL.setCapabilities(DisplayManager.glCapabilities);
 			while(!check && running){
 				try {
-					sleep(2000);
+					sleep(10000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
