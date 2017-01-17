@@ -136,7 +136,7 @@ public class Terrain {
 	}
 
 	public int tex(float x, float z, int max) {
-		System.out.println("TEX: " + (int)(gen.tex(x, z)));
+		System.out.println("TEX: " + (gen.tex(x, z)));
 		return (int)(gen.tex(x, z) * (max-1));
 	}
 

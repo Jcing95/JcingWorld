@@ -1,5 +1,6 @@
 package org.jcing.jcingworld.engine.terrain;
 
+import org.jcing.jcingworld.toolbox.Maths;
 import org.openSimplex.OpenSimplexNoise;
 
 public class MapGenerator {
@@ -52,7 +53,9 @@ public class MapGenerator {
     }
 
     public float tex(float x, float z) {
-    	return Math.min(Math.abs(noise(x,z,10,25)*(float) Math.sqrt(noise(x,z,10,25))),1);
+//    	return Math.min(Math.abs(noise(x,z,10,25)*(float) Math.sqrt(noise(x,z,10,25))),1);
+    	
+    	return Math.min(1,Math.max(0,(noise(noise(x,z,50,1000),(float)Math.sqrt(x*z),2,1)+1)));
     }
 
 }
