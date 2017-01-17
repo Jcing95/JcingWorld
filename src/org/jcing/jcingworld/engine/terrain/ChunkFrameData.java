@@ -30,15 +30,11 @@ public class ChunkFrameData implements Serializable{
 	
 	
     public static ChunkFrameData load(int x, int z){    
-    	ChunkFrameData dta = Chunk.saver.get(x,z);
-    	if(dta == null){
-    		dta = new ChunkFrameData();
-    		dta.x = x;
-    		dta.z = z;
-    		dta.initialized = false;
-    		Chunk.saver.put(x, z, dta);
-    	}
-    	return dta;
+    	return Chunk.saver.get(x,z);
+    }
+    
+    public static void prepare(int x, int z){
+    	Chunk.saver.prepare(x,z);
     }
     
 	public void apply(){

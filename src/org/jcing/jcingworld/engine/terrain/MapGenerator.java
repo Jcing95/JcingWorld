@@ -1,8 +1,5 @@
 package org.jcing.jcingworld.engine.terrain;
 
-import java.util.Random;
-
-import org.jcing.jcingworld.toolbox.Maths;
 import org.openSimplex.OpenSimplexNoise;
 
 public class MapGenerator {
@@ -56,7 +53,7 @@ public class MapGenerator {
 
     
     public float tex(float x, float z, float maxDelta) {
-    	return maxDelta-1;
+    	return maxDelta/2;
 //    	if((noise(x,z,1,100)) < 0){
 //    		return maxDelta/2*(noise(x,z,1,100)+1);
 //    	}else{

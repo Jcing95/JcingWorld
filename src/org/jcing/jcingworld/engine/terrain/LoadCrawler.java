@@ -4,47 +4,47 @@ import java.awt.Point;
 import java.util.List;
 
 import org.jcing.jcingworld.engine.DisplayManager;
+import org.jcing.jcingworld.engine.entities.Player;
 import org.lwjgl.opengl.GL;
 
-public class UnloadCrawler extends Thread {
+public class LoadCrawler extends Thread {
 	
-	private List<Point> loadedChunks;
+	private List<Point> loadedChunksTemplate;
 	private boolean running, check;
 	private Terrain terrain;
+	Player player;
 	
-	public UnloadCrawler(Terrain terrain, List<Point> loadedChunks){
-		this.loadedChunks = loadedChunks;
+	public LoadCrawler(Terrain terrain, List<Point> loadedChunks){
+		this.loadedChunksTemplate = loadedChunks;
 		this.terrain = terrain;
 		check = false;
 		running = true;
 	}
 	
 	public void run(){
-		GL.setCapabilities(DisplayManager.glCapabilities);
 		while(running){
+//			GL.setCapabilities(DisplayManager.glCapabilities);
 			while(!check && running){
 				try {
-					sleep(50);
+					sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 			check = false;
-			for (Point chunk : loadedChunks) {
-				if(terrain.isSupposedToUnload(chunk)){
-					terrain.unload(chunk);
-				}
+			for (Point chunk : loadedChunksTemplate) {
+				terrain.checkLoad(chunk);
 			}
-			terrain.finishUnloading();
+//			terrain.finishUnloading();
 		}
 	}
 
 	public List<Point> getLoadedChunks() {
-		return loadedChunks;
+		return loadedChunksTemplate;
 	}
 
 	public void setLoadedChunks(List<Point> loadedChunks) {
-		this.loadedChunks = loadedChunks;
+		this.loadedChunksTemplate = loadedChunks;
 	}
 
 	public void setChecking() {

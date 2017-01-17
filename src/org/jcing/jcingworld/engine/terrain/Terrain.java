@@ -42,6 +42,7 @@ public class Terrain {
 	PrintStream out = Logs.chunkLoading;
 	
 	UnloadCrawler ulc;
+	LoadCrawler lc;
 	
 	private LinkedList<Point> unloaded;
 
@@ -68,6 +69,15 @@ public class Terrain {
 					activesTemplate.add(new Point(i, j));
 			}
 		}
+		LinkedList<Point> loadedTemplate = new LinkedList<Point>();
+		for (int i = -RENDERDISTANCERADIUS-KEEPCHUNKBUFFERLENGTH; i < RENDERDISTANCERADIUS+KEEPCHUNKBUFFERLENGTH; i++) {
+			for (int j = -RENDERDISTANCERADIUS-KEEPCHUNKBUFFERLENGTH; j < RENDERDISTANCERADIUS+KEEPCHUNKBUFFERLENGTH; j++) {
+				if (Math.abs(new Vector2f(i, j).length()) <= RENDERDISTANCERADIUS+KEEPCHUNKBUFFERLENGTH)
+					loadedTemplate.add(new Point(i, j));
+			}
+		}
+		lc = new LoadCrawler(this,loadedTemplate);
+//		lc.run();
 		out.println("initialized Rendermap with a distance of: " + RENDERDISTANCERADIUS + " there will be "
 				+ activesTemplate.size() + " Chunks rendered");
 	}
@@ -103,6 +113,7 @@ public class Terrain {
 				}
 			}
 			ulc.setChecking();
+			lc.setChecking();
 		}
 	}
 
@@ -147,6 +158,15 @@ public class Terrain {
 		}
 		return false;
 	}
+	
+	public boolean checkLoad(Point chunk) {
+		if (!loadedChunks.contains(chunk) && new Vector2f(chunk.x - playerPos.x, chunk.y - playerPos.y).length() < RENDERDISTANCERADIUS
+				+ KEEPCHUNKBUFFERLENGTH) {
+			ChunkFrameData.prepare(chunk.x, chunk.y);
+			return true;
+		}
+		return false;
+	}
 
 	public void unload(Point chunk) {
 		chunks.get(chunk.x).get(chunk.y).dismiss();
@@ -167,8 +187,10 @@ public class Terrain {
 	
 	public void finish(){
 		ulc.setRunning(false);
+		lc.setRunning(false);
 		try {
 			ulc.join();
+			lc.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -278,4 +300,6 @@ public class Terrain {
 	//		return new Vector2f((int)chunk.x/PACKAGESIZE,(int)chunk.y/PACKAGESIZE);
 	//	}
 	//	
+
+	
 }
