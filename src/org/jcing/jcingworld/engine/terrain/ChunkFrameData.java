@@ -1,5 +1,6 @@
 package org.jcing.jcingworld.engine.terrain;
 
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class ChunkFrameData implements Serializable{
@@ -28,7 +29,6 @@ public class ChunkFrameData implements Serializable{
 		topTiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
 	}
 	
-	
     public static ChunkFrameData load(int x, int z){    
     	return Chunk.saver.get(x,z);
     }
@@ -44,6 +44,10 @@ public class ChunkFrameData implements Serializable{
 
 	public void setTile(int x, int z, Tile tile) {
 		topTiles[calcTilesIndex(x, z)] = tile;
+	}
+
+	public void dismiss() {
+		Chunk.saver.dismiss(x,z);
 	}
     
 }

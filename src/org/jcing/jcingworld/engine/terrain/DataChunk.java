@@ -237,4 +237,9 @@ public class DataChunk {
             System.out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
         }
 	}
+
+	public void dismiss(int x, int z) {
+		save(makeF(x), makeF(z));
+        System.out.println("saved " + x + "|" + z);
+	}
 }

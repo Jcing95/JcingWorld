@@ -449,6 +449,7 @@ public class Chunk {
 
 	public void dismiss() {
 		model.delete();
+		chunkdata.dismiss();
 	}
 
 	// public Tile[][] getTiles() {

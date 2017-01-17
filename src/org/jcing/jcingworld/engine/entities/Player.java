@@ -115,8 +115,6 @@ public class Player extends Entity {
 				&& (float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds()) + getRotX() < 90) {
 
 			xRotDelta += (float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds());
-		}else{
-			System.out.println(getRotX());
 		}
 		xRotDelta %= 180;
 		this.setRotX((xRotDelta + xRotDJDelta) % 360);
