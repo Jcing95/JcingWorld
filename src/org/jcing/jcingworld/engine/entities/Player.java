@@ -37,7 +37,7 @@ public class Player extends Entity {
 	private float doubleJumpRotationSpeed;
 	private static final float DOUBLEJUMPROTATIONACCELERATION= 37.5f;
 	private static final long JUMPTIMEDELTA = 150;
-	private static final float MAXDOUBLEJUMPROTATIONSPEED = 7.5f;
+	private static final float MAXDOUBLEJUMPROTATIONSPEED = 707.5f;
 	private static final int MAXDOUBLEJUMPS = 1;
 	
 	private Terrain terrain;
@@ -97,9 +97,9 @@ public class Player extends Entity {
 		}
 		if(doubleJumpRotation){
 			if(doubleJumpRotationSpeed < MAXDOUBLEJUMPROTATIONSPEED)
-				doubleJumpRotationSpeed += DOUBLEJUMPROTATIONACCELERATION*DisplayManager.getFrameTimeSeconds();
+				doubleJumpRotationSpeed += DOUBLEJUMPROTATIONACCELERATION;
 
-			doubleJumpRotationDegrees += doubleJumpRotationSpeed;
+			doubleJumpRotationDegrees += doubleJumpRotationSpeed*DisplayManager.getFrameTimeSeconds();;
 			if(doubleJumpRotationDegrees >= 360){
 				doubleJumpRotationDegrees = 0;
 				doubleJumpRotation = false;

@@ -1,5 +1,7 @@
 package org.jcing.jcingworld.engine.terrain;
 
+import java.util.Random;
+
 import org.jcing.jcingworld.toolbox.Maths;
 import org.openSimplex.OpenSimplexNoise;
 
@@ -52,10 +54,20 @@ public class MapGenerator {
         return height;
     }
 
-    public float tex(float x, float z) {
-//    	return Math.min(Math.abs(noise(x,z,10,25)*(float) Math.sqrt(noise(x,z,10,25))),1);
-    	
-    	return Math.min(1,Math.max(0,(noise(noise(x,z,50,1000),(float)Math.sqrt(x*z),2,1)+1)));
+    
+    public float tex(float x, float z, float maxDelta) {
+        Random random = new Random((long) Math.abs((x+2356)*(z+7895)/100));
+        return random.nextFloat()*maxDelta;
+//        float noise1 = 0;
+//        for (int i = 0; i < maxDelta; i++) {
+//            noise1 += Maths.fastFloor(Math.abs(noise(x*i,z*i,2,100*maxDelta)));
+//        }
+////        noise1 /= 2;
+////        float noise2 = Maths.fastFloor(Math.abs(noise(x*2,z*2,2,100)));
+////        float noiselast = noise(noise1,noise1,maxDelta/2f,1); //pos / neg
+//        return Maths.fastFloor(noise1);
+        
+//    	return Math.min(1,Math.max(0,(noise(noise(x,z,50,1000),(float)Math.sqrt(x*z),2,1)+1)));
     }
 
 }

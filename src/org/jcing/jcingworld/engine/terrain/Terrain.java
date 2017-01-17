@@ -42,14 +42,14 @@ public class Terrain {
 	PrintStream out = Logs.chunkLoading;
 	
 	UnloadCrawler ulc;
-
+	
 	private LinkedList<Point> unloaded;
 
 	public Terrain(Loader loader, MasterRenderer renderer) {
 		this.loader = loader;
 		this.renderer = renderer;
 		blendMap = loader.loadTexture("terrain/blend/64.png", false);
-		atlas = new TextureAtlas("terrain/erde", loader);//loader.loadTexture("terrain/100Square.png", false),16);
+		atlas = new TextureAtlas("terrain/erde",loader);//loader.loadTexture("terrain/100Square.png", false),16);
 		gen = new MapGenerator(1337);
 		chunks = new HashMap<Integer, HashMap<Integer, Chunk>>(RENDERDISTANCERADIUS * 2 + 1, 1);
 		activesTemplate = new LinkedList<Point>();
@@ -136,8 +136,8 @@ public class Terrain {
 	}
 
 	public int tex(float x, float z, int max) {
-		System.out.println("TEX: " + (gen.tex(x, z)));
-		return (int)(gen.tex(x, z) * (max-1));
+//		System.out.println("TEX: " + (gen.tex(x, z,max)));
+		return (int)(gen.tex(x, z,max));
 	}
 
 	boolean isSupposedToUnload(Point chunk) {

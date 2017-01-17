@@ -173,7 +173,7 @@ public class FileLoader {
     public LinkedList<BufferedImage> indexedFolderLoad(String folderPath) {
         out.println("loading images of Folder [" + folderPath + "]");
         LinkedList<String> filepaths;
-        File imageIndex = new File(folderPath + "/" + FOLDER_INDEX_FILENAME);
+        File imageIndex = new File("res/" + folderPath + "/" + FOLDER_INDEX_FILENAME);
         if (imageIndex.exists()) {
             //			System.out.println(FOLDER_INDEX_FILENAME + " exists!  " + imageIndex.isDirectory());
             try {
@@ -205,7 +205,7 @@ public class FileLoader {
                 "res/" + folderPath);
 
         indexedLoad = false;
-        saveFile(filepaths, imageIndex.getAbsoluteFile());
+        saveFile(filepaths, imageIndex);
         return imgs;
     }
 

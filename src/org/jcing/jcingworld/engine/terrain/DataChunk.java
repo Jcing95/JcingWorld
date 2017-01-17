@@ -36,7 +36,7 @@ public class DataChunk {
 		}
 		loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
 		changed = true;
-		out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
+		System.out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
 	}
 
 	public ChunkFrameData get(int x, int z) {
@@ -50,7 +50,7 @@ public class DataChunk {
 				System.out.println("loading existing CD (" + xF + "|" + zF + ")[" + x + "|" + z + "]");
 				return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 			} else {
-				out.println("tried to load CD[" + x + "|" + z + "]");
+				System.out.println("tried to load CD from (" + xF + "|" + zF + ")[" + x + "|" + z + "]");
 				return null;
 			}
 		}
@@ -130,31 +130,45 @@ public class DataChunk {
 	}
 
 	public void finish() {
-		assembleKeys();
-		Thread th = new Thread(){
-		    public void run(){
-//		        WorldSaverFrame frame = new WorldSaverFrame();
-		        int i=0;
-		        for (int x : assembledKeys.keySet()) {
-//		            frame.percent = (double)i/assembledKeys.size();
-//		            frame.repaint();
-		            save(x, assembledKeys.get(x));
-		            System.out.println("saved " + x + "|" + assembledKeys.get(x));
-		            i++;
-		        }
-//		        frame.dispose();
-		        System.out.println("finished saving!");
-		        try {
-					join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		    }
-		};
-		th.run();
+//		assembleKeys();
+		int i=0;
+		for (int x : assembleKeys().keySet()) {
+//          frame.percent = (double)i/assembledKeys.size();
+//          frame.repaint();
+            save(x, assembledKeys.get(x));
+            System.out.println("saved " + x + "|" + assembledKeys.get(x));
+            i++;
+        }
 		
-		
+//		for (int x : loaded.keySet()) {
+//            for (int z : loaded.get(x).keySet()) {
+//                save(x,z);
+//            }
+//        }
+//		Thread th = new Thread(){
+//		    public void run(){
+////		        WorldSaverFrame frame = new WorldSaverFrame();
+//		        int i=0;
+//		        for (int x : assembledKeys.keySet()) {
+////		            frame.percent = (double)i/assembledKeys.size();
+////		            frame.repaint();
+//		            save(x, assembledKeys.get(x));
+//		            System.out.println("saved " + x + "|" + assembledKeys.get(x));
+//		            i++;
+//		        }
+////		        frame.dispose();
+//		        System.out.println("finished saving!");
+//		        try {
+//					join();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//		    }
+//		};
+//		th.run();
+//		
+//		
 	}
 
 	private boolean loaded(int xF, int zF) {
