@@ -33,7 +33,7 @@ public class Terrain {
     //	private MapGenerator gen;
     private List<Point> activesTemplate;
     private List<Point> loadedChunks;
-    private Point playerPos;
+    private Point playerChunkPos;
 
     private Loader loader;
     private MasterRenderer renderer;
@@ -118,12 +118,12 @@ public class Terrain {
 
     public void updatePlayerPos(Player player) {
         if (chunkAtWorldPos(player.getPosition().getX(),
-                player.getPosition().getZ()) != playerPos) {
-            playerPos = chunkAtWorldPos(player.getPosition().getX(), player.getPosition().getZ());
+                player.getPosition().getZ()) != playerChunkPos) {
+            playerChunkPos = chunkAtWorldPos(player.getPosition().getX(), player.getPosition().getZ());
             for (Point curr : activesTemplate) {
-                if (getChunk(curr.x + playerPos.x, curr.y + playerPos.y) == null) {
+                if (getChunk(curr.x + playerChunkPos.x, curr.y + playerChunkPos.y) == null) {
                     //                    System.err.println("adding chunk!");
-                    addChunk(curr.x + playerPos.x, curr.y + playerPos.y);
+                    addChunk(curr.x + playerChunkPos.x, curr.y + playerChunkPos.y);
                 }
             }
             lc.check();
@@ -132,7 +132,7 @@ public class Terrain {
 
     public void processActives() {
         for (Point p : activesTemplate) {
-            renderer.processTerrain(getChunk(p.x + playerPos.x, p.y + playerPos.y));
+            renderer.processTerrain(getChunk(p.x + playerChunkPos.x, p.y + playerChunkPos.y));
         }
     }
 
@@ -164,7 +164,7 @@ public class Terrain {
     }
 
     boolean isSupposedToUnload(Point chunk) {
-        if (new Vector2f(chunk.x - playerPos.x, chunk.y - playerPos.y)
+        if (new Vector2f(chunk.x - playerChunkPos.x, chunk.y - playerChunkPos.y)
                 .length() > RENDERDISTANCERADIUS + KEEPCHUNKBUFFERLENGTH) {
             return true;
         }
@@ -316,4 +316,8 @@ public class Terrain {
     public DataChunk getSaver() {
         return saver;
     }
+
+	public Point getPlayerChunkPos() {
+		return playerChunkPos;
+	}
 }

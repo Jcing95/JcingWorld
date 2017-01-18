@@ -198,7 +198,7 @@ public class DataChunk {
 		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + "/frame" +fileExtension);
 	}
 
-	private int makeF(int x){
+	static int makeF(int x){
 		if (x >= 0) {
 			return x / SIZE;
 		}
@@ -212,15 +212,15 @@ public class DataChunk {
 		return -(x % SIZE);
 	}
 
-	public void prepare(int x, int z) {
-		int xF = makeF(x);
-		int zF = makeF(z);
+	public void preparePackage(int x, int z) {
+		int xF = x;//makeF(x);
+		int zF = z;//makeF(z);
 		if(!loaded(xF,zF)){
 			if(!load(xF,zF)){
 				if (!loaded.containsKey(xF))
 					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
 				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
-				init(xF, zF);
+				init(x, z);
 			}
 		}
 		if(!assembledKeys.contains(new Point(xF,zF))){
@@ -229,11 +229,11 @@ public class DataChunk {
         }
 	}
 
-    private void init(int xF, int zF) {
+    private void init(int x, int z) {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
 //                ChunkFrameData dta =  
-                loaded.get(xF).get(zF)[i][j]=new ChunkFrameData(xF+i,zF+j,terrain.getTextureAtlas());
+                loaded.get(makeF(x)).get(makeF(z))[arr(i+x)][arr(j+z)]=new ChunkFrameData(x+i,z+j,terrain.getTextureAtlas());
                 
             }
         }

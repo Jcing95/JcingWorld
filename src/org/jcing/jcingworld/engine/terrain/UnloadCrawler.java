@@ -30,12 +30,7 @@ public class UnloadCrawler extends Thread {
 				}
 			}
 			check = false;
-			for (Point chunk : loadedChunks) {
-				if(terrain.isSupposedToUnload(chunk)){
-					terrain.unload(chunk);
-				}
-			}
-			terrain.finishUnloading();
+			
 		}
 	}
 

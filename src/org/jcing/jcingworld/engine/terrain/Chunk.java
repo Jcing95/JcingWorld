@@ -65,8 +65,8 @@ public class Chunk {
 			System.out.println("CHUNK " + chunkdata.x + "|" + chunkdata.z + " WAS NOT INITIALIZED (" + Maths.fastFloor(chunkdata.x / DataChunk.SIZE) + "|"
 					+ Maths.fastFloor(chunkdata.z / DataChunk.SIZE) + ") ...");
 			info.println("generating Chunk[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
-			chunkdata.generate(textureAtlas);
-			chunkdata.apply();
+//			chunkdata.generate(textureAtlas);
+//			chunkdata.apply();
 			out.println("G" + gridZ + " d" + chunkdata.z);
 		}
 		this.model = generateTerrain(loader, shader);
