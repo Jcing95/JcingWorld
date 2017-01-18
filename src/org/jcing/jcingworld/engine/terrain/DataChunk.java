@@ -25,7 +25,7 @@ public class DataChunk {
 
 	public DataChunk(Terrain terrain) {
 	    this.terrain = terrain;
-		loaded = new HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>>();
+		loaded = new HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1);
 		assembledKeys = new LinkedList<Point>();
 	}
 
@@ -35,7 +35,7 @@ public class DataChunk {
 		if (!loaded(xF, zF)) {
 			if (!load(xF, zF)) {
 				if (!loaded.containsKey(xF))
-					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
+					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1));
 				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
 			}
 		}
@@ -80,7 +80,7 @@ public class DataChunk {
 		ChunkFrameData[][] fromFile = (ChunkFrameData[][]) FileLoader.loadFile(genFileName(xF, zF));
 		if (fromFile != null) {
 			if (!loaded.containsKey(xF)) {
-				loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
+				loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1));
 			}
 			loaded.get(xF).put(zF, fromFile);
 			
@@ -218,7 +218,7 @@ public class DataChunk {
 		if(!loaded(xF,zF)){
 			if(!load(xF,zF)){
 				if (!loaded.containsKey(xF))
-					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
+					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1));
 				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
 				init(x, z);
 			}

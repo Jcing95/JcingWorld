@@ -53,7 +53,7 @@ public class MapGenerator {
     }
 
     private byte decide(float x, float z, int i) {
-        if (noise(x + i * 1234, z + i * 5678, 1, 100) >= 0) {
+        if (noise(x + i * 1234, z + i * 5678, 1, 1000) >= 0) {
             return 1;
         }
         return 0;

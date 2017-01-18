@@ -38,7 +38,7 @@ public class Player extends Entity {
 	private static final float DOUBLEJUMPROTATIONACCELERATION= 37.5f;
 	private static final long JUMPTIMEDELTA = 150;
 	private static final float MAXDOUBLEJUMPROTATIONSPEED = 707.5f;
-	private static final int MAXDOUBLEJUMPS = 1;
+	private static final int MAXDOUBLEJUMPS = 3;
 	
 	private Terrain terrain;
 	private boolean spaceReleased;
@@ -108,7 +108,10 @@ public class Player extends Entity {
 		xRotDJDelta = doubleJumpRotationDegrees;
 		
 		// ROTATION Horizontal
-		this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()), 0);
+		if(doubleJumps>2)
+			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()+xRotDJDelta), 0);
+		else
+			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()), 0);
 
 		// Vertical
 		if ((float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds()) + getRotX() > -90

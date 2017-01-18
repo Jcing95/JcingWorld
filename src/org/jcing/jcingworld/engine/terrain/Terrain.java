@@ -52,14 +52,15 @@ public class Terrain {
     public Terrain(Loader loader, MasterRenderer renderer) {
         this.loader = loader;
         this.renderer = renderer;
-        blendMap = loader.loadTexture("terrain/blend/64.png", false);
-        textureAtlas = new TextureAtlas("terrain/erde", loader);//loader.loadTexture("terrain/100Square.png", false),16);
+        blendMap = loader.loadTexture("terrain/blend/32N.png", false);
+        textureAtlas = new TextureAtlas("terrain/naturalFloor", loader);//loader.loadTexture("terrain/100Square.png", false),16);
         gen = new MapGenerator(1337);
         chunks = new HashMap<Integer, HashMap<Integer, Chunk>>(RENDERDISTANCERADIUS * 2 + 1, 1);
         activesTemplate = new LinkedList<Point>();
         loadedChunks = new LinkedList<Point>();
         unloaded = new LinkedList<Point>();
         saver= new DataChunk(this);
+        Chunk.initIndices();
         initActiveMap();
         lc = new LoadingCrawler(this, loadedChunks);
         lc.start();
@@ -192,7 +193,7 @@ public class Terrain {
 
     public void finishUnloading() {
         for (Point point : unloaded) {
-            loadedChunks.remove(unloaded);
+            loadedChunks.remove(point);
         }
         unloaded.clear();
     }
