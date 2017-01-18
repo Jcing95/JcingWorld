@@ -18,11 +18,13 @@ public class DataChunk {
 	public static final int SIZE = 8;
 
 	private LinkedList<Point> assembledKeys;
-	private boolean changed = true;
 
+	private Terrain terrain;
+	
 	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
 
-	public DataChunk() {
+	public DataChunk(Terrain terrain) {
+	    this.terrain = terrain;
 		loaded = new HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>>();
 		assembledKeys = new LinkedList<Point>();
 	}
@@ -38,46 +40,36 @@ public class DataChunk {
 			}
 		}
 		loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
-		changed = true;
 		if(!assembledKeys.contains(new Point(xF,zF))){
 			assembledKeys.add(new Point(xF, zF));
-			System.out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
+			out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
 		}
-		System.out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
+		out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
 	}
 
 	public ChunkFrameData get(int x, int z) {
 		int xF = makeF(x);
 		int zF = makeF(z);
 		if (loaded(xF, zF)) {
-			System.out.println("got loaded CD[" + arr(x) + "|" + arr(z) + "] at (" +xF + "|" + zF + ")");
+			out.println("got loaded CD[" + arr(x) + "|" + arr(z) + "] at (" +xF + "|" + zF + ")");
 			if(loaded.get(xF).get(zF)[arr(x)][arr(z)] == null){
-				ChunkFrameData dta = new ChunkFrameData();
-	    		dta.x = x;
-	    		dta.z = z;
-	    		dta.initialized = false;
+				ChunkFrameData dta = new ChunkFrameData(x,z,terrain.getTextureAtlas());
 	    		put(x,z,dta);
 				return dta;
 			}else
 			return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 		} else {
 			if (load(xF, zF)) {
-				System.out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "]");
+				out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "]");
 				if(loaded.get(xF).get(zF)[arr(x)][arr(z)] == null){
-					ChunkFrameData dta = new ChunkFrameData();
-		    		dta.x = x;
-		    		dta.z = z;
-		    		dta.initialized = false;
+					ChunkFrameData dta = new ChunkFrameData(x,z,terrain.getTextureAtlas());
 		    		put(x,z,dta);
 					return dta;
 				}else
 				return loaded.get(xF).get(zF)[arr(x)][arr(z)];
 			} else {
-				System.out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "] ... creating it");
-				ChunkFrameData dta = new ChunkFrameData();
-	    		dta.x = x;
-	    		dta.z = z;
-	    		dta.initialized = false;
+				out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "] ... creating it");
+				ChunkFrameData dta = new ChunkFrameData(x,z,terrain.getTextureAtlas());
 	    		put(x,z,dta);
 				return dta;
 			}
@@ -92,7 +84,7 @@ public class DataChunk {
 			}
 			loaded.get(xF).put(zF, fromFile);
 			
-			changed = true;
+//			changed = true;
 			return true;
 		} else {
 			return false;
@@ -160,13 +152,11 @@ public class DataChunk {
 
 	public void finish() {
 //		assembleKeys();
-		int i=0;
 		for (Point pt : assembledKeys) {
 //          frame.percent = (double)i/assembledKeys.size();
 //          frame.repaint();
-            save(pt.x, pt.y);
-            System.out.println("saved " + pt.x + "|" + pt.y);
-            i++;
+//            save(pt.x, pt.y);
+            out.println("saved " + pt.x + "|" + pt.y);
         }
 		
 //		for (int x : loaded.keySet()) {
@@ -182,11 +172,11 @@ public class DataChunk {
 ////		            frame.percent = (double)i/assembledKeys.size();
 ////		            frame.repaint();
 //		            save(x, assembledKeys.get(x));
-//		            System.out.println("saved " + x + "|" + assembledKeys.get(x));
+//		            out.println("saved " + x + "|" + assembledKeys.get(x));
 //		            i++;
 //		        }
 ////		        frame.dispose();
-//		        System.out.println("finished saving!");
+//		        out.println("finished saving!");
 //		        try {
 //					join();
 //				} catch (InterruptedException e) {
@@ -230,16 +220,22 @@ public class DataChunk {
 				if (!loaded.containsKey(xF))
 					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>());
 				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
+				init(xF, zF);
 			}
 		}
 		if(!assembledKeys.contains(new Point(xF,zF))){
             assembledKeys.add(new Point(xF, zF));
-            System.out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
+            out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
         }
 	}
 
-	public void dismiss(int x, int z) {
-		save(makeF(x), makeF(z));
-        System.out.println("saved " + x + "|" + z);
-	}
+    private void init(int xF, int zF) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+//                ChunkFrameData dta =  
+                loaded.get(xF).get(zF)[i][j]=new ChunkFrameData(xF+i,zF+j,terrain.getTextureAtlas());
+                
+            }
+        }
+    }
 }

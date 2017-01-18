@@ -23,8 +23,9 @@ public class LoadCrawler extends Thread {
 	
 	public void run(){
 	    setPriority(MIN_PRIORITY);
+      GL.setCapabilities(DisplayManager.glCapabilities);
+
 		while(running){
-//			GL.setCapabilities(DisplayManager.glCapabilities);
 			while(!check && running){
 				try {
 					sleep(10000);
@@ -36,7 +37,7 @@ public class LoadCrawler extends Thread {
 			for (Point chunk : loadedChunksTemplate) {
 				terrain.checkLoad(chunk);
 			}
-//			terrain.finishUnloading();
+			terrain.finishUnloading();
 		}
 	}
 

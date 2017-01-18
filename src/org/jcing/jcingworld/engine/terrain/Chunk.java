@@ -25,15 +25,13 @@ public class Chunk {
 	public static final int TILE_TEX_INDICE_COUNT = TILE_COUNT + 1;
 	public static final float SIZE = TILE_SIZE * (TILE_COUNT - 1);
 
-	public static final DataChunk saver = new DataChunk();
-
 	// public static final float TEXTURES_PER_SQUARE = 2f;
 
 	// TODO: Tile MUST be a square (X,Z) at the Moment due to Texture Coordinate
 	// calculation in Vertex shader: Try to fix this later!
 	// IDEA: 4 per Vertex coordinates + calculation in Geometry shader.
 
-	private static final int VERTEX_COUNT = (TILE_COUNT) * 2;
+	static final int VERTEX_COUNT = (TILE_COUNT) * 2;
 
 	// TODO: terrain generation y Interpolation
 
@@ -43,7 +41,11 @@ public class Chunk {
 	// private Point gridPos;
 	private RawModel model;
 	private TextureAtlas textureAtlas;
-	private BaseImage blendMap;
+	public TextureAtlas getTextureAtlas() {
+        return textureAtlas;
+    }
+
+    private BaseImage blendMap;
 	private Terrain terrain;
 
 	private static PrintStream info = Logs.subLog(Logs.chunkLoading, "info", false);
@@ -58,12 +60,12 @@ public class Chunk {
 		this.blendMap = blendMap;
 		this.terrain = terrain;
 		// gridPos = new Vector2f(gridX, gridZ);
-		chunkdata = ChunkFrameData.load(gridX, gridZ);
+		chunkdata = terrain.getSaver().get(gridX, gridZ);
 		if (!chunkdata.initialized) {
 			System.out.println("CHUNK " + chunkdata.x + "|" + chunkdata.z + " WAS NOT INITIALIZED (" + Maths.fastFloor(chunkdata.x / DataChunk.SIZE) + "|"
 					+ Maths.fastFloor(chunkdata.z / DataChunk.SIZE) + ") ...");
 			info.println("generating Chunk[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
-			generateTiles();
+			chunkdata.generate(textureAtlas);
 			chunkdata.apply();
 			out.println("G" + gridZ + " d" + chunkdata.z);
 		}
@@ -194,54 +196,7 @@ public class Chunk {
 		return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.topTileTextureIndices);
 	}
 
-	private void generateTiles() {
-		float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
-		// System.err.println(textureAtlas.getNumTextures() + " here: " +
-		// ((int)getGridX()) % (textureAtlas.getNumTextures()-2));
-		for (int i = 0; i < VERTEX_COUNT; i += 2) { // i == z
-			for (int j = 0; j < VERTEX_COUNT; j += 2) {// j == x
-				float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE };
-				float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE, (i + 1) * SQUARE_SIZE };
-				float y[] = { terrain.getHeightAt(x[0] + this.x, z[0] + this.z), terrain.getHeightAt(x[1] + this.x, z[1] + this.z),
-						terrain.getHeightAt(x[2] + this.x, z[2] + this.z), terrain.getHeightAt(x[3] + this.x, z[3] + this.z) };
-				// double tex =
-				// Math.floor(y[3]+MapGenerator.continentalHeightDelta)/(2.0*MapGenerator.continentalHeightDelta)*textureAtlas.getNumTextures();
-				// System.out.println(tex);
-
-				// if (Math.random() * 100 < 80) {
-				// tex %= 3;
-				// }
-				chunkdata.setTile(j / 2, i / 2, new Tile(x, y, z, terrain.tex(x[3] + this.x, z[3] + this.z, textureAtlas.getNumTextures())));
-			}
-		}
-		constructTileTextureMap();
-	}
-
-	public void constructTileTextureMap() {
-		chunkdata.topTileTextureIndices = new float[TILE_TEX_INDICE_COUNT * TILE_TEX_INDICE_COUNT];
-		//
-		// for (int i = 0; i < tileTextureIndices.length; i++) {
-		// tileTextureIndices[i] = textureAtlas.getNumTextures() - 1;
-		// }
-
-		// constructing
-		for (int i = 1; i < TILE_COUNT; i++) {
-			for (int j = 1; j < TILE_COUNT; j++) {
-				chunkdata.topTileTextureIndices[(TILE_TEX_INDICE_COUNT - 1 - j) * TILE_TEX_INDICE_COUNT + (i)] = chunkdata.getTile(j - 1, i - 1).textureIndex;
-			}
-		}
-
-		info.println("PRINTING TERRAIN:");
-
-		String t = "";
-		for (int i = 0; i < chunkdata.topTileTextureIndices.length; i++) {
-			if (i % TILE_TEX_INDICE_COUNT == 0) {
-				t += System.lineSeparator();
-			}
-			t += "[" + (int) chunkdata.topTileTextureIndices[i] + "]";
-		}
-		info.println(t);
-	}
+	
 
 	public void registerNeighbour(Chunk terrain, boolean first) {
 		// L T R B
@@ -449,7 +404,6 @@ public class Chunk {
 
 	public void dismiss() {
 		model.delete();
-		chunkdata.dismiss();
 	}
 
 	// public Tile[][] getTiles() {
