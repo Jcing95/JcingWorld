@@ -18,12 +18,15 @@ uniform sampler2D rightTexture;
 
 uniform sampler2D blendMap;
 uniform sampler2D textureAtlas;
+uniform sampler2D selectedOverlay;
 
 uniform vec3 lightColor;
 uniform float ambient;
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
+
+uniform vec2 selected;
 
 uniform float numTextures;
 
@@ -38,6 +41,7 @@ vec2 texOffset(float texIndex){
 void main(void){
 	vec2 tiledCoords = pass_textureCoords*(TILECOUNT);
 	vec4 blendMapColor = texture(blendMap, tiledCoords);
+	vec4 selectedOverlayColor =  texture(selectedOverlay,tiledCoords);
 	float backGroundTextureAmount = 1-blendMapColor.a;
 	float rightTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 	
@@ -63,7 +67,9 @@ void main(void){
 	
 	
 	vec4 totalColor = backgroundTextureColor + (topTextureColor + bottomTextureColor + leftTextureColor + rightTextureColor);
-	
+	if(pos == selected){
+		totalColor += selectedOverlayColor;
+	}
 	vec3 unitNormal = normalize(surfaceNormal);
 	vec3 unitLightVector = normalize(toLightVector);
 	

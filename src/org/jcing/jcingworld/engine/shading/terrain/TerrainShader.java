@@ -6,6 +6,7 @@ import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.shading.ShaderProgram;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class TerrainShader extends ShaderProgram {
@@ -26,6 +27,8 @@ public class TerrainShader extends ShaderProgram {
     private int location_blendMap;
     private int location_numTextures;
     private int location_textureIndices;
+    private int location_selectedVec;
+    private int location_selectedOverlay;
 
     public TerrainShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -53,11 +56,14 @@ public class TerrainShader extends ShaderProgram {
         location_blendMap = super.getUniformLocation("blendMap");
         location_numTextures = super.getUniformLocation("numTextures");
         location_textureIndices = super.getUniformLocation("textureIndices");
+        location_selectedVec = super.getUniformLocation("selected");
+        location_selectedOverlay = super.getUniformLocation("selectedOverlay");
     }
 
     public void connectTextureUnits() {
         super.loadInt(location_blendMap, 0);
         super.loadInt(location_textureAtlas, 1);
+        super.loadInt(location_selectedOverlay, 2);
     }
 
     public void loadShineVariables(float damper, float reflectivity) {
@@ -73,9 +79,10 @@ public class TerrainShader extends ShaderProgram {
         super.loadMatrix(location_transformationMatrix, matrix);
     }
 
-    public void loadTerrainData(float[] textureIndices, float numTextures) {
+    public void loadTerrainData(float[] textureIndices, float numTextures, Vector2f selected) {
         super.loadFloatArray(location_textureIndices, textureIndices);
         super.loadFloat(location_numTextures, numTextures);
+        super.load2DVector(location_selectedVec, selected);
     }
 
     public void loadProjectionMatrix(Matrix4f projection) {

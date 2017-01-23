@@ -14,6 +14,7 @@ import org.jcing.jcingworld.engine.rendering.MasterRenderer;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Terrain {
 
@@ -49,11 +50,15 @@ public class Terrain {
 
     private LinkedList<Point> unloaded;
 
+	private BaseImage selectedTex;
+
     public Terrain(Loader loader, MasterRenderer renderer) {
         this.loader = loader;
         this.renderer = renderer;
         blendMap = loader.loadTexture("terrain/blend/32N.png", false);
+        selectedTex = loader.loadTexture("terrain/selectedOverlay.png", true);
         textureAtlas = new TextureAtlas("terrain/naturalFloor", loader);//loader.loadTexture("terrain/100Square.png", false),16);
+        
         gen = new MapGenerator(1337);
         chunks = new HashMap<Integer, HashMap<Integer, Chunk>>(RENDERDISTANCERADIUS * 2 + 1, 1);
         activesTemplate = new LinkedList<Point>();
@@ -101,7 +106,7 @@ public class Terrain {
     }
 
     private void addChunk(int x, int z) {
-        Chunk chunk = new Chunk(x, z, loader, renderer.getTerrainShader(), textureAtlas, blendMap,
+        Chunk chunk = new Chunk(x, z, loader, renderer.getTerrainShader(), textureAtlas, blendMap, selectedTex,
                 this);
         if (chunks.get(x) == null) {
             HashMap<Integer, Chunk> newMap = new HashMap<Integer, Chunk>(
@@ -320,5 +325,17 @@ public class Terrain {
 
 	public Point getPlayerChunkPos() {
 		return playerChunkPos;
+	}
+
+	private Vector3f mousePos;
+	public void select(Vector3f pos) {
+		mousePos = pos;
+	}
+
+	public Vector3f getMousePos() {
+		if(mousePos == null){
+			return new Vector3f(0,0,0);
+		}
+		return mousePos;
 	}
 }

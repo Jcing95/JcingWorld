@@ -84,6 +84,7 @@ public class Game {
 		player.moveCamera(cam);
 
 		terrain.updatePlayerPos(player);
+		terrain.select(picker.getCurrentTerrainPoint());
 		terrain.processActives();
 		if (Mouse.button[GLFW.GLFW_MOUSE_BUTTON_LEFT])
 			renderer.processEntity(pickTest);

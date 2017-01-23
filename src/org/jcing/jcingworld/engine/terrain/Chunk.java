@@ -1,5 +1,6 @@
 package org.jcing.jcingworld.engine.terrain;
 
+import java.awt.Rectangle;
 import java.io.PrintStream;
 
 import org.jcing.jcingworld.engine.Loader;
@@ -9,6 +10,8 @@ import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * 
@@ -42,10 +45,6 @@ public class Chunk {
 	private RawModel model;
 	private TextureAtlas textureAtlas;
 
-	public TextureAtlas getTextureAtlas() {
-		return textureAtlas;
-	}
-
 	private BaseImage blendMap;
 	private Terrain terrain;
 
@@ -54,14 +53,22 @@ public class Chunk {
 
 	private static int[] indices;
 	float x, z;
+	
+	private Rectangle bounds;
+
+	private BaseImage selectedTex;
+
+	private Vector2f selectedVec;
 
 	public Chunk(int gridX, int gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas,
-			BaseImage blendMap, Terrain terrain) {
+			BaseImage blendMap, BaseImage selectedTex, Terrain terrain) {
 		// TODO: everything from manager
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
+//		bounds = new Rectangle((int)x,(int)z,(int)SIZE,(int)SIZE);
 		this.textureAtlas = textureAtlas;
 		this.blendMap = blendMap;
+		this.selectedTex = selectedTex;
 		this.terrain = terrain;
 		// gridPos = new Vector2f(gridX, gridZ);
 		chunkdata = terrain.getSaver().get(gridX, gridZ);
@@ -414,6 +421,34 @@ public class Chunk {
 
 	public void dismiss() {
 		model.delete();
+	}
+
+	int i,j;
+	
+	private int convertWorldPos(float x){
+		return Maths.fastFloor(x / Chunk.SIZE);
+	}
+	public Vector2f getSelected() {
+		Vector2f mousePos = new Vector2f(terrain.getMousePos().x,terrain.getMousePos().z);
+		if(convertWorldPos(mousePos.x) == this.getGridX() && convertWorldPos(mousePos.y) == this.getGridZ()){
+			System.out.println("SELECTED!" +  (mousePos.y-z)/TILE_SIZE +"|"+(mousePos.x-x)/TILE_SIZE);
+			return new Vector2f(Maths.fastFloor((mousePos.y-z)/TILE_SIZE),Maths.fastFloor(TILE_COUNT-(mousePos.x-x)/TILE_SIZE-1));
+		}
+		i%=TILE_COUNT;
+		j%= TILE_COUNT;
+		return new Vector2f(-1,-1);
+//		return selectedVec;
+	}
+
+	public BaseImage getSelectedTex() {
+		// TODO Auto-generated method stub
+		return selectedTex;
+	}
+
+	public void select(Vector3f pos) {
+//		int x = Maths.fastFloor(pos.x%SIZE);
+//		int y = Maths.fastFloor(pos.y%SIZE);
+		selectedVec = new Vector2f(pos.x%SIZE,pos.z%SIZE);
 	}
 
 	// public Tile[][] getTiles() {

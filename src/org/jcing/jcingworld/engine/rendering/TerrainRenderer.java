@@ -35,24 +35,26 @@ public class TerrainRenderer {
         }
     }
 
-    public void prepareTerrain(Chunk terrain) {
-        RawModel rawModel = terrain.getModel();
+    public void prepareTerrain(Chunk chunk) {
+        RawModel rawModel = chunk.getModel();
         GL30.glBindVertexArray(rawModel.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
         GL20.glEnableVertexAttribArray(2);
-        bindTextures(terrain);
+        bindValues(chunk);
         shader.loadShineVariables(1, 0);
 
     }
 
-    private void bindTextures(Chunk terrain) {
+    private void bindValues(Chunk chunk) {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, chunk.getBlendMap().getTextureID());
         GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getTexturePack().getTextureID());
-        shader.loadTerrainData(terrain.getTextureIndices(), terrain.getTexturePack().getRows());
-
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, chunk.getTexturePack().getTextureID());
+        GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, chunk.getSelectedTex().getTextureID());
+        shader.loadTerrainData(chunk.getTextureIndices(), chunk.getTexturePack().getRows(),chunk.getSelected());
+        
         //		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getBackgroundTexture().getTextureID());
         //		
         //		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getrTexture().getTextureID());
