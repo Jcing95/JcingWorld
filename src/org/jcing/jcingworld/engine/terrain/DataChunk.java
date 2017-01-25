@@ -12,229 +12,213 @@ import org.jcing.jcingworld.logging.Logs;
 
 public class DataChunk {
 
-	public HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>> loaded;
-	public static final String fileExtension = ".jcf";
+    public HashMap<Integer, HashMap<Integer, ChunkData[][]>> loaded;
+    public static final String fileExtension = ".jcf";
 
-	public static final int SIZE = 8;
+    public static final int SIZE = 8;
 
-	private LinkedList<Point> assembledKeys;
+    private LinkedList<Point> assembledKeys;
 
-	private Terrain terrain;
-	
-	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
+    private Terrain terrain;
 
-	public DataChunk(Terrain terrain) {
-	    this.terrain = terrain;
-		loaded = new HashMap<Integer, HashMap<Integer, ChunkFrameData[][]>>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1);
-		assembledKeys = new LinkedList<Point>();
-	}
+    private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
 
-	private void put(int x, int z, ChunkFrameData dta) {
-		int xF = makeF(x);
-		int zF = makeF(z);
-		if (!loaded(xF, zF)) {
-			if (!load(xF, zF)) {
-				if (!loaded.containsKey(xF))
-					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1));
-				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
-			}
-		}
-		loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
-		if(!assembledKeys.contains(new Point(xF,zF))){
-			assembledKeys.add(new Point(xF, zF));
-			out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
-		}
-		out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "][" + arr(z) + "]");
-	}
+    public DataChunk(Terrain terrain) {
+        this.terrain = terrain;
+        loaded = new HashMap<Integer, HashMap<Integer, ChunkData[][]>>(
+                Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1);
+        assembledKeys = new LinkedList<Point>();
+    }
 
-	public ChunkFrameData get(int x, int z) {
-		int xF = makeF(x);
-		int zF = makeF(z);
-		if (loaded(xF, zF)) {
-			out.println("got loaded CD[" + arr(x) + "|" + arr(z) + "] at (" +xF + "|" + zF + ")");
-			if(loaded.get(xF).get(zF)[arr(x)][arr(z)] == null){
-				ChunkFrameData dta = new ChunkFrameData(x,z,terrain.getTextureAtlas());
-	    		put(x,z,dta);
-				return dta;
-			}else
-			return loaded.get(xF).get(zF)[arr(x)][arr(z)];
-		} else {
-			if (load(xF, zF)) {
-				out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "]");
-				if(loaded.get(xF).get(zF)[arr(x)][arr(z)] == null){
-					ChunkFrameData dta = new ChunkFrameData(x,z,terrain.getTextureAtlas());
-		    		put(x,z,dta);
-					return dta;
-				}else
-				return loaded.get(xF).get(zF)[arr(x)][arr(z)];
-			} else {
-				out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z) + "] ... creating it");
-				ChunkFrameData dta = new ChunkFrameData(x,z,terrain.getTextureAtlas());
-	    		put(x,z,dta);
-				return dta;
-			}
-		}
-	}
+    private void put(int x, int z, ChunkData dta) {
+        int xF = makePack(x);
+        int zF = makePack(z);
+        if (!loaded(xF, zF)) {
+            if (!load(xF, zF)) {
+                if (!loaded.containsKey(xF))
+                    loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
+                            Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
+                loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
+            }
+        }
+        loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
+        if (!assembledKeys.contains(new Point(xF, zF))) {
+            assembledKeys.add(new Point(xF, zF));
+            out.println("registered!" + assembledKeys.size() + "(" + xF + "|" + zF + ")");
+        }
+        out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "]["
+                + arr(z) + "]");
+    }
 
-	private boolean load(int xF, int zF) {
-		ChunkFrameData[][] fromFile = (ChunkFrameData[][]) FileLoader.loadFile(genFileName(xF, zF));
-		if (fromFile != null) {
-			if (!loaded.containsKey(xF)) {
-				loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1));
-			}
-			loaded.get(xF).put(zF, fromFile);
-			
-//			changed = true;
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public ChunkData get(int x, int z) {
+        int xF = makePack(x);
+        int zF = makePack(z);
+        if (loaded(xF, zF)) {
+            out.println("got loaded CD[" + arr(x) + "|" + arr(z) + "] at (" + xF + "|" + zF + ")");
+            if (loaded.get(xF).get(zF)[arr(x)][arr(z)] == null) {
+                ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
+                put(x, z, dta);
+                return dta;
+            } else
+                return loaded.get(xF).get(zF)[arr(x)][arr(z)];
+        } else {
+            if (load(xF, zF)) {
+                out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z)
+                        + "]");
+                if (loaded.get(xF).get(zF)[arr(x)][arr(z)] == null) {
+                    ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
+                    put(x, z, dta);
+                    return dta;
+                } else
+                    return loaded.get(xF).get(zF)[arr(x)][arr(z)];
+            } else {
+                out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z)
+                        + "] ... creating it");
+                ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
+                put(x, z, dta);
+                return dta;
+            }
+        }
+    }
 
-	private void save(int xF, int zF) {
-		FileLoader.saveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
-		loaded.get(xF).remove(zF);
-		if (loaded.get(xF).size() == 0) {
-			loaded.remove(xF);
-		}
-	}
+    private boolean load(int xF, int zF) {
+        ChunkData[][] fromFile = (ChunkData[][]) FileLoader.loadFile(genFileName(xF, zF));
+        if (fromFile != null) {
+            if (!loaded.containsKey(xF)) {
+                loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
+                        Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
+            }
+            loaded.get(xF).put(zF, fromFile);
 
-	// private void save(Vector2f vec) {
-	// save(Maths.fastFloor(vec.x), Maths.fastFloor(vec.y));
-	// }
+            //			changed = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-//	public HashMap<Integer, Integer> assembleKeys() {
-//		if (changed) {
-//			assembledKeys = new HashMap<Integer, Integer>(loaded.size());
-//			for (int x : loaded.keySet()) {
-//				for (int y : loaded.get(x).keySet()) {
-//					assembledKeys.put(x, y);
-//				}
-//			}
-//			changed = false;
-//		}
-//		return assembledKeys;
-//	}
+    public void dismiss(int x, int z){
+        int xF = makePack(x);
+        int zF = makePack(z);
+        int arrX = arr(x);
+        int arrZ = arr(z);
+        
+        loaded.get(xF).get(zF)[arrX][arrZ] = null;
+        if(empty(loaded.get(xF).get(zF))){
+            loaded.get(xF).remove(zF);
+            if(loaded.get(xF).size() == 0){
+                loaded.remove(xF);
+            }
+        }
+        
+    }
+    
+    private boolean empty(ChunkData[][] chunkDatas) {
+        for (ChunkData[] chunkDatas2 : chunkDatas) {
+            for (ChunkData chunkData : chunkDatas2) {
+                if(chunkData != null){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
-	public void printStatus() {
-////		assembleKeys();
-//		out.println("Printing DataChunk status");
-//
-//		for (int x : assembledKeys.keySet()) {
-//			out.println("- [" + x + "][" + assembledKeys.get(x) + "]");
-//			ChunkFrameData[][] dta = loaded.get(x).get(assembledKeys.get(x));
-//			out.println("subChunk:");
-//
-//			int length = (x > assembledKeys.get(x)) ? ("" + x).length() : ("" + assembledKeys.get(x)).length();
-//			String notLoaded = "[";
-//			for (int j = 0; j < length; j++) {
-//				notLoaded += "X";
-//			}
-//			notLoaded += "|";
-//			for (int j = 0; j < length; j++) {
-//				notLoaded += "X";
-//			}
-//			notLoaded += "]";
-//
-//			for (int i = 0; i < dta.length; i++) {
-//				String line = "----";
-//				for (int j = 0; j < dta.length; j++) {
-//					if (dta[i][j] != null) {
-//						line += "[" + x + i + "|" + assembledKeys.get(x) + j + "]";
-//					} else {
-//						line += notLoaded;
-//					}
-//				}
-//				out.println(line);
-//			}
-//		}
-	}
+    private void save(int xF, int zF) {
+        FileLoader.saveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
+        loaded.get(xF).remove(zF);
+        if (loaded.get(xF).size() == 0) {
+            loaded.remove(xF);
+        }
+    }
 
-	public void finish() {
-//		assembleKeys();
-		for (Point pt : assembledKeys) {
-//          frame.percent = (double)i/assembledKeys.size();
-//          frame.repaint();
-//            save(pt.x, pt.y);
+    public void finish() {
+        for (Point pt : assembledKeys) {
             out.println("saved " + pt.x + "|" + pt.y);
         }
-		
-//		for (int x : loaded.keySet()) {
-//            for (int z : loaded.get(x).keySet()) {
-//                save(x,z);
-//            }
-//        }
-//		Thread th = new Thread(){
-//		    public void run(){
-////		        WorldSaverFrame frame = new WorldSaverFrame();
-//		        int i=0;
-//		        for (int x : assembledKeys.keySet()) {
-////		            frame.percent = (double)i/assembledKeys.size();
-////		            frame.repaint();
-//		            save(x, assembledKeys.get(x));
-//		            out.println("saved " + x + "|" + assembledKeys.get(x));
-//		            i++;
-//		        }
-////		        frame.dispose();
-//		        out.println("finished saving!");
-//		        try {
-//					join();
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//		    }
-//		};
-//		th.run();
-//		
-//		
-	}
 
-	private boolean loaded(int xF, int zF) {
-		return loaded.containsKey(xF) && loaded.get(xF).containsKey(zF);
-	}
+        //		for (int x : loaded.keySet()) {
+        //            for (int z : loaded.get(x).keySet()) {
+        //                save(x,z);
+        //            }
+        //        }
 
-	private File genFileName(int xF, int zF) {
-		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + "/frame" +fileExtension);
-	}
+        //UNUSED:
 
-	static int makeF(int x){
-		if (x >= 0) {
-			return x / SIZE;
-		}
-		return (x / SIZE)-1;
-	}
-	
-	private int arr(int x) {
-		if (x >= 0) {
-			return x % SIZE;
-		}
-		return -(x % SIZE);
-	}
+        //		Thread th = new Thread(){
+        //		    public void run(){
+        ////		        WorldSaverFrame frame = new WorldSaverFrame();
+        //		        int i=0;
+        //		        for (int x : assembledKeys.keySet()) {
+        ////		            frame.percent = (double)i/assembledKeys.size();
+        ////		            frame.repaint();
+        //		            save(x, assembledKeys.get(x));
+        //		            out.println("saved " + x + "|" + assembledKeys.get(x));
+        //		            i++;
+        //		        }
+        ////		        frame.dispose();
+        //		        out.println("finished saving!");
+        //		        try {
+        //					join();
+        //				} catch (InterruptedException e) {
+        //					// TODO Auto-generated catch block
+        //					e.printStackTrace();
+        //				}
+        //		    }
+        //		};
+        //		th.run();
+        //		
+        //		
+    }
 
-	public void preparePackage(int x, int z) {
-		int xF = x;//makeF(x);
-		int zF = z;//makeF(z);
-		if(!loaded(xF,zF)){
-			if(!load(xF,zF)){
-				if (!loaded.containsKey(xF))
-					loaded.put(xF, new HashMap<Integer, ChunkFrameData[][]>(Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2,1));
-				loaded.get(xF).put(zF, new ChunkFrameData[SIZE][SIZE]);
-				init(x, z);
-			}
-		}
-		if(!assembledKeys.contains(new Point(xF,zF))){
-            assembledKeys.add(new Point(xF, zF));
-            out.println("registered!" + assembledKeys.size() + "("+xF +"|"+zF+")");
+    private boolean loaded(int xF, int zF) {
+        return loaded.containsKey(xF) && loaded.get(xF).containsKey(zF);
+    }
+
+    private File genFileName(int xF, int zF) {
+        return new File(
+                "saves/" + Game.saveGameName + "/" + xF + "_" + zF + "/frame" + fileExtension);
+    }
+
+    public static int makePack(int x) {
+        if (x >= 0) {
+            return x / SIZE;
         }
-	}
+        return (x / SIZE) - 1;
+    }
+
+    private int arr(int x) {
+        if (x >= 0) {
+            return x % SIZE;
+        }
+        return -(x % SIZE);
+    }
+
+    public void preparePackage(int x, int z) {
+        int xF = x;//makeF(x);
+        int zF = z;//makeF(z);
+        if (!loaded(xF, zF)) {
+            if (!load(xF, zF)) {
+                if (!loaded.containsKey(xF))
+                    loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
+                            Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
+                loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
+                init(x, z);
+            }
+        }
+        if (!assembledKeys.contains(new Point(xF, zF))) {
+            assembledKeys.add(new Point(xF, zF));
+            out.println("registered!" + assembledKeys.size() + "(" + xF + "|" + zF + ")");
+        }
+    }
 
     private void init(int x, int z) {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-//                ChunkFrameData dta =  
-                loaded.get(makeF(x)).get(makeF(z))[arr(i+x)][arr(j+z)]=new ChunkFrameData(x+i,z+j,terrain.getTextureAtlas());
-                
+                //                ChunkFrameData dta =  
+                loaded.get(makePack(x)).get(makePack(z))[arr(i + x)][arr(j + z)] = new ChunkData(
+                        x + i, z + j, terrain.getTextureAtlas(), terrain);
+
             }
         }
     }

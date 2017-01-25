@@ -11,72 +11,91 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class LoadingCrawler extends Thread {
 
-	private List<Point> unloadPackagesTemplate;
-	private List<Point> loadedChunks;
-	private boolean running, check;
-	private Terrain terrain;
-	Player player;
+    private List<Point> preparePackagesTemplate;
+    private List<Point> loadedChunks;
+    private List<Point> markedAsLoaded;
+    private List<Point> unloaded;
+    private boolean running, check;
+    private Terrain terrain;
+    Player player;
 
-	public LoadingCrawler(Terrain terrain, List<Point> loadedChunks) {
-		this.terrain = terrain;
-		this.loadedChunks = loadedChunks;
-		unloadPackagesTemplate = new LinkedList<Point>();
-		initTemplate();
-		check = false;
-		running = true;
-	}
+    public LoadingCrawler(Terrain terrain) {
+        this.terrain = terrain;
+        loadedChunks = new LinkedList<Point>();
+        unloaded = new LinkedList<Point>();
+        markedAsLoaded = new LinkedList<Point>();
+        preparePackagesTemplate = new LinkedList<Point>();
+        initTemplate();
+        check = false;
+        running = true;
+    }
 
-	private void initTemplate() {
-		for (int i = 0; i < Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2; i++) {
-			for (int j = 0; j < Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2; j++) {
-				if (new Vector2f(i, j).length() < Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2)
-					unloadPackagesTemplate.add(new Point(i, j));
-			}
-		}
-	}
+    private void initTemplate() {
+        for (int i = 0; i < Math.ceil((float) Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE)
+                + 1; i++) {
+            for (int j = 0; j < Math.ceil((float) Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE)
+                    + 1; j++) {
+                if (new Vector2f(i, j)
+                        .length() < Math.ceil((float) Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE)
+                                + 1)
+                    preparePackagesTemplate.add(new Point(i, j));
+            }
+        }
+    }
 
-	public void run() {
-		setPriority(MIN_PRIORITY);
-		GL.setCapabilities(DisplayManager.glCapabilities);
+    public void run() {
+        //		setPriority(MIN_PRIORITY);
+        GL.setCapabilities(DisplayManager.glCapabilities);
 
-		while (running) {
-			while (!check && running) {
-				try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			check = false;
-			for (Point chunk : unloadPackagesTemplate) {
-				if(!running)
-					return;
-				terrain.getSaver().preparePackage(chunk.x+DataChunk.makeF(terrain.getPlayerChunkPos().x), chunk.y+DataChunk.makeF(terrain.getPlayerChunkPos().y));
-			}
-			for (Point chunk : loadedChunks) {
-				if(!running)
-					return;
-				if(terrain.isSupposedToUnload(chunk)){
-					terrain.unload(chunk);
-				}
-			}
-			terrain.finishUnloading();
-		}
-	}
+        while (running) {
+            while (!check && running) {
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            check = false;
+            for (Point pack : preparePackagesTemplate) {
+                terrain.getSaver().preparePackage(
+                        pack.x + DataChunk.makePack(terrain.getPlayerChunkPos().x),
+                        pack.y + DataChunk.makePack(terrain.getPlayerChunkPos().y));
+            }
+            for (Point chunk : markedAsLoaded) {
+                loadedChunks.add(chunk);
+            }
+            markedAsLoaded.clear();
+            
+            for (Point chunk : loadedChunks) {
+                if (terrain.isSupposedToUnload(chunk)) {
+                    terrain.unload(chunk);
+                    unloaded.add(chunk);
+                }
+            }
+            for (Point point : unloaded) {
+                loadedChunks.remove(point);
+            }
+            unloaded.clear();
+        }
+    }
 
-	public List<Point> getLoadedChunks() {
-		return unloadPackagesTemplate;
-	}
+    public void markLoaded(Point chunk) {
+        markedAsLoaded.add(chunk);
+    }
 
-	public void setLoadedChunks(List<Point> loadedChunks) {
-		this.unloadPackagesTemplate = loadedChunks;
-	}
+    public List<Point> getLoadedChunks() {
+        return preparePackagesTemplate;
+    }
 
-	public void check() {
-		check = true;
-	}
+    public void setLoadedChunks(List<Point> loadedChunks) {
+        this.preparePackagesTemplate = loadedChunks;
+    }
 
-	public void setRunning(boolean b) {
-		running = b;
-	}
+    public void check() {
+        check = true;
+    }
+
+    public void setRunning(boolean b) {
+        running = b;
+    }
 }

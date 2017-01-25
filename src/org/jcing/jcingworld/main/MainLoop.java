@@ -28,11 +28,8 @@ import org.lwjgl.util.vector.Vector2f;
 public class MainLoop {
 
     private static double newMouseX;
-
     private static double newMouseY;
-
     private static double prevMouseX;
-
     private static double prevMouseY;
 
     private static long window;
@@ -46,15 +43,7 @@ public class MainLoop {
 
     private static final boolean WIRE = false;
 
-    public static void main(String[] args) {
-        
-//        JHash<String> hash = new JHash<String>();
-//        
-//        hash.put("test index 0", 0);
-//        hash.put("test 1000", 1000);
-//        System.out.println(hash.get(0));
-//        System.out.println(hash.get(1000));
-            
+    public static void main(String[] args) {   
         new MainLoop();
     }
 
@@ -62,15 +51,21 @@ public class MainLoop {
         try {
             System.setProperty("org.lwjgl.librarypath",
                     new File("lib/lwjgl3/native").getAbsolutePath());
+            
             loader = new Loader();
             window = DisplayManager.init();
+            
             renderer = new MasterRenderer();
-            guiRenderer = new GUIRenderer(loader);
+            
+            guiRenderer = new GUIRenderer(loader); //TODO: overlook GUI and Font
             gui = new GuiManager();
+            
             game = new Game(loader, renderer);
 
             TextMaster.init(loader);
+            
             MasterRenderer.enableCulling();
+            
             loop();
 
             // Free the window callbacks and destroy the window
@@ -84,7 +79,7 @@ public class MainLoop {
     }
 
     private void loop() {
-
+        //Initializing FPS - text
         DecimalFormat dec = new DecimalFormat("#.##");
         dec.setMinimumFractionDigits(2);
         FontType font = new FontType(loader.loadTexture("fonts/immortal.png", true),
@@ -95,30 +90,37 @@ public class MainLoop {
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(window)) {
-            manageMouse();
-            game.tick();
+            manageMouse(); //update mouse position
+            
+            game.tick(); //update game TODO: time based game ticks.
+            
+            //update debugging text
             fpsText.setText("FPS: " + DisplayManager.fps + " X: "
                     + dec.format(game.getPlayer().getPosition().x) + " Y: "
                     + dec.format(game.getPlayer().getPosition().y) + " Z: "
                     + dec.format(game.getPlayer().getPosition().z));
 
-            renderer.render(game.getSun(), game.getAmbient(), game.getCam());
+            //render game
+            renderer.render(game.getSun(), game.getCam());
 
+            //render GUIs
             guiRenderer.render(gui.getParts());
-
+            
+            //render text
             if (WIRE)
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
             TextMaster.render();
             if (WIRE)
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 
+            //draw
             DisplayManager.updateDisplay();
         }
-        game.finish();
+        
+        game.cleanUp();
         guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();
-        
     }
 
     private void manageMouse() {
@@ -143,7 +145,6 @@ public class MainLoop {
 
         prevMouseX = newMouseX;
         prevMouseY = newMouseY;
-
     }
 
     public static Game getGame() {

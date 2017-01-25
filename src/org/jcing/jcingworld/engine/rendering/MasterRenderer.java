@@ -51,12 +51,12 @@ public class MasterRenderer {
 
 	}
 
-	public void render(Light sun, Ambient ambient, Camera camera) {
+	public void render(Light sun, Camera camera) {
 		prepare();
 		shader.start();
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLight(sun);
-		shader.loadAmbient(ambient);
+//		shader.loadAmbient(sun.getAmbient());
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 
@@ -64,7 +64,7 @@ public class MasterRenderer {
 		terrainShader.start();
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLight(sun);
-		terrainShader.loadAmbient(ambient);
+//		terrainShader.loadAmbient(sun);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();

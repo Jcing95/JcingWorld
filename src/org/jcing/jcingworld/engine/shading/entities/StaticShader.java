@@ -76,10 +76,7 @@ public class StaticShader extends org.jcing.jcingworld.engine.shading.ShaderProg
     public void loadLight(Light light) {
         super.loadVector(location_lightPosition, light.getPosition());
         super.loadVector(location_lightColour, light.getColour());
-    }
-
-    public void loadAmbient(Ambient ambient) {
-        super.loadFloat(location_ambient, ambient.brightness);
+        super.loadFloat(location_ambient, light.getAmbient());
     }
 
 }

@@ -39,7 +39,7 @@ public class Chunk {
 	// TODO: terrain generation y Interpolation
 
 	// private float[][] heightMap;
-	ChunkFrameData chunkdata;
+	ChunkData chunkdata;
 
 	// private Point gridPos;
 	private RawModel model;
@@ -53,12 +53,8 @@ public class Chunk {
 
 	private static int[] indices;
 	float x, z;
-	
-	private Rectangle bounds;
 
 	private BaseImage selectedTex;
-
-	private Vector2f selectedVec;
 
 	public Chunk(int gridX, int gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas,
 			BaseImage blendMap, BaseImage selectedTex, Terrain terrain) {
@@ -368,7 +364,7 @@ public class Chunk {
 		return chunkdata.topTileTextureIndices;
 	}
 
-	public ChunkFrameData getChunkdata() {
+	public ChunkData getChunkdata() {
 		return chunkdata;
 	}
 
@@ -421,6 +417,7 @@ public class Chunk {
 
 	public void dismiss() {
 		model.delete();
+		chunkdata.dismiss();
 	}
 
 	int i,j;
@@ -431,7 +428,7 @@ public class Chunk {
 	public Vector2f getSelected() {
 		Vector2f mousePos = new Vector2f(terrain.getMousePos().x,terrain.getMousePos().z);
 		if(convertWorldPos(mousePos.x) == this.getGridX() && convertWorldPos(mousePos.y) == this.getGridZ()){
-			System.out.println("SELECTED!" +  (mousePos.y-z)/TILE_SIZE +"|"+(mousePos.x-x)/TILE_SIZE);
+//			System.out.println("SELECTED!" +  (mousePos.y-z)/TILE_SIZE +"|"+(mousePos.x-x)/TILE_SIZE);
 			return new Vector2f(Maths.fastFloor((mousePos.y-z)/TILE_SIZE),Maths.fastFloor(TILE_COUNT-(mousePos.x-x)/TILE_SIZE-1));
 		}
 		i%=TILE_COUNT;
@@ -445,11 +442,6 @@ public class Chunk {
 		return selectedTex;
 	}
 
-	public void select(Vector3f pos) {
-//		int x = Maths.fastFloor(pos.x%SIZE);
-//		int y = Maths.fastFloor(pos.y%SIZE);
-		selectedVec = new Vector2f(pos.x%SIZE,pos.z%SIZE);
-	}
 
 	// public Tile[][] getTiles() {
 	// return chunkdata.tiles;

@@ -18,78 +18,69 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Terrain {
 
+    
+    private MapGenerator gen = new MapGenerator(1337);
+    
+    
     private HashMap<Integer, HashMap<Integer, Chunk>> chunks;
 
     //loading management
     public static final int RENDERDISTANCERADIUS = 10;
-
     private static final int KEEPCHUNKBUFFERLENGTH = 5;
 
-    public static MapGenerator gen = new MapGenerator(1337);
-    //	public static final int UNLOADRANGERADIUS = 10;
-    //	public static final int PACKAGESIZE = 10;
-    //	public static final int LOADEDPACKAGEDISTANCE = 5;
-    //	private static final boolean FLAT = false;
+    
 
-    //	private MapGenerator gen;
     private List<Point> activesTemplate;
-    private List<Point> loadedChunks;
     private Point playerChunkPos;
 
     private Loader loader;
     private MasterRenderer renderer;
 
     private DataChunk saver;
+    
+    private Vector3f mousePos;
 
-    BaseImage blendMap;
-    TextureAtlas textureAtlas;
+    private BaseImage blendMap;
+    private TextureAtlas textureAtlas;
 
-    PrintStream out = Logs.chunkLoading;
+    private PrintStream out = Logs.chunkLoading;
 
-    LoadingCrawler lc;
-
-    private LinkedList<Point> unloaded;
+    private LoadingCrawler lc;
 
 	private BaseImage selectedTex;
 
     public Terrain(Loader loader, MasterRenderer renderer) {
         this.loader = loader;
         this.renderer = renderer;
+        
+        //set textures
         blendMap = loader.loadTexture("terrain/blend/32N.png", false);
         selectedTex = loader.loadTexture("terrain/selectedOverlay.png", true);
         textureAtlas = new TextureAtlas("terrain/naturalFloor", loader);//loader.loadTexture("terrain/100Square.png", false),16);
         
-        gen = new MapGenerator(1337);
+        //intiialize lists
         chunks = new HashMap<Integer, HashMap<Integer, Chunk>>(RENDERDISTANCERADIUS * 2 + 1, 1);
         activesTemplate = new LinkedList<Point>();
-        loadedChunks = new LinkedList<Point>();
-        unloaded = new LinkedList<Point>();
-        saver= new DataChunk(this);
+       
+        
         Chunk.initIndices();
+        gen = new MapGenerator(1337);
+        saver= new DataChunk(this);
+        
         initActiveMap();
-        lc = new LoadingCrawler(this, loadedChunks);
+        lc = new LoadingCrawler(this);
         lc.start();
     }
 
     private void initActiveMap() {
+        
         for (int i = -RENDERDISTANCERADIUS; i < RENDERDISTANCERADIUS; i++) {
             for (int j = -RENDERDISTANCERADIUS; j < RENDERDISTANCERADIUS; j++) {
                 if (Math.abs(new Vector2f(i, j).length()) <= RENDERDISTANCERADIUS)
                     activesTemplate.add(new Point(i, j));
             }
         }
-//        LinkedList<Point> loadedTemplate = new LinkedList<Point>();
-//        for (int i = -RENDERDISTANCERADIUS - KEEPCHUNKBUFFERLENGTH; i < RENDERDISTANCERADIUS
-//                + KEEPCHUNKBUFFERLENGTH; i++) {
-//            for (int j = -RENDERDISTANCERADIUS - KEEPCHUNKBUFFERLENGTH; j < RENDERDISTANCERADIUS
-//                    + KEEPCHUNKBUFFERLENGTH; j++) {
-//                if (Math.abs(new Vector2f(i, j).length()) <= RENDERDISTANCERADIUS
-//                        + KEEPCHUNKBUFFERLENGTH)
-//                    loadedTemplate.add(new Point(i, j));
-//            }
-//        }
-        
-        //		lc.run();
+
         out.println("initialized Rendermap with a distance of: " + RENDERDISTANCERADIUS
                 + " there will be " + activesTemplate.size() + " Chunks rendered");
     }
@@ -119,7 +110,7 @@ public class Terrain {
         chunk.registerNeighbour(getChunk(x - 1, z), true);
         chunk.registerNeighbour(getChunk(x, z + 1), true);
         chunk.registerNeighbour(getChunk(x, z - 1), true);
-        loadedChunks.add(new Point(chunk.getGridX(), chunk.getGridZ()));
+        lc.markLoaded(new Point(chunk.getGridX(), chunk.getGridZ()));
     }
 
     public void updatePlayerPos(Player player) {
@@ -177,147 +168,23 @@ public class Terrain {
         return false;
     }
 
-    //	public boolean checkLoad(Point ch) {
-    //	    Point chunk = new Point(ch.x+playerPos.x,ch.y+playerPos.y);
-    //		if (!loadedChunks.contains(chunk) && new Vector2f(chunk.x - playerPos.x, chunk.y - playerPos.y).length() < RENDERDISTANCERADIUS
-    //				+ KEEPCHUNKBUFFERLENGTH) {
-    //			ChunkFrameData.prepare(chunk.x, chunk.y);
-    //			return true;
-    //		}
-    //		return false;
-    //	}
-
     public void unload(Point chunk) {
         chunks.get(chunk.x).get(chunk.y).dismiss();
         chunks.get(chunk.x).remove(chunk.y);
         if (chunks.get(chunk.x).size() == 0) {
             chunks.remove(chunk.x);
         }
-        unloaded.add(chunk);
-    }
-
-    public void finishUnloading() {
-        for (Point point : unloaded) {
-            loadedChunks.remove(point);
-        }
-        unloaded.clear();
     }
 
     public void finish() {
         lc.setRunning(false);
-
         try {
             lc.join();
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         saver.finish();
     }
-    //    public float getHeight(float x, float z) {
-    //        // float z = globalZ; // switch weil faul und fehler
-    //        // float x = globalX;
-    //        if (!inTerrain(x, z)) {
-    //            return 0;
-    //        }
-    //        float squareNumber = TILE_SIZE / 2;// SIZE / (float) (SQUARE_COUNT);
-    //        float terrainX = (x - this.x);
-    //        float terrainZ = (z - this.z);
-    //        int gridX = (int) Math.floor(terrainX / squareNumber);
-    //        int gridZ = (int) Math.floor(terrainZ / squareNumber);
-    //        float xCoord = (terrainX % squareNumber) / squareNumber;
-    //        float zCoord = (terrainZ % squareNumber) / squareNumber;
-    //        float answer;
-    //
-    //        if (gridX + 1 >= heightMap.length || gridZ + 1 >= heightMap.length) {
-    //            return 0;
-    //        }
-    //        if (xCoord <= (1 - zCoord)) {
-    //            answer = Maths.barryCentric(new Vector3f(0, heightMap[gridX][gridZ], 0),
-    //                    new Vector3f(1, heightMap[gridX + 1][gridZ], 0),
-    //                    new Vector3f(0, heightMap[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
-    //        } else {
-    //            answer = Maths.barryCentric(new Vector3f(1, heightMap[gridX + 1][gridZ], 0),
-    //                    new Vector3f(1, heightMap[gridX + 1][gridZ + 1], 1),
-    //                    new Vector3f(0, heightMap[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
-    //        }
-    //        return answer;
-    //    }
-    //	private void checkPackageChange() {
-    //		if(playerPackagePos == null){
-    //			playerPackagePos = getPackage(playerPos);
-    //		}else{
-    //			if(playerPackagePos != getPackage(playerPos)){
-    //				LinkedList<Vector2f> toRemove = new LinkedList<Vector2f>();
-    //				for (Vector2f loaded : loadedChunks) {
-    //					if(isSupposedToUnload(getPackage(loaded))){
-    //						toRemove.add(loaded);
-    //						getChunk(loaded).dismiss();
-    //					}
-    //				}
-    //				for (Vector2f rem : toRemove) {
-    //					chunks.get(rem.x).remove(rem.y);
-    //					if(chunks.get(rem.x).size() < 1){
-    //						chunks.remove(rem.x);
-    //					}
-    //				}
-    //			}
-    //		}
-    //	}
-    //    public float getHeight(float x, float z) {
-    //        // float z = globalZ; // switch weil faul und fehler
-    //        // float x = globalX;
-    //        if (!inTerrain(x, z)) {
-    //            return 0;
-    //        }
-    //        float squareNumber = TILE_SIZE / 2;// SIZE / (float) (SQUARE_COUNT);
-    //        float terrainX = (x - this.x);
-    //        float terrainZ = (z - this.z);
-    //        int gridX = (int) Math.floor(terrainX / squareNumber);
-    //        int gridZ = (int) Math.floor(terrainZ / squareNumber);
-    //        float xCoord = (terrainX % squareNumber) / squareNumber;
-    //        float zCoord = (terrainZ % squareNumber) / squareNumber;
-    //        float answer;
-    //
-    //        if (gridX + 1 >= heightMap.length || gridZ + 1 >= heightMap.length) {
-    //            return 0;
-    //        }
-    //        if (xCoord <= (1 - zCoord)) {
-    //            answer = Maths.barryCentric(new Vector3f(0, heightMap[gridX][gridZ], 0),
-    //                    new Vector3f(1, heightMap[gridX + 1][gridZ], 0),
-    //                    new Vector3f(0, heightMap[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
-    //        } else {
-    //            answer = Maths.barryCentric(new Vector3f(1, heightMap[gridX + 1][gridZ], 0),
-    //                    new Vector3f(1, heightMap[gridX + 1][gridZ + 1], 1),
-    //                    new Vector3f(0, heightMap[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
-    //        }
-    //        return answer;
-    //    }
-    //	private void checkPackageChange() {
-    //		if(playerPackagePos == null){
-    //			playerPackagePos = getPackage(playerPos);
-    //		}else{
-    //			if(playerPackagePos != getPackage(playerPos)){
-    //				LinkedList<Vector2f> toRemove = new LinkedList<Vector2f>();
-    //				for (Vector2f loaded : loadedChunks) {
-    //					if(isSupposedToUnload(getPackage(loaded))){
-    //						toRemove.add(loaded);
-    //						getChunk(loaded).dismiss();
-    //					}
-    //				}
-    //				for (Vector2f rem : toRemove) {
-    //					chunks.get(rem.x).remove(rem.y);
-    //					if(chunks.get(rem.x).size() < 1){
-    //						chunks.remove(rem.x);
-    //					}
-    //				}
-    //			}
-    //		}
-    //	}
-    //	private Vector2f getPackage(Vector2f chunk){
-    //		return new Vector2f((int)chunk.x/PACKAGESIZE,(int)chunk.y/PACKAGESIZE);
-    //	}
-    //	
 
     public DataChunk getSaver() {
         return saver;
@@ -327,7 +194,6 @@ public class Terrain {
 		return playerChunkPos;
 	}
 
-	private Vector3f mousePos;
 	public void select(Vector3f pos) {
 		mousePos = pos;
 	}
@@ -338,4 +204,8 @@ public class Terrain {
 		}
 		return mousePos;
 	}
+
+    public MapGenerator getGenerator() {
+        return gen;
+    }
 }
