@@ -12,7 +12,7 @@ import org.jcing.jcingworld.logging.Logs;
 
 public class DataChunk {
 
-    public HashMap<Integer, HashMap<Integer, ChunkData[][]>> loaded;
+    public HashMap<Integer, HashMap<Integer, ChunkContainer>> loaded;
     public static final String fileExtension = ".jcf";
 
     public static final int SIZE = 8;
@@ -21,76 +21,76 @@ public class DataChunk {
 
     private Terrain terrain;
 
-    private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
+    private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", true);
 
     public DataChunk(Terrain terrain) {
         this.terrain = terrain;
-        loaded = new HashMap<Integer, HashMap<Integer, ChunkData[][]>>(
-                Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1);
+        loaded = new HashMap<Integer, HashMap<Integer, ChunkContainer>>();
         assembledKeys = new LinkedList<Point>();
     }
 
-    private void put(int x, int z, ChunkData dta) {
-        int xF = makePack(x);
-        int zF = makePack(z);
-        if (!loaded(xF, zF)) {
-            if (!load(xF, zF)) {
-                if (!loaded.containsKey(xF))
-                    loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
-                            Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
-                loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
-            }
-        }
-        loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
-        if (!assembledKeys.contains(new Point(xF, zF))) {
-            assembledKeys.add(new Point(xF, zF));
-            out.println("registered!" + assembledKeys.size() + "(" + xF + "|" + zF + ")");
-        }
-        out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "]["
-                + arr(z) + "]");
-    }
+//    private void put(int x, int z, ChunkData dta) {
+//        int xF = makePack(x);
+//        int zF = makePack(z);
+//        if (!loaded(xF, zF)) {
+//            if (!load(xF, zF)) {
+//                if (!loaded.containsKey(xF))
+//                    loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
+//                            Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
+//                loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
+//            }
+//        }
+//        loaded.get(xF).get(zF)[arr(x)][arr(z)] = dta;
+//        if (!assembledKeys.contains(new Point(xF, zF))) {
+//            assembledKeys.add(new Point(xF, zF));
+//            out.println("registered!" + assembledKeys.size() + "(" + xF + "|" + zF + ")");
+//        }
+//        out.println("put " + x + "|" + z + " to saver ... (" + xF + "|" + zF + ")[" + arr(x) + "]["
+//                + arr(z) + "]");
+//    }
 
     public ChunkData get(int x, int z) {
         int xF = makePack(x);
         int zF = makePack(z);
         if (loaded(xF, zF)) {
-            out.println("got loaded CD[" + arr(x) + "|" + arr(z) + "] at (" + xF + "|" + zF + ")");
-            if (loaded.get(xF).get(zF)[arr(x)][arr(z)] == null) {
-                ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
-                put(x, z, dta);
-                return dta;
-            } else
-                return loaded.get(xF).get(zF)[arr(x)][arr(z)];
+            out.println("loaded CD (" + x + "|" + z + ") at (" + xF + "|" + zF + ")");
+            return loaded.get(xF).get(zF).get(x, z);
+//            if (loaded.get(xF).get(zF)[arr(x)][arr(z)] == null) {
+//                ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
+//                put(x, z, dta);
+//                return dta;
+//            } else
+//                return loaded.get(xF).get(zF)[arr(x)][arr(z)];
         } else {
-            if (load(xF, zF)) {
-                out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z)
-                        + "]");
-                if (loaded.get(xF).get(zF)[arr(x)][arr(z)] == null) {
-                    ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
-                    put(x, z, dta);
-                    return dta;
-                } else
-                    return loaded.get(xF).get(zF)[arr(x)][arr(z)];
-            } else {
-                out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z)
-                        + "] ... creating it");
-                ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
-                put(x, z, dta);
-                return dta;
-            }
+            out.println("UNLOADED CD (" + x + "|" + z + ") at (" + xF + "|" + zF + ")");
+            preparePackage(x, z);
+            return loaded.get(xF).get(zF).get(x, z);
+//            if (load(xF, zF)) {
+//                out.println("loading existing CD (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z)
+//                        + "]");
+//                if (loaded.get(xF).get(zF)[arr(x)][arr(z)] == null) {
+//                    ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
+//                    put(x, z, dta);
+//                    return dta;
+//                } else
+//                    return loaded.get(xF).get(zF)[arr(x)][arr(z)];
+//            } else {
+//                out.println("tried to load CD from (" + xF + "|" + zF + ")[" + arr(x) + "|" + arr(z)
+//                        + "] ... creating it");
+//                ChunkData dta = new ChunkData(x, z, terrain.getTextureAtlas(), terrain);
+//                put(x, z, dta);
+//                return dta;
+//            }
         }
     }
 
     private boolean load(int xF, int zF) {
-        ChunkData[][] fromFile = (ChunkData[][]) FileLoader.loadFile(genFileName(xF, zF));
+        ChunkContainer fromFile = (ChunkContainer) FileLoader.loadFile(genFileName(xF, zF));
+        if (!loaded.containsKey(xF)) {
+            loaded.put(xF, new HashMap<Integer, ChunkContainer>());
+        }
         if (fromFile != null) {
-            if (!loaded.containsKey(xF)) {
-                loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
-                        Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
-            }
             loaded.get(xF).put(zF, fromFile);
-
-            //			changed = true;
             return true;
         } else {
             return false;
@@ -103,26 +103,26 @@ public class DataChunk {
         int arrX = arr(x);
         int arrZ = arr(z);
         
-        loaded.get(xF).get(zF)[arrX][arrZ] = null;
-        if(empty(loaded.get(xF).get(zF))){
-            loaded.get(xF).remove(zF);
-            if(loaded.get(xF).size() == 0){
-                loaded.remove(xF);
-            }
-        }
+//        loaded.get(xF).get(zF)[arrX][arrZ] = null;
+//        if(empty(loaded.get(xF).get(zF))){
+//            loaded.get(xF).remove(zF);
+//            if(loaded.get(xF).size() == 0){
+//                loaded.remove(xF);
+//            }
+//        }
         
     }
     
-    private boolean empty(ChunkData[][] chunkDatas) {
-        for (ChunkData[] chunkDatas2 : chunkDatas) {
-            for (ChunkData chunkData : chunkDatas2) {
-                if(chunkData != null){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+//    private boolean empty(ChunkData[][] chunkDatas) {
+//        for (ChunkData[] chunkDatas2 : chunkDatas) {
+//            for (ChunkData chunkData : chunkDatas2) {
+//                if(chunkData != null){
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
 
     private void save(int xF, int zF) {
         FileLoader.saveFile(loaded.get(xF).get(zF), genFileName(xF, zF));
@@ -182,9 +182,9 @@ public class DataChunk {
 
     public static int makePack(int x) {
         if (x >= 0) {
-            return x / SIZE;
+            return x / ChunkContainer.CONTAINERSIZE;
         }
-        return (x / SIZE) - 1;
+        return (x / ChunkContainer.CONTAINERSIZE) - 1;
     }
 
     private int arr(int x) {
@@ -195,31 +195,40 @@ public class DataChunk {
     }
 
     public void preparePackage(int x, int z) {
-        int xF = x;//makeF(x);
-        int zF = z;//makeF(z);
-        if (!loaded(xF, zF)) {
-            if (!load(xF, zF)) {
-                if (!loaded.containsKey(xF))
-                    loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
-                            Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
-                loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
-                init(x, z);
+        int xF = makePack(x);
+        int zF = makePack(z);
+        if(!loaded(xF,zF)){
+            if(!load(xF,zF)){
+                loaded.get(xF).put(zF, new ChunkContainer(xF,zF, terrain));
             }
         }
         if (!assembledKeys.contains(new Point(xF, zF))) {
             assembledKeys.add(new Point(xF, zF));
             out.println("registered!" + assembledKeys.size() + "(" + xF + "|" + zF + ")");
         }
+        
+//        int xF = x;//makeF(x);
+//        int zF = z;//makeF(z);
+//        if (!loaded(xF, zF)) {
+//            if (!load(xF, zF)) {
+//                if (!loaded.containsKey(xF))
+//                    loaded.put(xF, new HashMap<Integer, ChunkData[][]>(
+//                            Terrain.RENDERDISTANCERADIUS / DataChunk.SIZE + 2, 1));
+//                loaded.get(xF).put(zF, new ChunkData[SIZE][SIZE]);
+//                init(x, z);
+//            }
+//        }
+        
     }
 
-    private void init(int x, int z) {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                //                ChunkFrameData dta =  
-                loaded.get(makePack(x)).get(makePack(z))[arr(i + x)][arr(j + z)] = new ChunkData(
-                        x + i, z + j, terrain.getTextureAtlas(), terrain);
-
-            }
-        }
-    }
+//    private void init(int x, int z) {
+//        for (int i = 0; i < SIZE; i++) {
+//            for (int j = 0; j < SIZE; j++) {
+//                //                ChunkFrameData dta =  
+//                loaded.get(makePack(x)).get(makePack(z))[arr(i + x)][arr(j + z)] = new ChunkData(
+//                        x + i, z + j, terrain.getTextureAtlas(), terrain);
+//
+//            }
+//        }
+//    }
 }

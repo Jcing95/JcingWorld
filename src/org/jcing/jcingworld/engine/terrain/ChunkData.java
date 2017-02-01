@@ -26,12 +26,12 @@ public class ChunkData implements Serializable{
 		return topTiles[calcTilesIndex(x, z)];
 	}
 	
-	public ChunkData(int x, int z, TextureAtlas atlas, Terrain terrain){
+	public ChunkData(int x, int z, Terrain terrain){
         this.x = x;
         this.z = z;
         initialized = true;
 		topTiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
-		generate(atlas, terrain.getGenerator());
+		generate(terrain.getTextureAtlas(), terrain.getGenerator());
 	}
 	  
     public void generate(TextureAtlas textureAtlas, MapGenerator gen) {
