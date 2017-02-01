@@ -16,7 +16,7 @@ public class ChunkData implements Serializable{
     public float[] topTileTextureIndices; //TODO: keep topTileTextureIndice concurrent
     
 	public boolean initialized;
-    
+    public boolean dismissed;
 	
 	private int calcTilesIndex(int x, int z){
 		return z*(Chunk.TILE_COUNT)+x;
@@ -66,8 +66,7 @@ public class ChunkData implements Serializable{
 	}
 
     public void dismiss() {
-        // TODO Auto-generated method stub
-        
+        dismissed = true;
     }
     
 }

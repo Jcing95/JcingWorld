@@ -33,4 +33,16 @@ public class ChunkContainer implements Serializable{
     public void set(int x, int z, ChunkData chunk){
         chunks[x-(xF*(CONTAINERSIZE-1))][z-(zF*(CONTAINERSIZE-1))] = chunk;
     }
+
+	public void dismiss() {
+		chunks = null;
+//		for (int i = 0; i < chunks.length; i++) {
+//			for (int j = 0; j < chunks.length; j++) {
+//				if(!chunks[i][j].dismissed){
+//					return false;
+//				}
+//			}
+//		}
+//		return true;
+	}
 }

@@ -1,6 +1,5 @@
 package org.jcing.jcingworld.engine.terrain;
 
-import java.awt.Rectangle;
 import java.io.PrintStream;
 
 import org.jcing.jcingworld.engine.Loader;
@@ -11,7 +10,6 @@ import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * 

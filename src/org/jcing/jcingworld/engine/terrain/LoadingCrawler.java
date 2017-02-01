@@ -13,6 +13,7 @@ public class LoadingCrawler extends Thread {
 
     private List<Point> preparePackagesTemplate;
     private List<Point> loadedChunks;
+    private List<Point> loadedPacks;
     private List<Point> markedAsLoaded;
     private List<Point> unloaded;
     private boolean running, check;
@@ -24,6 +25,7 @@ public class LoadingCrawler extends Thread {
         loadedChunks = new LinkedList<Point>();
         unloaded = new LinkedList<Point>();
         markedAsLoaded = new LinkedList<Point>();
+        loadedPacks = new LinkedList<Point>();
         preparePackagesTemplate = new LinkedList<Point>();
         initTemplate();
         check = false;
@@ -44,23 +46,32 @@ public class LoadingCrawler extends Thread {
     }
 
     public void run() {
-        //		setPriority(MIN_PRIORITY);
+        setPriority(MIN_PRIORITY);
         GL.setCapabilities(DisplayManager.glCapabilities);
 
         while (running) {
             while (!check && running) {
                 try {
-                    sleep(500);
+                    sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
             check = false;
+            LinkedList<Point> recent = new LinkedList<Point>();
             for (Point pack : preparePackagesTemplate) {
                 terrain.getSaver().preparePackage(
                         pack.x + DataChunk.makePack(terrain.getPlayerChunkPos().x),
                         pack.y + DataChunk.makePack(terrain.getPlayerChunkPos().y));
+                recent.add(new Point(pack.x + DataChunk.makePack(terrain.getPlayerChunkPos().x),pack.y + DataChunk.makePack(terrain.getPlayerChunkPos().y)));
             }
+            for (Point point : loadedPacks) {
+				if(!recent.contains(point)){
+					terrain.getSaver().dismiss(point);
+				}
+			}
+            loadedPacks.clear();
+            loadedPacks = recent;
             for (Point chunk : markedAsLoaded) {
                 loadedChunks.add(chunk);
             }
@@ -76,6 +87,7 @@ public class LoadingCrawler extends Thread {
                 loadedChunks.remove(point);
             }
             unloaded.clear();
+            
         }
     }
 
