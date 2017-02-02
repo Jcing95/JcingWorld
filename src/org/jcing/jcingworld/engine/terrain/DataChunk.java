@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import org.jcing.filesystem.FileLoader;
 import org.jcing.jcingworld.game.Game;
@@ -13,7 +12,6 @@ import org.jcing.jcingworld.logging.Logs;
 public class DataChunk {
 
 	public HashMap<Point, ChunkContainer> loaded;
-	public static final String fileExtension = ".jcf";
 
 	public static final int SIZE = 8;
 
@@ -98,17 +96,17 @@ public class DataChunk {
 	}
 
 	public void dismiss(Point point) {
-		if(loaded.containsKey(point)){
-		loaded.get(point).dismiss();
-		//TODO: save ChunkContainers
-		System.out.println("removed " + point);
-		loaded.remove(point);
-	}else{
-		System.out.println("could not dismiss " + point + " loaded:" +loaded.size());
-//		for (Point p : loaded.keySet()) {
-//			System.out.println("--| " + p);
-//		}
-	}
+		if (loaded.containsKey(point)) {
+			loaded.get(point).dismiss();
+			//TODO: save ChunkContainers
+			System.out.println("removed " + point);
+			loaded.remove(point);
+		} else {
+			System.out.println("could not dismiss " + point + " loaded:" + loaded.size());
+			//		for (Point p : loaded.keySet()) {
+			//			System.out.println("--| " + p);
+			//		}
+		}
 
 		//        loaded.get(xF).get(zF)[arrX][arrZ] = null;
 		//        if(empty(loaded.get(xF).get(zF))){
@@ -141,11 +139,9 @@ public class DataChunk {
 		//            out.println("saved " + pt.x + "|" + pt.y);
 		//        }
 
-		//		for (int x : loaded.keySet()) {
-		//            for (int z : loaded.get(x).keySet()) {
-		//                save(x,z);
-		//            }
-		//        }
+		for (Point pt : loaded.keySet()) {
+			loaded.get(pt).dismiss();
+		}
 
 		//UNUSED:
 
@@ -180,7 +176,7 @@ public class DataChunk {
 	}
 
 	private File genFileName(int xF, int zF) {
-		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + "/frame" + fileExtension);
+		return new File("saves/" + Game.saveGameName + "/" + xF + "_" + zF + "/frame" + ChunkContainer.fileExtension);
 	}
 
 	public static int makePack(int x) {
@@ -203,7 +199,7 @@ public class DataChunk {
 		if (!loaded(xF, zF)) {
 			if (!load(xF, zF)) {
 				loaded.put(new Point(xF, zF), new ChunkContainer(xF, zF, terrain));
-				System.out.println("loaded new Package " + new Point(xF, zF) + " loaded:" +loaded.size());
+				System.out.println("loaded new Package " + new Point(xF, zF) + " loaded:" + loaded.size());
 
 			}
 		}

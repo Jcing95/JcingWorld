@@ -1,15 +1,20 @@
 package org.jcing.jcingworld.engine.terrain;
 
-import java.io.Serializable;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 
-public class ChunkData implements Serializable{
+public class ChunkData implements Externalizable{
     /**
      * 
      */
 	
     private static final long serialVersionUID = 8736427281334570040L;    
+    private static final int VERSION = 0;
+    
     
 	public int x, z;
     public Tile[] topTiles;
@@ -34,7 +39,35 @@ public class ChunkData implements Serializable{
 		generate(terrain.getTextureAtlas(), terrain.getGenerator());
 	}
 	  
-    public void generate(TextureAtlas textureAtlas, MapGenerator gen) {
+	public ChunkData(){
+		
+	}
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeInt(VERSION);
+		out.writeInt(x);
+		out.writeInt(z);
+		for (int i = 0; i < topTiles.length; i++) {
+			out.writeObject(topTiles[i]);
+		}
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		int version = in.readInt();
+		switch(version){
+		case 0:
+			x = in.readInt();
+			z = in.readInt();
+			topTiles = new Tile[Chunk.TILE_COUNT*Chunk.TILE_COUNT];
+			for (int i = 0; i < topTiles.length; i++) {
+				topTiles[i] = (Tile)in.readObject();
+			}
+			constructTileTextureMap();
+		}
+	}
+
+	public void generate(TextureAtlas textureAtlas, MapGenerator gen) {
         float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
         int xc = (int) (x*Chunk.SIZE);
         int zc = (int) (z*Chunk.SIZE);
