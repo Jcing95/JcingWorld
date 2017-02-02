@@ -33,130 +33,136 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLCapabilities;
 
 public class DisplayManager {
 
-	public static int width = 1280, height = 720;
+    public static int width = 1280, height = 720;
 
-	private static long lastFrameTime;
-	private static float delta;
-	private static int frames;
-	private static long lastSecond;
+    private static long lastFrameTime;
+    private static float delta;
+    private static int frames;
+    private static long lastSecond;
 
-	// The window handle
-	public static long window;
+    // The window handle
+    public static long window;
 
-	public static int fps;
+    public static int fps;
 
-	public static long init() {
-	    PrintStream out = Logs.display;
-		out.println("Initializing Window using LWJGL " + Version.getVersion() + "!");
-		// Setup an error callback. The default implementation
-		// will print the error message in System.err.
-		GLFWErrorCallback.createPrint(System.err).set();
-		// Initialize GLFW. Most GLFW functions will not work before doing this.
-		if (!glfwInit())
-			throw new IllegalStateException("Unable to initialize GLFW");
+    public static GLCapabilities glCapabilities;
 
-		// Configure our window
-		glfwDefaultWindowHints(); // optional, the current window hints are
-									// already the default
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
-													// after creation
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
-													// resizable
-		// Get the resolution of the primary monitor
-		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		width = vidmode.width();
-		height = vidmode.height();
-		out.println("set width/height: " + width + "/" + height);
-		// Create the window
-		window = glfwCreateWindow(width, height, "Hello World!", GLFW.glfwGetPrimaryMonitor(), NULL);
-		if (window == NULL)
-			throw new RuntimeException("Failed to create the GLFW window");
+    public static long init() {
+        PrintStream out = Logs.display;
+        out.println("Initializing Window using LWJGL " + Version.getVersion() + "!");
+        // Setup an error callback. The default implementation
+        // will print the error message in System.err.
+        GLFWErrorCallback.createPrint(System.err).set();
+        // Initialize GLFW. Most GLFW functions will not work before doing this.
+        if (!glfwInit())
+            throw new IllegalStateException("Unable to initialize GLFW");
 
-		// Setup a key callback. It will be called every time a key is pressed,
-		// repeated or released.
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+        // Configure our window
+        glfwDefaultWindowHints(); // optional, the current window hints are
+                                  // already the default
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
+                                                  // after creation
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
+                                                   // resizable
+                                                   // Get the resolution of the primary monitor
+        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        width = vidmode.width();
+        height = vidmode.height();
+        out.println("set width/height: " + width + "/" + height);
+        // Create the window
+        window = glfwCreateWindow(width, height, "Hello World!", GLFW.glfwGetPrimaryMonitor(),
+                NULL);
+        if (window == NULL)
+            throw new RuntimeException("Failed to create the GLFW window");
 
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-				glfwSetWindowShouldClose(window, true);
-			if (action == GLFW.GLFW_PRESS) {
-				KeyBoard.press(key);
-			}
-			if (action == GLFW.GLFW_RELEASE) {
-				KeyBoard.release(key);
-			}
-			// System.out.println("win: " +window + " key: " + key + " scancode:
-			// " + scancode + " action: " + action + " mods: " + mods);
-		});
+        // Setup a key callback. It will be called every time a key is pressed,
+        // repeated or released.
+        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 
-		GLFW.glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
-			if (action == GLFW.GLFW_PRESS) {
-				Mouse.button[button] = true;
-			}
-			if (action == GLFW.GLFW_RELEASE) {
-				Mouse.button[button] = false;
-			}
-		});
-		
-		
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+                glfwSetWindowShouldClose(window, true);
+            if (action == GLFW.GLFW_PRESS) {
+                KeyBoard.press(key);
+            }
+            if (action == GLFW.GLFW_RELEASE) {
+                KeyBoard.release(key);
+            }
+            // System.out.println("win: " +window + " key: " + key + " scancode:
+            // " + scancode + " action: " + action + " mods: " + mods);
+        });
 
-		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        GLFW.glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+            if (action == GLFW.GLFW_PRESS) {
+                Mouse.button[button] = true;
+            }
+            if (action == GLFW.GLFW_RELEASE) {
+                Mouse.button[button] = false;
+            }
+        });
 
-		GLFW.glfwSetWindowSizeCallback(window, (window, width, height) -> {
-			DisplayManager.width = width;
-			DisplayManager.height = height;
-		});
-		out.println("Callbacks set!");
-		// Center our window
-		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
 
-		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
+        GLFW.glfwSetWindowSizeCallback(window, (window, width, height) -> {
+            DisplayManager.width = width;
+            DisplayManager.height = height;
+        });
+        out.println("Callbacks set!");
+        // Center our window
+        glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 
-		// Enable v-sync
-		glfwSwapInterval(1);
+        // Make the OpenGL context current
+        glfwMakeContextCurrent(window);
 
-		// Make the window visible
-		glfwShowWindow(window);
-		lastFrameTime = getCurrentTime();
+        // Enable v-sync
+        glfwSwapInterval(1);
 
-		// This line is critical for LWJGL's interoperation with GLFW's
-		// OpenGL context, or any context that is managed externally.
-		// LWJGL detects the context that is current in the current thread,
-		// creates the GLCapabilities instance and makes the OpenGL
-		// bindings available for use.
-		GL.createCapabilities();
+        // Make the window visible
+        glfwShowWindow(window);
+        lastFrameTime = getCurrentTime();
 
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		out.println("Window succesfully created!");
-		return window;
-	}
+        // This line is critical for LWJGL's interoperation with GLFW's
+        // OpenGL context, or any context that is managed externally.
+        // LWJGL detects the context that is current in the current thread,
+        // creates the GLCapabilities instance and makes the OpenGL
+        // bindings available for use.
+        glCapabilities = GL.createCapabilities();
 
-	public static void updateDisplay() {
-		glfwSwapBuffers(window); // swap the color buffers
-		// Poll for window events. The key callback above will only be
-		// invoked during this call.
-		long currentFrameTime = getCurrentTime();
-		if (currentFrameTime - lastSecond >= 1000) {
-			fps = frames;
-			frames = 0;
-			lastSecond = currentFrameTime;
-			// System.out.println("FPS: " + fps);
-		}
-		frames++;
-		delta = (currentFrameTime - lastFrameTime) / 1000f;
-		lastFrameTime = currentFrameTime;
-		glfwPollEvents();
-	}
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        out.println("Window succesfully created!");
+        return window;
+    }
 
-	public static float getFrameTimeSeconds() {
-		return delta;
-	}
+    public static void updateDisplay() {
+        glfwSwapBuffers(window); // swap the color buffers
+        // Poll for window events. The key callback above will only be
+        // invoked during this call.
+        long currentFrameTime = getCurrentTime();
+        if (currentFrameTime - lastSecond >= 1000) {
+            fps = frames;
+            frames = 0;
+            lastSecond = currentFrameTime;
+            // System.out.println("FPS: " + fps);
+        }
+        frames++;
+        delta = (currentFrameTime - lastFrameTime) / 1000f;
+        lastFrameTime = currentFrameTime;
+        glfwPollEvents();
+    }
+    
+    public static long getLastFrameTime(){
+    	return lastFrameTime;
+    }
 
-	private static long getCurrentTime() {
-		return GLFW.glfwGetTimerValue() * 1000 / GLFW.glfwGetTimerFrequency();
-	}
+    public static float getFrameTimeSeconds() {
+        return delta;
+    }
+
+    private static long getCurrentTime() {
+        return GLFW.glfwGetTimerValue() * 1000 / GLFW.glfwGetTimerFrequency();
+    }
 
 }

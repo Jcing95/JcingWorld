@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.shading.entities.StaticShader;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
-import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.engine.terrain.Chunk;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
@@ -41,7 +42,7 @@ public class MasterRenderer {
 	private TerrainShader terrainShader = new TerrainShader();
 
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-	private List<Terrain> terrains = new ArrayList<Terrain>();
+	private List<Chunk> terrains = new LinkedList<Chunk>();
 
 	public MasterRenderer() {
 		createProjectionMatrix();
@@ -50,12 +51,12 @@ public class MasterRenderer {
 
 	}
 
-	public void render(Light sun, Ambient ambient, Camera camera) {
+	public void render(Light sun, Camera camera) {
 		prepare();
 		shader.start();
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLight(sun);
-		shader.loadAmbient(ambient);
+//		shader.loadAmbient(sun.getAmbient());
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 
@@ -63,7 +64,7 @@ public class MasterRenderer {
 		terrainShader.start();
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLight(sun);
-		terrainShader.loadAmbient(ambient);
+//		terrainShader.loadAmbient(sun);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
@@ -71,8 +72,11 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	public void processTerrain(Terrain terrain) {
-		terrains.add(terrain);
+	public void processTerrain(Chunk terrain) {
+		if (terrain != null)
+			terrains.add(terrain);
+		else
+			System.err.println("TerrainRenderer received NULL-Terrain!");
 	}
 
 	public void prepare() {

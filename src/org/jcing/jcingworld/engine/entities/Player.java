@@ -4,16 +4,11 @@ import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
-import org.jcing.jcingworld.main.MainLoop;
+import org.jcing.jcingworld.engine.terrain.Terrain;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Player extends Entity {
-
-	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale) {
-		super(model, position, rotX, rotY, rotZ, scale);
-		// TODO Auto-generated constructor stub
-	}
 
 	private static final float SPEED = 17.5f;
 	private static final float TURN = 7.5f;
@@ -32,6 +27,29 @@ public class Player extends Entity {
 	private float forwardSpeed = 0;
 	private float upwardsSpeed = 0;
 	private float rightSpeed = 0;
+
+	
+	
+	private float xRotDelta;
+	private boolean doubleJumpRotation;
+	private long lastJump;
+	private float doubleJumpRotationDegrees;
+	private float doubleJumpRotationSpeed;
+	private static final float DOUBLEJUMPROTATIONACCELERATION= 37.5f;
+	private static final long JUMPTIMEDELTA = 150;
+	private static final float MAXDOUBLEJUMPROTATIONSPEED = 707.5f;
+	private static final int MAXDOUBLEJUMPS = 3;
+	
+	private Terrain terrain;
+	private boolean spaceReleased;
+	private float xRotDJDelta;
+	private int doubleJumps;
+
+	public Player(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Terrain terrain) {
+		super(model, position, rotX, rotY, rotZ, scale);
+		// TODO: Player Implemention / MOBS n co.
+		this.terrain = terrain;
+	}
 
 	public void move() {
 
@@ -72,19 +90,37 @@ public class Player extends Entity {
 			upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
 			if (KeyBoard.key(GLFW.GLFW_KEY_SPACE)) {
 				jump();
+				spaceReleased = false;
+			}else{
+				spaceReleased = true;
 			}
 		}
+		if(doubleJumpRotation){
+			if(doubleJumpRotationSpeed < MAXDOUBLEJUMPROTATIONSPEED)
+				doubleJumpRotationSpeed += DOUBLEJUMPROTATIONACCELERATION;
 
+			doubleJumpRotationDegrees += doubleJumpRotationSpeed*DisplayManager.getFrameTimeSeconds();;
+			if(doubleJumpRotationDegrees >= 360){
+				doubleJumpRotationDegrees = 0;
+				doubleJumpRotation = false;
+			}
+		}
+		xRotDJDelta = doubleJumpRotationDegrees;
+		
 		// ROTATION Horizontal
-		this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()), 0);
+		if(doubleJumps>2)
+			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()+xRotDJDelta), 0);
+		else
+			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()), 0);
 
 		// Vertical
 		if ((float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds()) + getRotX() > -90
 				&& (float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds()) + getRotX() < 90) {
 
-			this.increaseRotation((float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds()), 0, 0);
+			xRotDelta += (float) (Mouse.deltaY * TURN * DisplayManager.getFrameTimeSeconds());
 		}
-
+		xRotDelta %= 180;
+		this.setRotX((xRotDelta + xRotDJDelta) % 360);
 		// MOVEMENT
 
 		float distanceUp = 0.0f;
@@ -99,8 +135,8 @@ public class Player extends Entity {
 
 		// FLYING
 		if (flying) {
-			distanceUp = (float) (distanceForward * Math.sin(Math.toRadians(getRotX())) - speedUp * Math.sin(Math.toRadians(getRotX() - 90)));
-			distanceForward = (float) (distanceForward * Math.cos(Math.toRadians(getRotX())) - speedUp * Math.cos(Math.toRadians(getRotX() - 90)));
+			distanceUp = speedUp;//(float) (distanceForward * Math.sin(Math.toRadians(getRotX())) - speedUp * Math.sin(Math.toRadians(getRotX() - 90)));
+			distanceForward = (float) (distanceForward * Math.cos(Math.toRadians(getRotX())) /*- speedUp * Math.cos(Math.toRadians(getRotX() - 90))*/);
 			// distanceRight = (float) (distanceRight *
 			// Math.cos(Math.toRadians(getRotX()))
 			// - speedUp * Math.cos(Math.toRadians(getRotX() - 90)));
@@ -111,11 +147,12 @@ public class Player extends Entity {
 
 		} else {
 			// NOT FLYING
-			if (getPosition().y + speedUp < MainLoop.getGame().getTerrainHeight(getPosition().x, getPosition().z)) {
+			if (getPosition().y + speedUp < terrain.getHeightAt(getPosition().x, getPosition().z)) {
 				inAir = false;
+				doubleJumps = 0;
 				upwardsSpeed = 0;
 				speedUp = 0;
-				getPosition().y = MainLoop.getGame().getTerrainHeight(getPosition().x, getPosition().z);
+				getPosition().y = terrain.getHeightAt(getPosition().x, getPosition().z);
 			}
 			distanceY = speedUp;
 			distanceX = (float) (distanceForward * Math.sin(Math.toRadians(-getRotY())) + distanceRight * Math.sin(Math.toRadians(-getRotY() + 90)));
@@ -136,11 +173,18 @@ public class Player extends Entity {
 
 	private void jump() {
 		if (!inAir) {
+			lastJump = DisplayManager.getLastFrameTime();
 			this.upwardsSpeed = JUMP_POWER;
+		}else if(!doubleJumpRotation && spaceReleased && doubleJumps < MAXDOUBLEJUMPS && DisplayManager.getLastFrameTime() - lastJump >= JUMPTIMEDELTA){
+			doubleJumps++;
+			doubleJumpRotationSpeed = 0;
+			this.upwardsSpeed += JUMP_POWER*(doubleJumps+0.3f);
+			doubleJumpRotation = true;
 		}
 		inAir = true;
 	}
 
+	
 	public void moveCamera(Camera cam) {
 		// System.out.println("Y: " + getPosition().y);
 		cam.setPosition(new Vector3f(getPosition().x, getPosition().y + CAMERA_HEADOFFSET, getPosition().z));
