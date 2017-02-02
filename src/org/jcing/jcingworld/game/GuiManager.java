@@ -9,18 +9,16 @@ import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 
 public class GuiManager {
-	
-	
+
 	private List<GuiPart> parts;
-	
-	public GuiManager(){
+
+	public GuiManager() {
 		parts = new LinkedList<GuiPart>();
-		parts.add(new GuiPart(MainLoop.getLoader().loadTexture("gui/crosshair", false),new Vector2f(0,0), Maths.calcOrigSizeScale(32, 32)));
+		parts.add(new GuiPart(MainLoop.getLoader().loadTexture("gui/crosshair.png", false), new Vector2f(0, 0), Maths.calcOrigSizeScale(32, 32)));
 	}
 
 	public List<GuiPart> getParts() {
 		return parts;
 	}
-	
-	
+
 }

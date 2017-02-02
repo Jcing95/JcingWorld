@@ -8,6 +8,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL31;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -32,10 +33,6 @@ public abstract class ShaderProgram {
 		getAllUniformLocations();
 	}
 
-	protected int getUniformLocation(String uniformName) {
-		return GL20.glGetUniformLocation(programID, uniformName);
-	}
-
 	protected abstract void getAllUniformLocations();
 
 	public void start() {
@@ -55,6 +52,14 @@ public abstract class ShaderProgram {
 		GL20.glDeleteProgram(programID);
 	}
 
+	protected int getUniformLocation(String uniformName) {
+		return GL20.glGetUniformLocation(programID, uniformName);
+	}
+
+	protected int getUniformBufferIndex(String bufferName) {
+		return GL31.glGetUniformBlockIndex(programID, bufferName);
+	}
+	
 	protected abstract void bindAttributes();
 
 	protected void loadFloat(int location, float value) {

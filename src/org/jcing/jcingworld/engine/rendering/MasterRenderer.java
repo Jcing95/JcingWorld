@@ -110,6 +110,10 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 
+	public TerrainShader getTerrainShader() {
+		return terrainShader;
+	}
+
 	private void createProjectionMatrix() {
 		// IntBuffer w = BufferUtils.createIntBuffer(1);
 		// IntBuffer h = BufferUtils.createIntBuffer(1);

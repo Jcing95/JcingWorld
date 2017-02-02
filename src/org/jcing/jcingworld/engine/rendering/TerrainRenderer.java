@@ -3,9 +3,9 @@ package org.jcing.jcingworld.engine.rendering;
 import java.util.List;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.engine.imagery.TerrainTexturePack;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.engine.terrain.Terrain;
-import org.jcing.jcingworld.engine.textures.TerrainTexturePack;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

@@ -15,8 +15,8 @@ public class RawModel {
 	public int getVaoID() {
 		return vaodata.getVAO();
 	}
-	
-	public VAOData getVaoData(){
+
+	public VAOData getVaoData() {
 		return vaodata;
 	}
 

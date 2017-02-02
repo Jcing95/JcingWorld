@@ -23,11 +23,11 @@ public class TerrainShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skyColour;
-	private int location_backgroundTexture;
-	private int location_rTexture;
-	private int location_gTexture;
-	private int location_bTexture;
-	private int location_blackTexture;
+	private int location_mainTexture;
+	private int location_topTexture;
+	private int location_leftTexture;
+	private int location_bottomTexture;
+	private int location_rightTexture;
 	private int location_blendMap;
 	private int location_terrainSize;
 
@@ -53,23 +53,23 @@ public class TerrainShader extends ShaderProgram {
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColor");
-		location_backgroundTexture = super.getUniformLocation("backgroundTexture");
-		location_rTexture = super.getUniformLocation("rTexture");
-		location_gTexture = super.getUniformLocation("gTexture");
-		location_bTexture = super.getUniformLocation("bTexture");
-		location_blackTexture = super.getUniformLocation("blackTexture");
+		location_mainTexture = super.getUniformLocation("backgroundTexture");
+		location_topTexture = super.getUniformLocation("topTexture");
+		location_leftTexture = super.getUniformLocation("leftTexture");
+		location_bottomTexture = super.getUniformLocation("bottomTexture");
+		location_rightTexture = super.getUniformLocation("rightTexture");
 		location_blendMap = super.getUniformLocation("blendMap");
 		location_terrainSize = super.getUniformLocation("terrainSize");
 	}
 
 	public void connectTextureUnits() {
-		super.loadInt(location_backgroundTexture, 0);
-		super.loadInt(location_rTexture, 1);
-		super.loadInt(location_gTexture, 2);
-		super.loadInt(location_bTexture, 3);
-		super.loadInt(location_blackTexture, 4);
+		super.loadInt(location_mainTexture, 0);
+		super.loadInt(location_topTexture, 1);
+		super.loadInt(location_leftTexture, 2);
+		super.loadInt(location_bottomTexture, 3);
+		super.loadInt(location_rightTexture, 4);
 		super.loadInt(location_blendMap, 5);
-		super.loadFloat(location_terrainSize, Terrain.SQUARE_COUNT);
+		super.loadFloat(location_terrainSize, Terrain.TILE_COUNT);
 	}
 
 	public void loadShineVariables(float damper, float reflectivity) {
@@ -100,7 +100,6 @@ public class TerrainShader extends ShaderProgram {
 
 	public void loadSkyColour(float red, float green, float blue) {
 		super.loadVector(location_skyColour, new Vector3f(red, green, blue));
-
 	}
 
 }

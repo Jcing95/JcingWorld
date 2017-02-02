@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
+import org.jcing.jcingworld.logging.Logs;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -15,14 +16,14 @@ public class OBJLoader {
 
 	public static RawModel loadObjModel(String fileName, Loader loader) {
 		FileReader fr = null;
-
+		Logs.objLoader.println("loading [" + fileName +"]");
 		try {
-			fr = new FileReader(new File("res/" + fileName + ".obj"));
+			fr = new FileReader(new File("res/" + fileName));
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load obj-file!");
 			e.printStackTrace();
 		}
-
+		Logs.objLoader.println("processing [" + fileName +"]");
 		BufferedReader reader = new BufferedReader(fr);
 		String line;
 		List<Vector3f> vertices = new ArrayList<Vector3f>();
@@ -91,7 +92,7 @@ public class OBJLoader {
 		for (int i = 0; i < indicesArray.length; i++) {
 			indicesArray[i] = indices.get(i);
 		}
-
+		Logs.objLoader.println("succesfully loaded [" + fileName +"]");
 		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray);
 	}
 

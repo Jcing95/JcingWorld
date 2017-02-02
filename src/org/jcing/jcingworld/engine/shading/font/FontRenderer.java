@@ -22,7 +22,7 @@ public class FontRenderer {
 		prepare();
 		for (FontType font : texts.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureAtlas());
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, font.getTextureAtlas().getTextureID());
 			for (GUIText text : texts.get(font)) {
 				renderText(text);
 			}

@@ -22,8 +22,11 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.io.PrintStream;
+
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
+import org.jcing.jcingworld.logging.Logs;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -46,7 +49,8 @@ public class DisplayManager {
 	public static int fps;
 
 	public static long init() {
-		System.out.println("Initializing Window using LWJGL " + Version.getVersion() + "!");
+	    PrintStream out = Logs.display;
+		out.println("Initializing Window using LWJGL " + Version.getVersion() + "!");
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
 		GLFWErrorCallback.createPrint(System.err).set();
@@ -65,6 +69,7 @@ public class DisplayManager {
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		width = vidmode.width();
 		height = vidmode.height();
+		out.println("set width/height: " + width + "/" + height);
 		// Create the window
 		window = glfwCreateWindow(width, height, "Hello World!", GLFW.glfwGetPrimaryMonitor(), NULL);
 		if (window == NULL)
@@ -73,7 +78,7 @@ public class DisplayManager {
 		// Setup a key callback. It will be called every time a key is pressed,
 		// repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			
+
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
 				glfwSetWindowShouldClose(window, true);
 			if (action == GLFW.GLFW_PRESS) {
@@ -85,15 +90,16 @@ public class DisplayManager {
 			// System.out.println("win: " +window + " key: " + key + " scancode:
 			// " + scancode + " action: " + action + " mods: " + mods);
 		});
-		
+
 		GLFW.glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
-			if(action == GLFW.GLFW_PRESS){
+			if (action == GLFW.GLFW_PRESS) {
 				Mouse.button[button] = true;
 			}
-			if(action == GLFW.GLFW_RELEASE){
+			if (action == GLFW.GLFW_RELEASE) {
 				Mouse.button[button] = false;
 			}
 		});
+		
 		
 
 		GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
@@ -102,7 +108,7 @@ public class DisplayManager {
 			DisplayManager.width = width;
 			DisplayManager.height = height;
 		});
-
+		out.println("Callbacks set!");
 		// Center our window
 		glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
 
@@ -115,15 +121,16 @@ public class DisplayManager {
 		// Make the window visible
 		glfwShowWindow(window);
 		lastFrameTime = getCurrentTime();
-		
+
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 		GL.createCapabilities();
-		
+
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		out.println("Window succesfully created!");
 		return window;
 	}
 
