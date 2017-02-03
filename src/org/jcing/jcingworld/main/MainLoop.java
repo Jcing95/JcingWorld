@@ -137,11 +137,8 @@ public class MainLoop {
         Mouse.posX = newMouseX;
         Mouse.posY = newMouseY;
 
-        double deltaX = newMouseX - prevMouseX;
-        double deltaY = newMouseY - prevMouseY;
-
-        Mouse.deltaY = deltaY;
-        Mouse.deltaX = deltaX;
+        Mouse.deltaY = newMouseX - prevMouseX;
+        Mouse.deltaX = newMouseY - prevMouseY;
 
         prevMouseX = newMouseX;
         prevMouseY = newMouseY;
