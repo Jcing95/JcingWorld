@@ -4,7 +4,7 @@ import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.io.Mouse;
-import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.terrain.Terrain;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.util.vector.Vector3f;
 

@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.engine.terrain;
+package org.jcing.jcingworld.terrain;
 
 import java.awt.Point;
 import java.util.LinkedList;

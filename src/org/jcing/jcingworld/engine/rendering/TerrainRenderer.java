@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
-import org.jcing.jcingworld.engine.terrain.Chunk;
+import org.jcing.jcingworld.terrain.Chunk;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;

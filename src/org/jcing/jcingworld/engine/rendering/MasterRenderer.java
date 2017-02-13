@@ -18,7 +18,7 @@ import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.shading.entities.StaticShader;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
-import org.jcing.jcingworld.engine.terrain.Chunk;
+import org.jcing.jcingworld.terrain.Chunk;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;

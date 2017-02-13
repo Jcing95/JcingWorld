@@ -2,7 +2,7 @@ package org.jcing.filesystem;
 
 import java.util.HashMap;
 
-import org.jcing.jcingworld.engine.terrain.Terrain;
+import org.jcing.jcingworld.terrain.Terrain;
 
 public class ModuloTree<O> {
 

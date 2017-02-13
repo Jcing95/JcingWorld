@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.engine.terrain;
+package org.jcing.jcingworld.terrain;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -15,6 +15,9 @@ public class Tile implements Externalizable{
 	private static final long serialVersionUID = -6529445147414158037L;
 	
 	private static final int TILEVERSION = 0;
+	
+	public static final int SIZE = 6;
+	
 	private float[] x;
     private float[] y;
     private float[] z;

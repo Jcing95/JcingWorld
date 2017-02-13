@@ -66,9 +66,6 @@ public class FileLoader {
     public static boolean saveFile(Serializable toSave, File file) {
         if (file.getParentFile() != null && !file.getParentFile().exists())
             file.getParentFile().mkdirs();
-        //		if (file.exists()) {
-        //			file.renameTo(new File(file.getPath() + ".BACKUP"));
-        //		}
         try {
             FileOutputStream fos = new FileOutputStream(file.getPath());
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -170,6 +167,7 @@ public class FileLoader {
      * Not yet indexed images will be added at the end.
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public LinkedList<BufferedImage> indexedFolderLoad(String folderPath) {
         out.println("loading images of Folder [" + folderPath + "]");
         LinkedList<String> filepaths;

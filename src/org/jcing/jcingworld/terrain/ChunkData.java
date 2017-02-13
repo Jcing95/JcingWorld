@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.engine.terrain;
+package org.jcing.jcingworld.terrain;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -42,6 +42,7 @@ public class ChunkData implements Externalizable{
 	public ChunkData(){
 		
 	}
+	
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeInt(VERSION);

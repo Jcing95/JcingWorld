@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.engine.terrain;
+package org.jcing.jcingworld.terrain;
 
 import java.awt.Point;
 import java.io.PrintStream;
@@ -22,7 +22,7 @@ public class Terrain {
     private MapGenerator gen = new MapGenerator(1337);
     
     
-    private HashMap<Integer, HashMap<Integer, Chunk>> chunks;
+    private HashMap<Point, Chunk> chunks;
 
     //loading management
     public static final int RENDERDISTANCERADIUS = 20;
@@ -59,7 +59,7 @@ public class Terrain {
         textureAtlas = new TextureAtlas("terrain/naturalFloor", loader);//loader.loadTexture("terrain/100Square.png", false),16);
         
         //intiialize lists
-        chunks = new HashMap<Integer, HashMap<Integer, Chunk>>(RENDERDISTANCERADIUS * 2 + 1, 1);
+        chunks = new HashMap<Point, Chunk>(RENDERDISTANCERADIUS * 2 + 1, 1);
         activesTemplate = new LinkedList<Point>();
        
         
@@ -96,20 +96,19 @@ public class Terrain {
         //		ulc.start();
     }
 
-    private void addChunk(int x, int z) {
-        Chunk chunk = new Chunk(x, z, loader, renderer.getTerrainShader(), textureAtlas, blendMap, selectedTex,
+    private void addChunk(int x, int z){
+    	addChunk(new Point(x,z));
+    }
+    
+    private void addChunk(Point pos) {
+        Chunk chunk = new Chunk(pos.x,pos.y, loader, renderer.getTerrainShader(), textureAtlas, blendMap, selectedTex,
                 this);
-        if (chunks.get(x) == null) {
-            HashMap<Integer, Chunk> newMap = new HashMap<Integer, Chunk>(
-                    RENDERDISTANCERADIUS * 2 + 1, 1);
-            newMap.put(z, chunk);
-            chunks.put(x, newMap);
-        }
-        chunks.get(x).put(z, chunk);
-        chunk.registerNeighbour(getChunk(x + 1, z), true);
-        chunk.registerNeighbour(getChunk(x - 1, z), true);
-        chunk.registerNeighbour(getChunk(x, z + 1), true);
-        chunk.registerNeighbour(getChunk(x, z - 1), true);
+
+        chunks.put(pos, chunk);
+        chunk.registerNeighbour(getChunk(pos.x + 1, pos.y), true);
+        chunk.registerNeighbour(getChunk(pos.x - 1, pos.y), true);
+        chunk.registerNeighbour(getChunk(pos.x, pos.y + 1), true);
+        chunk.registerNeighbour(getChunk(pos.x, pos.y - 1), true);
         lc.markLoaded(new Point(chunk.getGridX(), chunk.getGridZ()));
     }
 
@@ -141,14 +140,12 @@ public class Terrain {
         return new Point(Maths.fastFloor(x / Chunk.SIZE), Maths.fastFloor(z / Chunk.SIZE));
     }
 
-    public Chunk getChunk(int x, int y) {
-        if (chunks.get(x) != null)
-            return chunks.get(x).get(y);
-        return null;
+    public Chunk getChunk(int x, int z) {
+        return getChunk(new Point(x,z));
     }
 
-    public Chunk getChunk(Point gridPos) {
-        return getChunk(gridPos.x, gridPos.y);
+    public Chunk getChunk(Point pos) {
+        return chunks.get(pos);
     }
 
     public float getHeightAt(float x, float z) {
@@ -168,12 +165,9 @@ public class Terrain {
         return false;
     }
 
-    public void unload(Point chunk) {
-        chunks.get(chunk.x).get(chunk.y).dismiss();
-        chunks.get(chunk.x).remove(chunk.y);
-        if (chunks.get(chunk.x).size() == 0) {
-            chunks.remove(chunk.x);
-        }
+    public void unload(Point pos) {
+        chunks.get(pos).dismiss();
+        chunks.remove(pos);
     }
 
     public void finish() {

@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.engine.terrain;
+package org.jcing.jcingworld.terrain;
 
 import java.io.PrintStream;
 
@@ -42,7 +42,6 @@ public class Chunk {
 	// private Point gridPos;
 	private RawModel model;
 	private TextureAtlas textureAtlas;
-
 	private BaseImage blendMap;
 	private Terrain terrain;
 
@@ -146,7 +145,7 @@ public class Chunk {
 	}
 
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
-		info.println("generated random Heightmap");
+//		info.println("generated random Heightmap");
 		info.println("generated Tiles");
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
