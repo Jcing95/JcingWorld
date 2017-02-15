@@ -130,7 +130,7 @@ public class DataChunk {
 	//    }
 
 	private void save(int xF, int zF) {
-		FileLoader.saveFile(loaded.get(new Point(xF, zF)), genFileName(xF, zF));
+//		FileLoader.saveFile(loaded.get(new Point(xF, zF)), genFileName(xF, zF));
 		loaded.remove(new Point(xF, zF));
 	}
 

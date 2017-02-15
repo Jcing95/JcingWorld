@@ -25,16 +25,33 @@ public class FileTable<O> implements Externalizable, FilenameFilter{
 		
 	}
 	
-	public FileTable(String path, String fileExtension){
+	public FileTable(String fileExtension){
 		extension = fileExtension;
-		File loc = new File(path);
-		if(loc.isDirectory()){
-			String[] files = loc.list(this);
-			paths = new ArrayList<String>(files.length);
-			for (int i = 0; i < files.length; i++) {
-				paths.add(files[i]);
-			}
-		}
+		paths = new ArrayList<String>();
+	}
+	
+	public void add(String path){
+	    if(path.endsWith(extension)){
+	        paths.add(path);
+	    }
+	}
+	
+	public void remove(int index){
+	    paths.remove(index);
+	}
+	
+	public void remove(String path){
+	    paths.remove(path);
+	}
+	
+	public void swap(int index1, int index2){
+	    String placeholder = paths.get(index1);
+	    paths.set(index1, paths.get(index2));
+	    paths.set(index2, placeholder);
+	}
+	
+	public int indexOf(String path){
+	    return paths.indexOf(path);
 	}
 	
 	@SuppressWarnings("unchecked")

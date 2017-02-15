@@ -15,6 +15,8 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import org.jcing.options.JTable;
+
 public class FileTableEditor extends Canvas implements ActionListener, KeyListener, MouseMotionListener{
 
 	/**
@@ -32,7 +34,7 @@ public class FileTableEditor extends Canvas implements ActionListener, KeyListen
 		this.setSize(new Dimension(1280, 720));
 
 		win.add(this);
-		win.add(test);
+//		win.add(test);
 		win.pack();
 		win.setVisible(true);
 		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,7 +43,12 @@ public class FileTableEditor extends Canvas implements ActionListener, KeyListen
 		addKeyListener(this);
 		addMouseMotionListener(this);
 		
-		
+		JTable<Integer> test = new JTable<Integer>();
+		test.add(5);
+		test.add(7);
+		test.add(3);
+		test.enableIdentifying();
+		test.identify(1, "test");
 		
 		Thread repainter = new Thread() {
 			public void run() {

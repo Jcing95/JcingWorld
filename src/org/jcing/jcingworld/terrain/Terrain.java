@@ -25,8 +25,8 @@ public class Terrain {
     private HashMap<Point, Chunk> chunks;
 
     //loading management
-    public static final int RENDERDISTANCERADIUS = 20;
-    private static final int KEEPCHUNKBUFFERLENGTH = 5;
+    public static final int RENDERDISTANCERADIUS = 5;
+    private static final int KEEPCHUNKBUFFERLENGTH = 1;
 
     
 

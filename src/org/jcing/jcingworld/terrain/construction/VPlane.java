@@ -1,5 +1,7 @@
 package org.jcing.jcingworld.terrain.construction;
 
+import org.jcing.jcingworld.terrain.material.Material;
+
 public class VPlane implements Comparable<VPlane>{
 
 	

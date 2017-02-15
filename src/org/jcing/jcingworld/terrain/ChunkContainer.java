@@ -82,7 +82,7 @@ public class ChunkContainer implements Externalizable{
 	}
     
 	public void dismiss() {
-		FileLoader.saveFile(this, genFileName());
+//		FileLoader.saveFile(this, genFileName());
 		chunks = null;
 //		for (int i = 0; i < chunks.length; i++) {
 //			for (int j = 0; j < chunks.length; j++) {
