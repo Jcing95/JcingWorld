@@ -42,7 +42,7 @@ public class MapGenerator {
         //                + ());
         float y = 0;
         double lastval = 0;//noise.eval(x, y, z);
-        double val = noise.eval(x/100, y,z/100);
+//        double val = noise.eval(x/100, y,z/100);
         float inc = 0.001f;
 //        if(lastval < 0.7 && noise.eval(x, y+inc, z) < val)
 //            inc *= -1;
@@ -52,7 +52,7 @@ public class MapGenerator {
 //            lastval = val;
 //            val = noise.eval(x/100, y, z/100);
 //        }
-        return (float)noise.eval(x/100, noise.eval(x/100, z/100)*10, z/100)*30;
+        return (float)noise.eval(x/100, noise.eval(x/100, z/100), z/100)*100;
 //        float height = noise(x, z, continentalHeightDelta, continentalInterpolation);
 //
 //        float steady = noise(x, z, 1, hillSteadyness);
