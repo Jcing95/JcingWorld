@@ -1,4 +1,4 @@
-package org.jcing.state;
+package org.jcing.operator;
 
 import java.io.Externalizable;
 import java.io.IOException;

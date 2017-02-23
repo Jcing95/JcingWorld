@@ -70,11 +70,11 @@ public class DisplayManager {
                                                    // resizable
                                                    // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-//        width = vidmode.width();
-//        height = vidmode.height();
+        width = vidmode.width();
+        height = vidmode.height();
         out.println("set width/height: " + width + "/" + height);
         // Create the window
-        window = glfwCreateWindow(width, height, "Hello World!", NULL /*GLFW.glfwGetPrimaryMonitor()*/,
+        window = glfwCreateWindow(width, height, "Hello World!", GLFW.glfwGetPrimaryMonitor(),
                 NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");

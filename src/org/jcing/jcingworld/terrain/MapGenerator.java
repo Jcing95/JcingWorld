@@ -40,10 +40,19 @@ public class MapGenerator {
         //        return +heightDelta * (float) (noise.eval(x / interpolation, z / interpolation))
         //                + (heightDelta / 6) * (float) (noise.eval(x / (interpolation / 6), z / (interpolation / 4)))
         //                + ());
-        float y = 0;
-        double lastval = 0;//noise.eval(x, y, z);
+//        double lowest = 50;//noise.eval(x/256, z/256)*50;
+//        double val[] = new double[40];
+//        double lastval = 0;
+//        double chosenHeight = 0;
+//        for (int i = 0; i < val.length; i++) {
+//            val[i] = noise.eval(x/256.0, i, z/256.0);
+//            
+//        }
+//        System.out.println(chosenHeight);
+//        return (float)(chosenHeight+20)/40f*(float)noise.eval(x, z);
+        //noise.eval(x, y, z);
 //        double val = noise.eval(x/100, y,z/100);
-        float inc = 0.001f;
+//        float inc = 0.001f;
 //        if(lastval < 0.7 && noise.eval(x, y+inc, z) < val)
 //            inc *= -1;
         
@@ -52,16 +61,16 @@ public class MapGenerator {
 //            lastval = val;
 //            val = noise.eval(x/100, y, z/100);
 //        }
-        return (float)noise.eval(x/100, noise.eval(x/100, z/100), z/100)*100;
-//        float height = noise(x, z, continentalHeightDelta, continentalInterpolation);
-//
-//        float steady = noise(x, z, 1, hillSteadyness);
-//        height += noise(x, z, steady * hillDelta, hillInterpolation);
-//        height -= noise(x, z, steady * hillErosionstretchdiff, hillErosionInterpolation);
-//
-//        steady += steady * noise(x, z, 1, roughnesSteadyness);
-//        height += noise(x, z, roughnessDelta * steady, roughnesInterpolation);
-//        return height;
+//        return (float)noise.eval(x/100, noise.eval(x/100, z/100), z/100)*100;
+        float height = noise(x, z, continentalHeightDelta, continentalInterpolation);
+
+        float steady = noise(x, z, 1, hillSteadyness);
+        height += noise(x, z, steady * hillDelta, hillInterpolation);
+        height -= noise(x, z, steady * hillErosionstretchdiff, hillErosionInterpolation);
+
+        steady += steady * noise(x, z, 1, roughnesSteadyness);
+        height += noise(x, z, roughnessDelta * steady, roughnesInterpolation);
+        return height;
     }
 
     private byte decide(float x, float z, int i) {
@@ -72,23 +81,24 @@ public class MapGenerator {
     }
 
     public int tex(float x, float z, float maxDelta) {
-        int iterations = 1;
-        for (int i = 2; i < maxDelta; i *= 2) {
-            iterations++;
-        }
-        byte decisions[] = new byte[iterations];
-        for (int i = 0; i < decisions.length; i++) {
-            decisions[i] = decide(x, z, i);
-        }
-        int tex = 0;
-        int fac = 1;
-        for (int i = 0; i < decisions.length; i++) {
-            if (tex + decisions[i] * fac < maxDelta) {
-                tex += decisions[i] * fac;
-                fac *= 2;
-            }
-        }
-        return tex;
+        return (int)(height(x, z)/50*maxDelta);
+//        int iterations = 1;
+//        for (int i = 2; i < maxDelta; i *= 2) {
+//            iterations++;
+//        }
+//        byte decisions[] = new byte[iterations];
+//        for (int i = 0; i < decisions.length; i++) {
+//            decisions[i] = decide(x, z, i);
+//        }
+//        int tex = 0;
+//        int fac = 1;
+//        for (int i = 0; i < decisions.length; i++) {
+//            if (tex + decisions[i] * fac < maxDelta) {
+//                tex += decisions[i] * fac;
+//                fac *= 2;
+//            }
+//        }
+//        return tex;
         //    	return maxDelta-1;
         //    	if((noise(x,z,1,100)) < 0){
         //    		return maxDelta/2*(noise(x,z,1,100)+1);
