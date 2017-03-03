@@ -1,12 +1,13 @@
 package org.jcing.operator;
 
+import java.util.List;
 
 public class Operator implements Runnable {
 
     private boolean running;
     private Thread th;
     
-    private List<Runnable> runnables
+    private List<Runnable> runnables;
     
     public Operator(){
       running = false;

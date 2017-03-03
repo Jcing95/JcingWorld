@@ -31,7 +31,7 @@ public class FileTableEditor extends Canvas implements ActionListener, KeyListen
 	public FileTableEditor() {
 		win = new JFrame("Jcing Filetable Editor " + VERSION);
 
-		this.setSize(new Dimension(1280, 720));
+		this.setSize(new Dimension(640, 480));
 
 		win.add(this);
 //		win.add(test);
