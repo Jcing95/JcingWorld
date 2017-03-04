@@ -38,6 +38,8 @@ public class Game {
         picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
     }
 
+    
+    
     public void tick() {
         if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
             player.reset();

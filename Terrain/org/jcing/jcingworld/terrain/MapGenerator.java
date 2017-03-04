@@ -4,119 +4,57 @@ import org.openSimplex.OpenSimplexNoise;
 
 public class MapGenerator {
 
-    private OpenSimplexNoise noise;
+  private float maxHeightDelta = 120;
 
-    //    private static float heightDelta = 7.25f;
-    //    private static float interpolation = 22.75f;
+  private int[] seeds;
 
-    public static float continentalHeightDelta = 100;
-    private static float continentalInterpolation = 1075;
+  private OpenSimplexNoise defNoise;
 
-    public static float hillDelta = 245;
-    public static float hillInterpolation = 375;
-    public static float hillSteadyness = 1050;
-    public static float hillErosionDelta = 25;
-    public static float hillErosionInterpolation = 75;
-    public static float hillErosionstretchdiff = 30f;
+  private static final float BIOMEINTERPOLATION = 1560f;
+  private OpenSimplexNoise humidityNoise, fertilityNoise;
 
-    public static float roughnessDelta = 5;
-    public static float roughnesInterpolation = 15;
-    public static float roughnesSteadyness = 257;
+  public MapGenerator(long seed) {
+    defNoise = new OpenSimplexNoise(seed);
 
-    private static float maxDelta = continentalHeightDelta + hillErosionDelta + hillDelta
-            + roughnessDelta;
+    humidityNoise = new OpenSimplexNoise((long) (seed * defNoise.eval(100, 50)));
+    fertilityNoise = new OpenSimplexNoise((long) (seed * defNoise.eval(50, 100)));
 
-    public MapGenerator(long seed) {
-        noise = new OpenSimplexNoise(seed);
-    }
+  }
 
-    private float noise(float x, float z, float delta, float interpolation) {
-        return delta * (float) (noise.eval(x / (interpolation), z / (interpolation)));
-    }
+  public float height(float x, float z) {
+    return 0;
+  }
 
-    public float height(float x, float z) {
-        //        float height = continentalHeightDelta * (float) (noise.eval(x / (continentalInterpolation), z / (continentalInterpolation)));
-        //        height += mountainDelta * (float) (noise.eval(x / (mountainInterpolation), z / (mountainInterpolation)));
-        //        return +heightDelta * (float) (noise.eval(x / interpolation, z / interpolation))
-        //                + (heightDelta / 6) * (float) (noise.eval(x / (interpolation / 6), z / (interpolation / 4)))
-        //                + ());
-//        double lowest = 50;//noise.eval(x/256, z/256)*50;
-//        double val[] = new double[40];
-//        double lastval = 0;
-//        double chosenHeight = 0;
-//        for (int i = 0; i < val.length; i++) {
-//            val[i] = noise.eval(x/256.0, i, z/256.0);
-//            
-//        }
-//        System.out.println(chosenHeight);
-//        return (float)(chosenHeight+20)/40f*(float)noise.eval(x, z);
-        //noise.eval(x, y, z);
-//        double val = noise.eval(x/100, y,z/100);
-//        float inc = 0.001f;
-//        if(lastval < 0.7 && noise.eval(x, y+inc, z) < val)
-//            inc *= -1;
-        
-//        while(val > lastval){
-//            y += inc;
-//            lastval = val;
-//            val = noise.eval(x/100, y, z/100);
-//        }
-//        return (float)noise.eval(x/100, noise.eval(x/100, z/100), z/100)*100;
-        float height = noise(x, z, continentalHeightDelta, continentalInterpolation);
+  public int biome(float x, float z) {
+    double fert = fertilityNoise.eval(x / BIOMEINTERPOLATION, z / BIOMEINTERPOLATION)+fertilityNoise.eval(x*3/(BIOMEINTERPOLATION/100), z*3/(BIOMEINTERPOLATION/100))/5f;
+    double hum = humidityNoise.eval(x / BIOMEINTERPOLATION, z / BIOMEINTERPOLATION)+humidityNoise.eval(x*3/(BIOMEINTERPOLATION/100), z*3/(BIOMEINTERPOLATION/100))/5f;
+//    System.out.println("F: " + fert + " H: " + hum);
 
-        float steady = noise(x, z, 1, hillSteadyness);
-        height += noise(x, z, steady * hillDelta, hillInterpolation);
-        height -= noise(x, z, steady * hillErosionstretchdiff, hillErosionInterpolation);
+    double bindbounds = 0.1;
 
-        steady += steady * noise(x, z, 1, roughnesSteadyness);
-        height += noise(x, z, roughnessDelta * steady, roughnesInterpolation);
-        return height;
-    }
+    if (Math.abs(fert) < bindbounds || Math.abs(hum) < bindbounds)
+      return 0;
+    if (fert < 0 && hum < 0)
+      return 1;
+    if (fert > 0 && hum < -0)
+      return 2;
+    if (fert < 0 && hum > 0)
+      return 3;
+    if (fert > 0 && hum > 0)
+      return 4;
+    return 0;
+  }
 
-    private byte decide(float x, float z, int i) {
-        if (noise(x + i * 1234, z + i * 5678, 1, 1000) >= 0) {
-            return 1;
-        }
-        return 0;
-    }
+  public int tex(float x, float z, float maxDelta) {
+    return biome(x, z);
+  }
 
-    public int tex(float x, float z, float maxDelta) {
-        return (int)(height(x, z)/50*maxDelta);
-//        int iterations = 1;
-//        for (int i = 2; i < maxDelta; i *= 2) {
-//            iterations++;
-//        }
-//        byte decisions[] = new byte[iterations];
-//        for (int i = 0; i < decisions.length; i++) {
-//            decisions[i] = decide(x, z, i);
-//        }
-//        int tex = 0;
-//        int fac = 1;
-//        for (int i = 0; i < decisions.length; i++) {
-//            if (tex + decisions[i] * fac < maxDelta) {
-//                tex += decisions[i] * fac;
-//                fac *= 2;
-//            }
-//        }
-//        return tex;
-        //    	return maxDelta-1;
-        //    	if((noise(x,z,1,100)) < 0){
-        //    		return maxDelta/2*(noise(x,z,1,100)+1);
-        //    	}else{
-        //    		return maxDelta-1;
-        //    	}
-        //        Random random = new Random((long) Math.abs((x+2356)*(z+7895)/100));
-        //        return random.nextFloat()*maxDelta;
-        //        float noise1 = 0;
-        //        for (int i = 0; i < maxDelta; i++) {
-        //            noise1 += Maths.fastFloor(Math.abs(noise(x*i,z*i,2,100*maxDelta)));
-        //        }
-        ////        noise1 /= 2;
-        ////        float noise2 = Maths.fastFloor(Math.abs(noise(x*2,z*2,2,100)));
-        ////        float noiselast = noise(noise1,noise1,maxDelta/2f,1); //pos / neg
-        //        return Maths.fastFloor(noise1);
+  public static final class BIOME {
 
-        //    	return Math.min(1,Math.max(0,(noise(noise(x,z,50,1000),(float)Math.sqrt(x*z),2,1)+1)));
-    }
-
+    public static final int PLAINS = 0;
+    public static final int HILLS = 1;
+    public static final int DESERT = 2;
+    public static final int MOUNTAINS = 3;
+    public static final int OCEAN = 4;
+  }
 }

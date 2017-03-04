@@ -98,7 +98,7 @@ public class MainLoop {
             fpsText.setText("FPS: " + DisplayManager.fps + " X: "
                     + dec.format(game.getPlayer().getPosition().x) + " Y: "
                     + dec.format(game.getPlayer().getPosition().y) + " Z: "
-                    + dec.format(game.getPlayer().getPosition().z));
+                    + dec.format(game.getPlayer().getPosition().z) + " Biome: " + game.getPlayer().getBiome());
 
             //render game
             renderer.render(game.getSun(), game.getCam());

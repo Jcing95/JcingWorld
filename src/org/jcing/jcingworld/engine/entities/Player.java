@@ -51,6 +51,15 @@ public class Player extends Entity {
 		this.terrain = terrain;
 	}
 
+	
+	public String getBiome(){
+    switch(terrain.getGenerator().biome(this.getPosition().x,this.getPosition().z)){
+      default:
+        return ""+terrain.getGenerator().biome(this.getPosition().x,this.getPosition().z);
+    }
+  }
+	
+	
 	public void move() {
 
 		flying = KeyBoard.toggled(GLFW.GLFW_KEY_F);

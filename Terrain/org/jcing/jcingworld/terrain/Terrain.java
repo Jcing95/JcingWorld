@@ -25,7 +25,7 @@ public class Terrain {
     private HashMap<Point, Chunk> chunks;
 
     //loading management
-    public static final int RENDERDISTANCERADIUS = 5;
+    public static final int RENDERDISTANCERADIUS = 15;
     private static final int KEEPCHUNKBUFFERLENGTH = 1;
 
     
@@ -56,7 +56,7 @@ public class Terrain {
         //set textures
         blendMap = loader.loadTexture("terrain/blend/32N.png", false);
         selectedTex = loader.loadTexture("terrain/selectedOverlay.png", true);
-        textureAtlas = new TextureAtlas("terrain/naturalFloor", loader);//loader.loadTexture("terrain/100Square.png", false),16);
+        textureAtlas = new TextureAtlas("terrain/dev", loader);//loader.loadTexture("terrain/100Square.png", false),16);
         
         //intiialize lists
         chunks = new HashMap<Point, Chunk>(RENDERDISTANCERADIUS * 2 + 1, 1);
