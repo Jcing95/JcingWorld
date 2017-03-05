@@ -6,6 +6,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
+import org.jcing.jcingworld.terrain.generation.MapGenerator;
 
 public class ChunkData implements Externalizable{
     /**
