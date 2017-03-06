@@ -1,5 +1,6 @@
 package org.jcing.windowframework;
 
+import java.awt.Color;
 import java.awt.Font;
 
 public class TextField extends Component{
@@ -9,7 +10,7 @@ public class TextField extends Component{
 	
 	protected StringBuffer text;
 	
-	protected 
+	protected Color background;
 	
 	public TextField(){
 		

@@ -1,5 +1,7 @@
 package org.jcing.windowframework;
 
+import java.awt.Graphics;
+
 public abstract class Component {
 	
 	protected int width, height;
