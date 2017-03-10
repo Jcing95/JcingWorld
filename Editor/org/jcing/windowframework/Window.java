@@ -1,4 +1,4 @@
-package org.jcing.jcingworld.editor;
+package org.jcing.windowframework;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -6,61 +6,59 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import org.jcing.jcingworld.editor.test.BiomeTest;
+import org.jcing.jcingworld.engine.io.Mouse;
 import org.jcing.options.JTable;
+import org.jcing.windowframework.decorations.Border;
+import org.jcing.windowframework.io.KeyBoardManager;
 import org.lwjgl.util.vector.Vector2f;
 
-public class Editor extends Canvas implements ActionListener, MouseMotionListener {
+public class Window extends Canvas implements ActionListener, MouseMotionListener {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8255319694373975038L;
-	private static final double VERSION = 0.1;
+	private static final double VERSION = 0.2;
 	JFrame win;
 
-	TextHandler textHandler;
-	JButton test;
-	
+	KeyBoardManager textHandler;
+
 	BiomeTest biomeTest;
 
-	public Editor() {
-		win = new JFrame("Jcing Filetable Editor " + VERSION);
+	Dimension size;
+	
+	Thread repainter;
+	
+	protected LinkedList<Component> comps;
 
-		this.setSize(new Dimension(640, 480));
+	public Window() {
+		
+		comps = new LinkedList<Component>();
+		textHandler = new KeyBoardManager();
+		size = new Dimension(640,480);
+		setBackground(new Color(15,20,40));
+		addKeyListener(textHandler);
+		addMouseMotionListener(this);
+			
+	}
 
+	public void activate(){
+		win = new JFrame("Jcing WindowFramework" + VERSION);
+		this.setSize(size);
 		win.add(this);
-		// win.add(test);
 		win.pack();
 		win.setVisible(true);
 		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		win.createBufferStrategy(3);
-		setBackground(new Color(3, 24, 133));
-
-		textHandler = new TextHandler();
-
-		addKeyListener(textHandler);
-		addMouseMotionListener(this);
-
-		JTable<Integer> test = new JTable<Integer>();
-		test.add(5);
-		test.add(7);
-		test.add(3);
-		test.enableIdentifying();
-		test.identify(1, "test");
-		biomeTest = new BiomeTest(8000);
-
-		Thread repainter = new Thread() {
+		repainter = new Thread() {
 			public void run() {
 				while (true) {
 					tick();
@@ -74,15 +72,10 @@ public class Editor extends Canvas implements ActionListener, MouseMotionListene
 			}
 		};
 		repainter.start();
-		biomeTest.init(new Vector2f(0, 0), 100f);
 	}
-
-	public static void main(String args[]) {
-		new Editor();		
-	}
-
-	private void tick() {
-
+	
+	public void tick() {
+		
 	}
 
 	public void render() {
@@ -97,24 +90,33 @@ public class Editor extends Canvas implements ActionListener, MouseMotionListene
 
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
-		
-		paint(g);
 
+		paint(g);
+		for (Component component : comps) {
+			component.print(g);
+		}
 		g.dispose();
 		bs.show();
 	}
 
 	public void paint(Graphics g) {
-		if(biomeTest == null){
-			System.out.println("lulz");
-			return;
+		
+		for (Component component : comps) {
+			component.print(g);
 		}
-		if(biomeTest.getImg() == null){
-			System.out.println("lelel");
-			return;
-		}
-		g.drawImage(biomeTest.getImg().getScaledInstance(getWidth(), getHeight(), BufferedImage.SCALE_SMOOTH), 0, 0,null);
-//		System.out.println("frame" + biomeTest.getImg());
+		
+		// if(biomeTest == null){
+		// System.out.println("lulz");
+		// return;
+		// }
+		// if(biomeTest.getImg() == null){
+		// System.out.println("lelel");
+		// return;
+		// }
+		// g.drawImage(biomeTest.getImg().getScaledInstance(getWidth(),
+		// getHeight(), BufferedImage.SCALE_SMOOTH), 0, 0,null);
+//		testField.print(g);
+		// System.out.println("frame" + biomeTest.getImg());
 	}
 
 	@Override
