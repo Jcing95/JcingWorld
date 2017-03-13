@@ -4,68 +4,114 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-public class Mouse implements MouseListener, MouseMotionListener{
+import org.jcing.windowframework.Window;
 
-	
-	boolean button[];
-	
-	int posX;
-	int posY;
-	
-	int lastClickX;
-	int lastClickY;
-	
-	boolean drag;
-	
-	public Mouse(){
-		button = new boolean[3];
-	}
+public class Mouse implements MouseListener, MouseMotionListener {
 
-	
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		posX = e.getX();
-		posY = e.getY();
-		drag = true;
-	}
+    Window win;
+    
+    boolean button[];
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		posX = e.getX();
-		posY = e.getY();
-	}
+    int posX, lastPosX;
+    int posY, lastPosY;
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    int lastClickX;
+    int lastClickY;
+    
+    int deltaX;
+    int deltaY;
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		if(e.getButton()-1 < 4)
-			button[e.getButton()-1] = true;
-		lastClickX = e.getX();
-		lastClickY = e.getY();
-	}
+    boolean drag;
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		if(e.getButton()-1 < 4)
-			button[e.getButton()-1] = false;
-		drag = false;
-	}
+    public Mouse(Window win) {
+        this.win = win;
+        button = new boolean[3];
+    }
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        posX = e.getX();
+        posY = e.getY();
+        drag = true;
+    }
 
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        posX = e.getX();
+        posY = e.getY();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() - 1 < 4)
+            button[e.getButton() - 1] = true;
+        lastClickX = e.getX();
+        lastClickY = e.getY();
+        win.processClick(lastClickX, lastClickY);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() - 1 < 4)
+            button[e.getButton() - 1] = false;
+        drag = false;
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public boolean[] getButton() {
+        return button;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public int getLastClickX() {
+        return lastClickX;
+    }
+
+    public int getLastClickY() {
+        return lastClickY;
+    }
+
+    public boolean isDrag() {
+        return drag;
+    }
+
+    public int getDeltaX() {
+        return deltaX;
+    }
+
+    public int getDeltaY() {
+        return deltaY;
+    }
+    
+    public void move() {
+        deltaX = posX - lastPosX;
+        deltaY = posY - lastPosY;
+        lastPosX = posX;
+        lastPosY = posY;
+    }
 
 }

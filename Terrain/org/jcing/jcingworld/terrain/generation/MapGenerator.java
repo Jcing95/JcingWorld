@@ -6,8 +6,6 @@ public class MapGenerator {
 
 	private float maxHeightDelta = 120;
 
-	private int[] seeds;
-
 	private OpenSimplexNoise defNoise;
 
 	private static final float BIOMEINTERPOLATION = 1560f;

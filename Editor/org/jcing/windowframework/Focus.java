@@ -7,9 +7,16 @@ public class Focus{
 	private Component c;
 	//TODO: may deletion of focus
 	
+	private boolean initialized;
+	
+	public Focus(){
+	}
+	
 	public Focus(FocusManager fm, Component c){
 		fm.addFocus(this);
 		this.fm = fm;
+		this.c = c;
+		initialized = true;
 	}
 	
 	public void setFocus(boolean focus){
@@ -21,6 +28,9 @@ public class Focus{
 	}
 	
 	public boolean evaluate(int x, int y){
+	    if(!initialized)
+	        return false;
+	    System.out.println("FOCUSED");
 		return c.contains(x,y);
 	}
 	

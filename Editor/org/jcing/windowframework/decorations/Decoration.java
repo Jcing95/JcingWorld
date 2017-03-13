@@ -15,6 +15,8 @@ public abstract class Decoration {
 		g.setColor(old);
 	}
 	
+	public abstract Decoration getInstance(Component c);
+	
 	public abstract void paint(Graphics g);
 
 	public void setComp(Component component) {

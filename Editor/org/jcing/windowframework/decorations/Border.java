@@ -3,6 +3,8 @@ package org.jcing.windowframework.decorations;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.jcing.windowframework.Component;
+
 public class Border extends Decoration{
 
 	
@@ -22,6 +24,13 @@ public class Border extends Decoration{
 		g.fillRect(0, comp.getHeight()-bold, comp.getWidth(),bold);
 		g.fillRect(0, 0, bold, comp.getHeight());
 	}
+
+    @Override
+    public Decoration getInstance(Component c) {
+        Border b = new Border(color,bold);
+        b.setComp(c);
+        return b;
+    }
 	
 	
 	
