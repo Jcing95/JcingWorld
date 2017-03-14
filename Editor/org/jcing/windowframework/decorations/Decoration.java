@@ -7,20 +7,13 @@ import org.jcing.windowframework.Component;
 
 public abstract class Decoration {
 	
-	protected Component comp;
-	
-	public void print(Graphics g){
+	public void print(Graphics g, Component c){
 		Color old = g.getColor();
-		paint(g);
+		paint(g,c);
 		g.setColor(old);
 	}
-	
-	public abstract Decoration getInstance(Component c);
-	
-	public abstract void paint(Graphics g);
+		
+	public abstract void paint(Graphics g, Component c);
 
-	public void setComp(Component component) {
-		comp = component;
-	}
 
 }

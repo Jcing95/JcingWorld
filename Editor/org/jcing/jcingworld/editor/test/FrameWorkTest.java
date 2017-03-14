@@ -6,6 +6,7 @@ import org.jcing.windowframework.Pane;
 import org.jcing.windowframework.TextField;
 import org.jcing.windowframework.Window;
 import org.jcing.windowframework.decorations.Border;
+import org.jcing.windowframework.decorations.Striped;
 
 public class FrameWorkTest extends Window{
 	
@@ -53,10 +54,13 @@ public class FrameWorkTest extends Window{
 			}
         }
 		Anchor anchor = new Anchor(0,0,innerPane.getWidth(),20);
+		anchor.addDecoration(new Striped(new Color(0,0,0,75),0));
 		innerPane.setAnchor(anchor);
 		testpane.add(innerPane);
 		testpane.setMovable(true);
-//		testpane.setTransparent(true);
+		innerPane.addDecoration(new Border(new Color(40,150,60,200),5));
+		innerPane.setTransparent(true);
+		innerPane.addShadow(10, 10);
 		add(testpane);
 
 		activate();	

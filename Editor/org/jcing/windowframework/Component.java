@@ -34,8 +34,6 @@ public abstract class Component implements Comparable<Component> {
 
     protected Container container;
 
-    protected Decoration focusDecoration;
-
     public static Decoration focused = new Border(Color.cyan, 2);
 
     protected int renderPriority;
@@ -58,7 +56,6 @@ public abstract class Component implements Comparable<Component> {
         renderPriority = 0;
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         movable = false;
-        focusDecoration = focused.getInstance(this);
     }
 
     public Anchor getAnchor() {
@@ -138,43 +135,35 @@ public abstract class Component implements Comparable<Component> {
 
     public void print(Graphics gr) {
         Graphics2D g = (Graphics2D) img.getGraphics();
+        
         if (!transparent) {
             if (hasShadow) {
                 gr.drawImage(shadowPic, x + shadowX, y + shadowY, null);
             }
-
-            // g.setBackground(new Color(0,0,0,0));
-            // g.clearRect(0, 0, width, height);
-
-            // if(focus.getFocus())
-            // this.setBackground(new
-            // Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255),150));
             g.setBackground(background);
             g.clearRect(0, 0, width, height);
             g.setColor(foreground);
             if (focus)
-                focusDecoration.print(g);
-
+                focused.print(g,this); //TODO: remove Focushighlight
         } else {
             g.setBackground(new Color(0, 0, 0, 0));
             g.clearRect(0, 0, width, height);
         }
+        for (Decoration decoration : decorations) {
+            decoration.print(img.getGraphics(),this);
+        }
         if (anchor != null)
             anchor.print(g);
-        for (Decoration decoration : decorations) {
-            decoration.print(img.getGraphics());
-        }
+        
         g.setColor(foreground);
-        paint(img.getGraphics());
+        paint(g);
         gr.drawImage(img, x, y, null);
         g.dispose();
-
     }
 
     public abstract void paint(Graphics g);
 
     public void addDecoration(Decoration d) {
-        d.setComp(this);
         decorations.add(d);
     }
 
