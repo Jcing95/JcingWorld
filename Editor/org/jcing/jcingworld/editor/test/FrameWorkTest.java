@@ -1,6 +1,7 @@
 package org.jcing.jcingworld.editor.test;
 import java.awt.Color;
 
+import org.jcing.windowframework.Anchor;
 import org.jcing.windowframework.Pane;
 import org.jcing.windowframework.TextField;
 import org.jcing.windowframework.Window;
@@ -44,11 +45,17 @@ public class FrameWorkTest extends Window{
 		testpane.setBackground(Color.WHITE.darker().darker().darker());
 		testpane.enableShadow(true);
 		testpane.add(testField);
+		Pane innerPane = new Pane(20,20,440,280);
+		innerPane.setBackground(new Color(20,30,100,70));
 		for (int i = 0; i < texts.length; i++) {
             for (int j = 0; j < texts[i].length; j++) {
-            	testpane.add(texts[i][j]);
+            	innerPane.add(texts[i][j]);
 			}
         }
+		Anchor anchor = new Anchor(0,0,innerPane.getWidth(),20);
+		innerPane.setAnchor(anchor);
+		testpane.add(innerPane);
+		testpane.setMovable(true);
 //		testpane.setTransparent(true);
 		add(testpane);
 

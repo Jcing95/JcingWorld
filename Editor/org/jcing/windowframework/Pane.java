@@ -18,11 +18,6 @@ public class Pane extends Component implements Container {
 		comps.add(c);
 	}
 
-	@Override
-	public void setContainer(Container c) {
-		this.container = c;
-
-	}
 
 	@Override
 	public boolean evaluateClick(int x, int y) {
@@ -32,11 +27,7 @@ public class Pane extends Component implements Container {
 				return true;
 		}
 
-		if (contains(x, y)) {
-			setFocus(true);
-		} else
-			setFocus(false);
-		return focus;
+		return super.evaluateClick(x, y);
 	}
 
 	@Override

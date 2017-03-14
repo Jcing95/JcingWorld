@@ -19,11 +19,10 @@ public class Window extends Canvas implements Container {
 	 * 
 	 */
 	private static final long serialVersionUID = -8255319694373975038L;
-	private static final double VERSION = 0.2;
+	private static final double VERSION = 0.3;
 	JFrame win;
 
 	protected KeyBoardManager textHandler;
-	protected FocusManager focusmanager;
 	protected Mouse mouse;
 
 	Dimension size;
@@ -33,12 +32,9 @@ public class Window extends Canvas implements Container {
 	protected Component focused;
 
 	protected LinkedList<Component> comps;
-	// protected LinkedList<Component> focused;
 
 	public Window() {
 		comps = new LinkedList<Component>();
-		// focused = new LinkedList<Component>();
-		focusmanager = new FocusManager();
 		textHandler = new KeyBoardManager();
 		mouse = new Mouse(this);
 		size = new Dimension(640, 480);
@@ -49,7 +45,7 @@ public class Window extends Canvas implements Container {
 	}
 
 	public void activate() {
-		win = new JFrame("Jcing WindowFramework" + VERSION);
+		win = new JFrame("Jcing WindowFramework v" + VERSION);
 		this.setSize(size);
 		win.add(this);
 		win.pack();
