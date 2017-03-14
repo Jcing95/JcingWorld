@@ -1,6 +1,5 @@
 package org.jcing.jcingworld.editor.test;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import org.jcing.filesystem.FileLoader;

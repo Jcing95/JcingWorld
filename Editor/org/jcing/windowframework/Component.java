@@ -10,211 +10,243 @@ import org.jcing.windowframework.decorations.Border;
 import org.jcing.windowframework.decorations.Decoration;
 import org.jcing.windowframework.io.Mouse;
 
-public abstract class Component {
+public abstract class Component implements Comparable<Component>{
 
-    protected int width, height;
-    protected int x, y;
-    protected BufferedImage img;
-    protected LinkedList<Decoration> decorations;
-    protected Color background, foreground;
+	protected int width, height;
+	protected int x, y;
+	protected BufferedImage img;
+	protected LinkedList<Decoration> decorations;
+	protected Color background, foreground;
 
-    protected Window win;
+	protected boolean focus;
+	protected boolean transparent;
 
-    protected boolean focus;
-    protected Color shadow;
-    protected static final float shadowColorFactor = 0.7f;
-    protected static final float shadowAlphaFactor = 0.3f;
-    protected int shadowX, shadowY;
-    protected boolean hasShadow;
-    protected int shadowBlurIterations;
-    protected BufferedImage shadowPic;
-    protected float shadowSmoothnes;
+	protected Color shadow;
+	protected static final float shadowColorFactor = 0.7f;
+	protected static final float shadowAlphaFactor = 0.3f;
+	protected int shadowX, shadowY;
+	protected boolean hasShadow;
+	protected int shadowBlurIterations;
+	protected BufferedImage shadowPic;
+	protected float shadowSmoothnes;
 
-    protected boolean movable;
+	protected boolean movable;
 
-    protected Container container;
-    
-    protected Decoration focusDecoration;
+	protected Container container;
 
-    public static Decoration focused = new Border(Color.cyan, 2);
+	protected Decoration focusDecoration;
 
-    public Component(int x, int y, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.x = x;
-        this.y = y;
-        background = new Color(20, 200, 50);
-        foreground = new Color(10, 15, 50);
-        decorations = new LinkedList<Decoration>();
-        shadowX = (int) Math.sqrt(width * height) / 20;
-        shadowY = (int) Math.sqrt(width * height) / 20;
-        shadowSmoothnes = 0.9f;
-        ComputeShadow(background);
-        hasShadow = false;
-        img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        movable = true;
-        focusDecoration = focused.getInstance(this);
-    }
+	public static Decoration focused = new Border(Color.cyan, 2);
 
-    protected void setWin(Window win) {
-        this.win = win;
-    }
+	protected int renderPriority;
+	
+	public Component(int x, int y, int width, int height) {
+		this.width = width;
+		this.height = height;
+		this.x = x;
+		this.y = y;
+		background = new Color(20, 200, 50);
+		foreground = new Color(10, 15, 50);
+		decorations = new LinkedList<Decoration>();
+		shadowX = (int) Math.sqrt(width * height) / 20;
+		shadowY = (int) Math.sqrt(width * height) / 20;
+		shadowSmoothnes = 0.9f;
+		ComputeShadow(background);
+		hasShadow = false;
+		renderPriority = 0;
+		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		movable = true;
+		focusDecoration = focused.getInstance(this);
+	}
 
-    public void push(int deltaX, int deltaY) {
-        x += deltaX;
-        y += deltaY;
-    }
+	protected void setContainer(Container c) {
+		this.container = c;
+	}
 
-    public void move(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
+	public void push(int deltaX, int deltaY) {
+		x += deltaX;
+		y += deltaY;
+	}
 
-    //	private int lastX, lastY;
+	public void move(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
 
-    public void moveWithMouse(Mouse mouse) {
-        push(mouse.getDeltaX(), mouse.getDeltaY());
-    }
+	// private int lastX, lastY;
 
-    private void ComputeShadow(Color c) {
-        shadowPic = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        if (c.getAlpha() < 200)
-            shadow = new Color((int) (background.getRed() * shadowColorFactor),
-                    (int) (background.getGreen() * shadowColorFactor),
-                    (int) (background.getBlue() * shadowColorFactor),
-                    (int) (background.getAlpha() * shadowAlphaFactor));
-        shadow = new Color(0, 0, 0, 100);
+	public void moveWithMouse(Mouse mouse) {
+		push(mouse.getDeltaX(), mouse.getDeltaY());
+	}
 
-        if (shadowX > shadowY)
-            shadowBlurIterations = Math.round(shadowX * shadowSmoothnes);
-        else
-            shadowBlurIterations = Math.round(shadowY * shadowSmoothnes);
-        shadow = new Color(shadow.getRed(), shadow.getGreen(), shadow.getBlue(),
-                (int) (shadow.getAlpha() / shadowBlurIterations));
+	private void ComputeShadow(Color c) {
+		shadowPic = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		if (c.getAlpha() < 200)
+			shadow = new Color((int) (background.getRed() * shadowColorFactor),
+					(int) (background.getGreen() * shadowColorFactor), (int) (background.getBlue() * shadowColorFactor),
+					(int) (background.getAlpha() * shadowAlphaFactor));
+		shadow = new Color(0, 0, 0, 100);
 
-        Graphics gr = shadowPic.getGraphics();
-        gr.setColor(shadow);
-        for (int i = 0; i < shadowBlurIterations; i++) {
-            gr.fillRect((int) (i / (float) shadowBlurIterations * shadowX),
-                    (int) (i / (float) shadowBlurIterations * shadowY),
-                    width - 2 * (int) (i / (float) shadowBlurIterations * shadowX),
-                    height - 2 * (int) (i / (float) shadowBlurIterations * shadowY));
-        }
+		if (shadowX > shadowY)
+			shadowBlurIterations = Math.round(shadowX * shadowSmoothnes);
+		else
+			shadowBlurIterations = Math.round(shadowY * shadowSmoothnes);
+		shadow = new Color(shadow.getRed(), shadow.getGreen(), shadow.getBlue(),
+				(int) (shadow.getAlpha() / shadowBlurIterations));
 
-    }
+		Graphics gr = shadowPic.getGraphics();
+		gr.setColor(shadow);
+		for (int i = 0; i < shadowBlurIterations; i++) {
+			gr.fillRect((int) (i / (float) shadowBlurIterations * shadowX),
+					(int) (i / (float) shadowBlurIterations * shadowY),
+					width - 2 * (int) (i / (float) shadowBlurIterations * shadowX),
+					height - 2 * (int) (i / (float) shadowBlurIterations * shadowY));
+		}
 
-    public boolean getFocus() {
-        return focus;
-    }
+	}
 
-    public void print(Graphics gr) {
-        if (hasShadow) {
-            gr.drawImage(shadowPic, x + shadowX, y + shadowY, null);
-        }
-        Graphics2D g = (Graphics2D) img.getGraphics();
-        // g.setBackground(new Color(0,0,0,0));
-        // g.clearRect(0, 0, width, height);
+	public boolean getFocus() {
+		return focus;
+	}
+	
+	@Override
+	public int compareTo(Component o) {
+		return Integer.compare(o.renderPriority, renderPriority);
+	}
+	
 
-        //		if(focus.getFocus())
-        //		    this.setBackground(new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255),150));
-        g.setBackground(background);
-        g.clearRect(0, 0, width, height);
-        g.setColor(foreground);
-        if (focus)
-            focusDecoration.print(g);
-        for (Decoration decoration : decorations) {
-            decoration.print(img.getGraphics());
-        }
-        g.setColor(foreground);
-        paint(img.getGraphics());
-        gr.drawImage(img, x, y, null);
-        g.dispose();
-    }
+	public void print(Graphics gr) {
+		Graphics2D g = (Graphics2D) img.getGraphics();
+		if (!transparent) {
+			if (hasShadow) {
+				gr.drawImage(shadowPic, x + shadowX, y + shadowY, null);
+			}
 
-    public abstract void paint(Graphics g);
+			// g.setBackground(new Color(0,0,0,0));
+			// g.clearRect(0, 0, width, height);
 
-    public void addDecoration(Decoration d) {
-        d.setComp(this);
-        decorations.add(d);
-    }
+			// if(focus.getFocus())
+			// this.setBackground(new
+			// Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255),150));
+			g.setBackground(background);
+			g.clearRect(0, 0, width, height);
+			g.setColor(foreground);
+			if (focus)
+				focusDecoration.print(g);
 
-    public void enableShadow(boolean enabled) {
-        hasShadow = true;
-        ComputeShadow(background);
-    }
+		} else {
+			g.setBackground(new Color(0,0,0,0));
+			g.clearRect(0, 0, width, height);
+		}
+		for (Decoration decoration : decorations) {
+			decoration.print(img.getGraphics());
+		}
+		g.setColor(foreground);
+		paint(img.getGraphics());
+		gr.drawImage(img, x, y, null);
+		g.dispose();
 
-    public void addShadow(int offsetX, int offsetY) {
-        hasShadow = true;
-        this.shadowX = offsetX;
-        this.shadowY = offsetY;
-    }
+	}
 
-    public Color getBackground() {
-        return background;
-    }
+	public abstract void paint(Graphics g);
 
-    public void setBackground(Color background) {
-        this.background = background;
-        ComputeShadow(background);
-    }
+	public void addDecoration(Decoration d) {
+		d.setComp(this);
+		decorations.add(d);
+	}
 
-    public Color getForeground() {
-        return foreground;
-    }
+	public void enableShadow(boolean enabled) {
+		hasShadow = true;
+		ComputeShadow(background);
+	}
 
-    public void setForeground(Color foreground) {
-        this.foreground = foreground;
-    }
+	public void addShadow(int offsetX, int offsetY) {
+		this.shadowX = offsetX;
+		this.shadowY = offsetY;
+		enableShadow(true);
+	}
 
-    public int getWidth() {
-        return width;
-    }
+	public Color getBackground() {
+		return background;
+	}
 
-    public int getHeight() {
-        return height;
-    }
+	public void setBackground(Color background) {
+		this.background = background;
+		ComputeShadow(background);
+	}
 
-    public int getX() {
-        return x;
-    }
+	public Color getForeground() {
+		return foreground;
+	}
 
-    public int getY() {
-        return y;
-    }
+	public void setForeground(Color foreground) {
+		this.foreground = foreground;
+	}
 
-    protected void setFocus(boolean focus) {
-        if (focus) {
-            win.setFocused(this);
-            this.focus = true;
-        } else {
-            this.focus = false;
-        }
-    }
+	public int getWidth() {
+		return width;
+	}
 
-    public boolean evaluateClick(int x, int y) {
-        if (contains(x, y))
-            setFocus(true);
-        else
-            setFocus(false);
-        return focus;
-    }
+	public int getHeight() {
+		return height;
+	}
 
-    public boolean contains(int x2, int y2) {
-        if (x <= x2 && y <= y2 && x + width >= x2 && y + height >= y2)
-            return true;
-        return false;
-    }
+	public int getX() {
+		return x;
+	}
 
-    public void evaluateMouse(Mouse mouse) {
-        if (movable && focus) {
-            if (mouse.getButton()[0]) {
-                moveWithMouse(mouse);
-            }
-        }
-    }
+	public int getY() {
+		return y;
+	}
 
-    public void setContainer(Container c) {
-     this.container = c;   
-    }
+	protected void setFocus(boolean focus) {
+		if (focus) {
+			renderPriority = -10;
+			container.getWin().setFocused(this);
+			container.sort();
+			this.focus = true;
+		} else {
+			renderPriority = 0;
+			this.focus = false;
+		}
+	}
+
+	public boolean evaluateClick(int x, int y) {
+		if (contains(x, y))
+			setFocus(true);
+		else
+			setFocus(false);
+		return focus;
+	}
+
+	public boolean contains(int x2, int y2) {
+		if (x <= x2 && y <= y2 && x + width >= x2 && y + height >= y2)
+			return true;
+		return false;
+	}
+
+	public void evaluateMouse(Mouse mouse) {
+		if (movable && focus) {
+			if (mouse.getButton()[0]) {
+				moveWithMouse(mouse);
+			}
+		}
+	}
+
+	public boolean isTransparent() {
+		return transparent;
+	}
+
+	public void setTransparent(boolean transparent) {
+		this.transparent = transparent;
+	}
+
+	public int getRenderPriority() {
+		return renderPriority;
+	}
+
+	public void setRenderPriority(int renderPriority) {
+		this.renderPriority = renderPriority;
+	}
 
 }

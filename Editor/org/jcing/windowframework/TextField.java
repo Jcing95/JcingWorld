@@ -27,7 +27,6 @@ public class TextField extends Component {
 		g.setFont(font);
 		g.drawString(text.toString(), xPadding, yPadding);
 	}
-	
-	
+
 
 }
