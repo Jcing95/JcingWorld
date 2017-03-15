@@ -3,6 +3,7 @@ package org.jcing.windowframework.io;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 
 import org.jcing.windowframework.Window;
 
@@ -26,6 +27,10 @@ public class Mouse implements MouseListener, MouseMotionListener {
     public Mouse(Window win) {
         this.win = win;
         button = new boolean[3];
+    }
+    
+    public void addMouseWheelListener(MouseWheelListener l){
+        win.addMouseWheelListener(l);
     }
 
     @Override

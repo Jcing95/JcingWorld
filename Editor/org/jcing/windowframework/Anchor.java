@@ -29,7 +29,7 @@ public class Anchor extends Component{
     
     @Override
     public void evaluateMouse(Mouse mouse){
-        if (mouse.getButton()[0]) {
+        if (focus && mouse.getButton()[0]) {
             moveWithMouse(mouse);
         }
     }

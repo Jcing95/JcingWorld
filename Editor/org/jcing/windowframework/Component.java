@@ -133,12 +133,16 @@ public abstract class Component implements Comparable<Component> {
         return Integer.compare(o.renderPriority, renderPriority);
     }
 
-    public void print(Graphics gr) {
+    public void print(Graphics gr){
+        print(gr,0,0);
+    }
+    
+    public void print(Graphics gr, int xOffset, int yOffset) {
         Graphics2D g = (Graphics2D) img.getGraphics();
         
         if (!transparent) {
             if (hasShadow) {
-                gr.drawImage(shadowPic, x + shadowX, y + shadowY, null);
+                gr.drawImage(shadowPic, x + shadowX+xOffset, y + shadowY+yOffset, null);
             }
             g.setBackground(background);
             g.clearRect(0, 0, width, height);
@@ -157,7 +161,7 @@ public abstract class Component implements Comparable<Component> {
         
         g.setColor(foreground);
         paint(g);
-        gr.drawImage(img, x, y, null);
+        gr.drawImage(img, x+xOffset, y+yOffset, null);
         g.dispose();
     }
 

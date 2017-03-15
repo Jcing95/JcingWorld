@@ -88,6 +88,8 @@ public class Window extends Canvas implements Container {
 	}
 
 	public void processClick(int x, int y) {
+	    if (focused != null)
+            focused.setFocus(false);
 		Iterator<Component> i = comps.descendingIterator();
 		while(i.hasNext()){
 			if(i.next().evaluateClick(x, y))
