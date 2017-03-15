@@ -12,4 +12,7 @@ public interface Container {
 
 	public int getHeight();
 
+	public int setWithXBounds(int x);
+	public int setWithYBounds(int x);
+
 }

@@ -79,16 +79,16 @@ public abstract class Component implements Comparable<Component> {
     }
 
     public void move(int x, int y) {
-        this.x = x;
-        this.y = y;
-        if (this.x + width > container.getWidth())
-            this.x = container.getWidth() - width;
-        if (this.y + height > container.getHeight())
-            this.y = container.getHeight() - height;
-        if (this.x < 0)
-            this.x = 0;
-        if (this.y < 0)
-            this.y = 0;
+        this.x = container.setWithXBounds(x);
+        this.y = container.setWithYBounds(y);
+//        if (this.x + width > container.getWidth())
+//            this.x = container.getWidth() - width;
+//        if (this.y + height > container.getHeight())
+//            this.y = container.getHeight() - height;
+//        if (this.x < 0)
+//            this.x = 0;
+//        if (this.y < 0)
+//            this.y = 0;
     }
 
     // private int lastX, lastY;

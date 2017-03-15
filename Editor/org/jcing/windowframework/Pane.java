@@ -58,4 +58,22 @@ public class Pane extends Component implements Container {
 		return container.getWin();
 	}
 
+	@Override
+	public int setWithXBounds(int x) {
+		if(x<0)
+			return 0;
+		if(x>width)
+			return width;
+		return x;
+	}
+
+	@Override
+	public int setWithYBounds(int y) {
+		if(y<0)
+			return 0;
+		if(y>height)
+			return height;
+		return y;
+	}
+
 }
