@@ -60,16 +60,7 @@ public class ScrollPane extends Pane implements MouseWheelListener {
 	}
 	
 	@Override
-	public int setWithXBounds(int x) {
-		if(x<0)
-			return 0;
-		if(x>width)
-			return width;
-		return x;
-	}
-
-	@Override
-	public int setWithYBounds(int y) {
+	public int setWithYBounds(int y, int height) {
 		return y;
 	}
 

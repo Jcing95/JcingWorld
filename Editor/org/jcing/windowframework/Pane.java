@@ -69,20 +69,20 @@ public class Pane extends Component implements Container {
 	}
 
 	@Override
-	public int setWithXBounds(int x) {
+	public int setWithXBounds(int x, int width) {
 		if(x<0)
 			return 0;
-		if(x>width)
-			return width;
+		if(x >this.width-width)
+			return this.width-width;
 		return x;
 	}
 
 	@Override
-	public int setWithYBounds(int y) {
+	public int setWithYBounds(int y, int height) {
 		if(y<0)
 			return 0;
-		if(y>height)
-			return height;
+		if(y>this.height-height)
+			return this.height-height;
 		return y;
 	}
 

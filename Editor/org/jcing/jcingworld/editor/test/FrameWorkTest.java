@@ -1,7 +1,10 @@
 package org.jcing.jcingworld.editor.test;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import org.jcing.windowframework.Anchor;
+import org.jcing.windowframework.Button;
 import org.jcing.windowframework.Pane;
 import org.jcing.windowframework.ScrollPane;
 import org.jcing.windowframework.TextField;
@@ -62,6 +65,8 @@ public class FrameWorkTest extends Window{
 		innerPane.addDecoration(new Border(new Color(40,150,60,200),5));
 		innerPane.addShadow(10, 10);
 		add(testpane);
+		Button testButton = new Button(100,100,"Buttanh");
+		add(testButton);
 
 		activate();	
 		System.out.println("fin");

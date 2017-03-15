@@ -148,20 +148,20 @@ public class Window extends Canvas implements Container {
 	}
 
 	@Override
-	public int setWithXBounds(int x) {
+	public int setWithXBounds(int x, int width) {
 		if(x<0)
 			return 0;
-		if(x>getWidth())
-			return getWidth();
+		if(x>getWidth()-width)
+			return getWidth()-width;
 		return x;
 	}
 
 	@Override
-	public int setWithYBounds(int y) {
+	public int setWithYBounds(int y, int height) {
 		if(y<0)
 			return 0;
-		if(y>getHeight())
-			return getHeight();
+		if(y>getHeight()-height)
+			return getHeight()-height;
 		return y;
 	}
 
