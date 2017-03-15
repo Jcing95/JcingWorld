@@ -43,7 +43,7 @@ public class FrameWorkTest extends Window{
 		testField.addDecoration(new Border(new Color(0, 0, 0, 100), 2));
 		testField.setBackground(new Color(155, 15, 35, 150));
 		testField.enableShadow(true);
-		testpane = new ScrollPane(50, 50, 540, 380,mouse);
+		testpane = new ScrollPane(50, 50, 540, 380);
 		testpane.setBackground(Color.WHITE.darker().darker().darker());
 		testpane.enableShadow(true);
 		testpane.add(testField);

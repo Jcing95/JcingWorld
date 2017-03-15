@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.jcing.windowframework.io.Mouse;
+
 public class Pane extends Component implements Container {
 
 	public LinkedList<Component> comps;
@@ -18,6 +20,14 @@ public class Pane extends Component implements Container {
 		comps.add(c);
 	}
 
+	
+	@Override
+	public void evaluateMouse(Mouse mouse){
+	    super.evaluateMouse(mouse);
+	    for (Component component : comps) {
+            component.evaluateMouse(mouse);
+        }
+	}
 
 	@Override
 	public boolean evaluateClick(int x, int y) {

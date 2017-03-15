@@ -70,7 +70,7 @@ public abstract class Component implements Comparable<Component> {
 
     protected void setContainer(Container c) {
         this.container = c;
-        if(anchor != null)
+        if (anchor != null)
             anchor.setContainer(container);
     }
 
@@ -81,14 +81,14 @@ public abstract class Component implements Comparable<Component> {
     public void move(int x, int y) {
         this.x = container.setWithXBounds(x);
         this.y = container.setWithYBounds(y);
-//        if (this.x + width > container.getWidth())
-//            this.x = container.getWidth() - width;
-//        if (this.y + height > container.getHeight())
-//            this.y = container.getHeight() - height;
-//        if (this.x < 0)
-//            this.x = 0;
-//        if (this.y < 0)
-//            this.y = 0;
+        //        if (this.x + width > container.getWidth())
+        //            this.x = container.getWidth() - width;
+        //        if (this.y + height > container.getHeight())
+        //            this.y = container.getHeight() - height;
+        //        if (this.x < 0)
+        //            this.x = 0;
+        //        if (this.y < 0)
+        //            this.y = 0;
     }
 
     // private int lastX, lastY;
@@ -133,35 +133,35 @@ public abstract class Component implements Comparable<Component> {
         return Integer.compare(o.renderPriority, renderPriority);
     }
 
-    public void print(Graphics gr){
-        print(gr,0,0);
+    public void print(Graphics gr) {
+        print(gr, 0, 0);
     }
-    
+
     public void print(Graphics gr, int xOffset, int yOffset) {
         Graphics2D g = (Graphics2D) img.getGraphics();
-        
+
         if (!transparent) {
             if (hasShadow) {
-                gr.drawImage(shadowPic, x + shadowX+xOffset, y + shadowY+yOffset, null);
+                gr.drawImage(shadowPic, x + shadowX + xOffset, y + shadowY + yOffset, null);
             }
             g.setBackground(background);
             g.clearRect(0, 0, width, height);
             g.setColor(foreground);
             if (focus)
-                focused.print(g,this); //TODO: remove Focushighlight
+                focused.print(g, this); //TODO: remove Focushighlight
         } else {
             g.setBackground(new Color(0, 0, 0, 0));
             g.clearRect(0, 0, width, height);
         }
         for (Decoration decoration : decorations) {
-            decoration.print(img.getGraphics(),this);
+            decoration.print(img.getGraphics(), this);
         }
         if (anchor != null)
             anchor.print(g);
-        
+
         g.setColor(foreground);
         paint(g);
-        gr.drawImage(img, x+xOffset, y+yOffset, null);
+        gr.drawImage(img, x + xOffset, y + yOffset, null);
         g.dispose();
     }
 
@@ -227,8 +227,14 @@ public abstract class Component implements Comparable<Component> {
         }
     }
 
+    public boolean evaluateClick(Mouse mouse, boolean pressed) {
+        if (pressed)
+            return evaluateClick(mouse.getPosX(), mouse.getPosY());
+        return false;
+    }
+
     public boolean evaluateClick(int x, int y) {
-        if (anchor != null){
+        if (anchor != null) {
             if (anchor.evaluateClick(x - this.x, y - this.y))
                 return true;
         }
@@ -246,9 +252,9 @@ public abstract class Component implements Comparable<Component> {
     }
 
     public void evaluateMouse(Mouse mouse) {
+        if (anchor != null)
+            anchor.evaluateMouse(mouse);
         if (focus) {
-//            if (anchor != null)
-//                anchor.evaluateMouse(mouse);
             if (movable && mouse.getButton()[0]) {
                 moveWithMouse(mouse);
             }

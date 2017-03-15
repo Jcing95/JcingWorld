@@ -10,16 +10,21 @@ import org.jcing.windowframework.io.Mouse;
 public class ScrollPane extends Pane implements MouseWheelListener {
 
 	protected int yOffset;
-	protected Mouse mouse;
 	protected float wheelFactor = 5.75f;
+	protected Mouse mouse;
 
-	public ScrollPane(int x, int y, int width, int height, Mouse mouse) {
+	public ScrollPane(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		this.mouse = mouse;
-		mouse.addMouseWheelListener(this);
 		yOffset = 0;
 	}
 
+	@Override
+	public void setContainer(Container c){
+	    super.setContainer(c);
+	    mouse = c.getWin().getMouse();
+	    mouse.addMouseWheelListener(this);
+	}
+	
 	@Override
 	public boolean evaluateClick(int x, int y) {
 		if (contains(x, y)) {
@@ -39,11 +44,6 @@ public class ScrollPane extends Pane implements MouseWheelListener {
 		} else
 			setFocus(false);
 		return focus;
-	}
-
-	@Override
-	public int getHeight() {
-		return height - yOffset;
 	}
 
 	@Override
