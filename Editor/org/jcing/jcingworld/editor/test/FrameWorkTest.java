@@ -25,7 +25,7 @@ public class FrameWorkTest extends Window{
 	TextField[][] texts;
 	Pane testpane;
 	
-	int xPanes = 8, yPanes = 5;
+	int xPanes = 8, yPanes = 4;
 	String testFieldString = "12!";
 	
 	
@@ -59,7 +59,6 @@ public class FrameWorkTest extends Window{
 		testpane.add(innerPane);
 		testpane.setMovable(true);
 		innerPane.addDecoration(new Border(new Color(40,150,60,200),5));
-		innerPane.setTransparent(true);
 		innerPane.addShadow(10, 10);
 		add(testpane);
 
