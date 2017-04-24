@@ -83,14 +83,17 @@ public class Window extends Canvas implements Container {
 
 	private void manage() {
 		mouse.move();
-		if (focused != null)
-			focused.evaluateMouse(mouse);
+		for (Component component : comps) {
+            component.evaluateMouse(mouse);
+        }
 	}
 
-	public void processClick(int x, int y) {
+	public void processClick(Mouse mouse,boolean pressed) {
+	    if (pressed && focused != null)
+            focused.setFocus(false);
 		Iterator<Component> i = comps.descendingIterator();
 		while(i.hasNext()){
-			if(i.next().evaluateClick(x, y))
+			if(i.next().evaluateClick(mouse,pressed))
 				return;
 		}
 //		for (Component component : comps) {
@@ -143,4 +146,26 @@ public class Window extends Canvas implements Container {
 	public Window getWin() {
 		return this;
 	}
+
+	@Override
+	public int setWithXBounds(int x, int width) {
+		if(x<0)
+			return 0;
+		if(x>getWidth()-width)
+			return getWidth()-width;
+		return x;
+	}
+
+	@Override
+	public int setWithYBounds(int y, int height) {
+		if(y<0)
+			return 0;
+		if(y>getHeight()-height)
+			return getHeight()-height;
+		return y;
+	}
+
+    public Mouse getMouse() {
+        return mouse;
+    }
 }

@@ -1,8 +1,12 @@
 package org.jcing.jcingworld.editor.test;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import org.jcing.windowframework.Anchor;
+import org.jcing.windowframework.Button;
 import org.jcing.windowframework.Pane;
+import org.jcing.windowframework.ScrollPane;
 import org.jcing.windowframework.TextField;
 import org.jcing.windowframework.Window;
 import org.jcing.windowframework.decorations.Border;
@@ -23,7 +27,7 @@ public class FrameWorkTest extends Window{
 	
 	TextField testField;
 	TextField[][] texts;
-	Pane testpane;
+	ScrollPane testpane;
 	
 	int xPanes = 8, yPanes = 4;
 	String testFieldString = "12!";
@@ -42,7 +46,7 @@ public class FrameWorkTest extends Window{
 		testField.addDecoration(new Border(new Color(0, 0, 0, 100), 2));
 		testField.setBackground(new Color(155, 15, 35, 150));
 		testField.enableShadow(true);
-		testpane = new Pane(50, 50, 540, 380);
+		testpane = new ScrollPane(50, 50, 540, 380);
 		testpane.setBackground(Color.WHITE.darker().darker().darker());
 		testpane.enableShadow(true);
 		testpane.add(testField);
@@ -61,6 +65,8 @@ public class FrameWorkTest extends Window{
 		innerPane.addDecoration(new Border(new Color(40,150,60,200),5));
 		innerPane.addShadow(10, 10);
 		add(testpane);
+		Button testButton = new Button(100,100,"Buttanh");
+		add(testButton);
 
 		activate();	
 //		System.out.println(Short.reverseBytes(Short.MAX_VALUE));
