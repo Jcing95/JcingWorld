@@ -63,7 +63,7 @@ public class FrameWorkTest extends Window{
 		add(testpane);
 
 		activate();	
-		System.out.println("fin");
+//		System.out.println(Short.reverseBytes(Short.MAX_VALUE));
 	}
 
 	@Override
