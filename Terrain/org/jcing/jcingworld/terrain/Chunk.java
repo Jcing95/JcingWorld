@@ -8,6 +8,7 @@ import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.logging.Logs;
+import org.jcing.jcingworld.terrain.generation.MapGenerator;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -78,6 +79,17 @@ public class Chunk {
 
 	}
 
+	public Tile generateTileData(byte xp, byte yp, TextureAtlas textureAtlas, MapGenerator gen){
+        float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
+        int xc = (int) (x*Chunk.SIZE);
+        int zc = (int) (z*Chunk.SIZE);
+        float x[] = { xp * SQUARE_SIZE, (xp + 1) * SQUARE_SIZE, xp * SQUARE_SIZE, (xp + 1) * SQUARE_SIZE };
+        float z[] = { yp * SQUARE_SIZE, yp * SQUARE_SIZE, (yp + 1) * SQUARE_SIZE, (yp + 1) * SQUARE_SIZE };
+        float y[] = { gen.height(x[0] + xc, z[0] + zc), gen.height(x[1] + xc, z[1] + zc),
+                gen.height(x[2] + xc, z[2] + zc), gen.height(x[3] + xc, z[3] + zc) };
+        return new Tile(x, y, z, gen.tex(x[3] + xc, z[3] + zc));
+    }
+	
 	public static void initIndices() {
 		// INDICES
 		indices = new int[4 * 6 * (TILE_COUNT - 1) * (TILE_COUNT - 1)];

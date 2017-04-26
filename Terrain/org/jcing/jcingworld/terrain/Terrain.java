@@ -155,7 +155,7 @@ public class Terrain {
 
     public int tex(float x, float z, int max) {
         //		System.out.println("TEX: " + (gen.tex(x, z,max)));
-        return (int) (gen.tex(x, z, max));
+        return (int) (gen.tex(x, z));
     }
 
     boolean isSupposedToUnload(Point chunk) {

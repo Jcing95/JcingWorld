@@ -76,7 +76,7 @@ public class MapGenerator {
 		return 0;
 	}
 
-	public int tex(float x, float z, float maxDelta) {
+	public int tex(float x, float z) {
 		return biome(x, z);
 	}
 

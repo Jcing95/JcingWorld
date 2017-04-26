@@ -38,7 +38,9 @@ public class Game {
         picker = new MousePicker(cam, renderer.getProjectionMatrix(), terrain);
     }
 
-    
+    public Terrain getTerrain(int i){
+        return terrain;
+    }
     
     public void tick() {
         if (KeyBoard.key(GLFW.GLFW_KEY_R)) {
@@ -62,9 +64,9 @@ public class Game {
         return cam;
     }
 
-    public Chunk getTerrain() {
-        return terrain.getChunk(0, 0);
-    }
+//    public Chunk getTerrain() {
+//        return terrain.getChunk(0, 0);
+//    }
 
     public Player getPlayer() {
         return player;

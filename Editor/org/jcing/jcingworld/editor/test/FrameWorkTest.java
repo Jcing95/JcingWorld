@@ -69,7 +69,7 @@ public class FrameWorkTest extends Window{
 		add(testButton);
 
 		activate();	
-//		System.out.println(Short.reverseBytes(Short.MAX_VALUE));
+		System.out.println(Float.BYTES);
 	}
 
 	@Override
