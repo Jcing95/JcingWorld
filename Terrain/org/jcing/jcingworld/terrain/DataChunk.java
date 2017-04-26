@@ -19,7 +19,7 @@ public class DataChunk {
 
 	private Terrain terrain;
 
-	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", false);
+	private PrintStream out = Logs.subLog(Logs.chunkLoading, "ChunkData_Management", true);
 
 	public DataChunk(Terrain terrain) {
 		this.terrain = terrain;

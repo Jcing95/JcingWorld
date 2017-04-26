@@ -71,6 +71,7 @@ public class Chunk {
 					+ Maths.fastFloor(chunkdata.x / DataChunk.SIZE) + "|"
 					+ Maths.fastFloor(chunkdata.z / DataChunk.SIZE) + ") ...");
 			info.println("generating Chunk[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
+			chunkdata.generate(textureAtlas, terrain.getGenerator());
 			//			chunkdata.generate(textureAtlas);
 			//			chunkdata.apply();
 			out.println("G" + gridZ + " d" + chunkdata.z);

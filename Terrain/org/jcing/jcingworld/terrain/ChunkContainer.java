@@ -31,7 +31,7 @@ public class ChunkContainer implements Externalizable{
         for (int i = 0; i < chunks.length; i++) {
             for (int j = 0; j < chunks.length; j++) {
                 chunks[i][j] = new ChunkData((xF*(CONTAINERSIZE))+i,(zF*(CONTAINERSIZE))+j,terrain);
-                chunks[i][j].init(terrain.getGenerator());
+//                chunks[i][j].init(terrain.getGenerator());
             }
         }
     }
@@ -43,7 +43,7 @@ public class ChunkContainer implements Externalizable{
     @Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeInt(VERSION);
-		out.writeInt(CONTAINERSIZE);
+//		out.writeInt(CONTAINERSIZE);
 		out.writeInt(xF);
 		out.writeInt(zF);
 		for (int i = 0; i < chunks.length; i++) {
@@ -58,7 +58,7 @@ public class ChunkContainer implements Externalizable{
 		int version = in.readInt();
 		switch(version){
 		case 0:
-			CONTAINERSIZE = in.readInt();
+//			CONTAINERSIZE = in.readInt();
 			xF = in.readInt();
 			zF = in.readInt();
 			chunks = new ChunkData[CONTAINERSIZE+1][CONTAINERSIZE+1];

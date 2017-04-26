@@ -50,9 +50,10 @@ public class ChunkData implements Externalizable {
         out.writeInt(VERSION);
         out.writeInt(x);
         out.writeInt(z);
-        for (int i = 0; i < topTiles.length; i++) {
-            out.writeObject(topTiles[i]);
-        }
+        out.writeObject(topTiles);
+//        for (int i = 0; i < topTiles.length; i++) {
+//            out.writeObject(topTiles[i]);
+//        }
     }
 
     @Override
@@ -62,19 +63,20 @@ public class ChunkData implements Externalizable {
         case 0:
             x = in.readInt();
             z = in.readInt();
-            topTiles = new Tile[Chunk.TILE_COUNT * Chunk.TILE_COUNT];
+            topTiles = (Tile[]) in.readObject();//new Tile[Chunk.TILE_COUNT * Chunk.TILE_COUNT];
             for (int i = 0; i < topTiles.length; i++) {
-                topTiles[i] = (Tile) in.readObject();
+                topTiles[i].generate(data, gen, version, y);
             }
             constructTileTextureMap();
         }
+        initialized = true;
     }
 
-    public void init(MapGenerator gen) {
-        for (Tile tile : topTiles) {
-            tile.generate(this, gen);
-        }
-    }
+//    public void init(MapGenerator gen) {
+//        for (Tile tile : topTiles) {
+//            tile.generate(this, gen);
+//        }
+//    }
 
     public void generate(TextureAtlas textureAtlas, MapGenerator gen) {
         float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
@@ -82,13 +84,16 @@ public class ChunkData implements Externalizable {
         int zc = (int) (z * Chunk.SIZE);
         for (int i = 0; i < Chunk.VERTEX_COUNT; i += 2) { // i == z
             for (int j = 0; j < Chunk.VERTEX_COUNT; j += 2) {// j == x
-                float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE,
-                        (j + 1) * SQUARE_SIZE };
-                float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE,
-                        (i + 1) * SQUARE_SIZE };
-                float y[] = { gen.height(x[0] + xc, z[0] + zc), gen.height(x[1] + xc, z[1] + zc),
-                        gen.height(x[2] + xc, z[2] + zc), gen.height(x[3] + xc, z[3] + zc) };
-                setTile(j / 2, i / 2, new Tile(x, y, z, gen.tex(x[3] + xc, z[3] + zc)));
+//                float x[] = { j * SQUARE_SIZE, (j + 1) * SQUARE_SIZE, j * SQUARE_SIZE,
+//                        (j + 1) * SQUARE_SIZE };
+//                float z[] = { i * SQUARE_SIZE, i * SQUARE_SIZE, (i + 1) * SQUARE_SIZE,
+//                        (i + 1) * SQUARE_SIZE };
+//                float y[] = { gen.height(x[0] + xc, z[0] + zc), gen.height(x[1] + xc, z[1] + zc),
+//                        gen.height(x[2] + xc, z[2] + zc), gen.height(x[3] + xc, z[3] + zc) };
+//                setTile(j / 2, i / 2, new Tile(x, y, z, gen.tex(x[3] + xc, z[3] + zc)));
+            	Tile tile = new Tile(i,j,gen.tex(x*SQUARE_SIZE+i, z*SQUARE_SIZE+j));
+            	tile.generate(this, gen, (byte)(i), (byte)(j));
+            	setTile(i/2, j/2,tile);
             }
         }
         constructTileTextureMap();
