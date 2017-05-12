@@ -36,7 +36,6 @@ public class OBJLoader {
         float[] textureArray = null;
         int[] indicesArray = null;
         try {
-
             while (true) { // PARSE Vertices / Texture Coordinates / Normals
                 line = reader.readLine();
                 String[] currentLine = line.split(" ");
