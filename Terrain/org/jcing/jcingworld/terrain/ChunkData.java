@@ -63,8 +63,7 @@ public class ChunkData implements Externalizable {
         case 0:
             x = in.readInt();
             z = in.readInt();
-            topTiles = (Tile[]) in.readObject();//new Tile[Chunk.TILE_COUNT * Chunk.TILE_COUNT];
-            
+            topTiles = (Tile[]) in.readObject();
             constructTileTextureMap();
         }
         initialized = true;
