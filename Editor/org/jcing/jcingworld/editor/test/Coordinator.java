@@ -21,11 +21,20 @@ public class Coordinator<O> {
         
     }
     
-    public void insert(int x, int y){
+    public void insert(int x, int y, O o){
         if(subX.containsKey(x)){
-           subX.put(x, arg1); 
+           subX.get(x).insert(x/BASE,y,o); 
         }else if(subY.containsKey(y)){
-            
+           subY.get(y).insert(x, y/BASE, o);
+        }
+        else{
+            if(subX.size() > subY.size()){
+                Coordinator<O> c = new Coordinator<O>();
+                c.insert(x/BASE, y, o);
+                subX.put(x,c);
+                
+                //TODO: fix n co
+            }
         }
        
         
