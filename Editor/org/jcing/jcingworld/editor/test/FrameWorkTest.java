@@ -1,7 +1,5 @@
 package org.jcing.jcingworld.editor.test;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import org.jcing.windowframework.Anchor;
 import org.jcing.windowframework.Button;

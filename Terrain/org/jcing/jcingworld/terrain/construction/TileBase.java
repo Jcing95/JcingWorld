@@ -14,6 +14,20 @@ public class TileBase implements Externalizable {
     
     private HashMap<Float,Material> content;
 
+    public TileBase(){
+    }
+    
+    public TileBase(byte x, byte z, Material mat, float y){
+    	this.x = x;
+    	this.z = z;
+    	content = new HashMap<Float, Material>();
+    	content.put(y,mat);
+    }
+    
+    public void addMat(Material mat, float y){
+    	content.put(y, mat);
+    }
+    
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         x = in.readByte();

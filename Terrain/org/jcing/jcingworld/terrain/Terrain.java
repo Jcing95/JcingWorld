@@ -11,6 +11,7 @@ import org.jcing.jcingworld.engine.entities.Player;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
+import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.terrain.generation.MapGenerator;
 import org.jcing.jcingworld.toolbox.Maths;
@@ -202,5 +203,13 @@ public class Terrain {
 
     public MapGenerator getGenerator() {
         return gen;
+    }
+    
+    public Loader getLoader(){
+    	return loader;
+    }
+    
+    public TerrainShader getShader(){
+    	return renderer.getTerrainShader();
     }
 }

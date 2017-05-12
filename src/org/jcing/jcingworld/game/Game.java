@@ -6,7 +6,6 @@ import org.jcing.jcingworld.engine.entities.Player;
 import org.jcing.jcingworld.engine.io.KeyBoard;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.rendering.MasterRenderer;
-import org.jcing.jcingworld.terrain.Chunk;
 import org.jcing.jcingworld.terrain.Terrain;
 import org.jcing.jcingworld.toolbox.MousePicker;
 import org.lwjgl.glfw.GLFW;

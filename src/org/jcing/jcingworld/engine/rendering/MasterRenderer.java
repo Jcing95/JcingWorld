@@ -14,7 +14,6 @@ import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.entities.Entity;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
-import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.shading.entities.StaticShader;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;

@@ -1,7 +1,6 @@
 package org.jcing.jcingworld.engine.shading.entities;
 
 import org.jcing.jcingworld.engine.entities.Camera;
-import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;

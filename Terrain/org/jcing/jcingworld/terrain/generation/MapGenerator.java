@@ -79,7 +79,9 @@ public class MapGenerator {
 	public int tex(float x, float z) {
 		return biome(x, z);
 	}
-
+	
+	
+	
 	public static final class BIOME {
 
 		public static final int PLAINS = 0;

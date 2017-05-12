@@ -159,7 +159,7 @@ public class Chunk {
 
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
 //		info.println("generated random Heightmap");
-		info.println("generated Tiles");
+//		info.println("generated Tiles");
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
