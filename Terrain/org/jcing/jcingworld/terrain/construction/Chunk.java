@@ -13,50 +13,82 @@ import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
 import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.terrain.Terrain;
 import org.jcing.jcingworld.terrain.generation.MapGenerator;
+import org.lwjgl.util.vector.Vector3f;
 
-public class Chunk implements Externalizable{
+public class Chunk implements Externalizable {
 
 	private byte VERSION = 0;
-	
+
 	public static final float TILE_SIZE = 6;
 
 	public static final int TILE_COUNT = 16;
 	public static final int TILE_TEX_INDICE_COUNT = TILE_COUNT + 1;
 	public static final float SIZE = TILE_SIZE * (TILE_COUNT - 1);
-	
+
 	public static final int VERTEX_COUNT = (TILE_COUNT) * 2;
-		
+
 	private TileBase[][] tiles;
 	private RawModel model;
 	private BaseImage blendMap;
 	private Terrain terrain;
-	
-	private float x,z;
-	
+
+	private float x, z;
+
 	private static int[] indices;
-	
+
 	private static PrintStream out = Logs.subLog(Logs.chunkLoading, "newChunk", true);
-	
-	public Chunk(){
-		if(indices == null){
+
+	public Chunk() {
+		if (indices == null) {
 			initIndices();
 		}
 	}
-	
-	
-	public void initialize(Loader loader, Terrain terrain, float GRIDx, float GRIDy){
+
+	public void initialize(Loader loader, Terrain terrain, float GRIDx, float GRIDy) {
 		tiles = new TileBase[TILE_COUNT][TILE_COUNT];
 		this.terrain = terrain;
 		this.x = GRIDx * SIZE;
 		this.z = GRIDy * SIZE;
-		if(tiles == null){
+		if (tiles == null) {
 			generateTiles();
 		}
 		model = generateTerrain(terrain.getLoader(), terrain.getShader());
 	}
+
+	private void generateTiles() {
+
+	}
+
+	private float getTileX(int i, int j, boolean second) {
+		if (second)
+			return tiles[i][j].getX() * TILE_SIZE + this.x + TILE_SIZE / 2;
+		return tiles[i][j].getX() * TILE_SIZE + this.x;
+	}
+
+	private float getTileZ(int i, int j, boolean second) {
+		if (second)
+			return tiles[i][j].getZ() * TILE_SIZE + this.x + TILE_SIZE / 2;
+		return tiles[i][j].getZ() * TILE_SIZE + this.x;
+	}
 	
-	private void generateTiles(){
-		
+	private Vector3f[] calcNormal(float[] xV, float[] yV, float[] zV) {
+		Vector3f left = Vector3f.sub(new Vector3f(xV[1], yV[1], zV[1]), new Vector3f(xV[0], yV[0], zV[0]), null);
+		Vector3f right = Vector3f.sub(new Vector3f(xV[0], yV[0], zV[0]), new Vector3f(xV[2], yV[2], zV[2]), null);
+		Vector3f[] normal = new Vector3f[4];
+
+		normal[0] = Vector3f.cross(left, right, null);
+
+		left = Vector3f.sub(new Vector3f(xV[1], yV[1], zV[1]), new Vector3f(xV[2], yV[2], zV[2]), null);
+		right = Vector3f.sub(new Vector3f(xV[0], yV[0], zV[0]), new Vector3f(xV[1], yV[1], zV[1]), null);
+		normal[1] = Vector3f.cross(left, right, null);
+		left = Vector3f.sub(new Vector3f(xV[1], yV[1], zV[1]), new Vector3f(xV[2], yV[2], zV[2]), null);
+		right = Vector3f.sub(new Vector3f(xV[2], yV[2], zV[2]), new Vector3f(xV[3], yV[3], zV[3]), null);
+		normal[2] = Vector3f.cross(left, right, null);
+		left = Vector3f.sub(new Vector3f(xV[1], yV[1], zV[1]), new Vector3f(xV[3], yV[3], zV[3]), null);
+		right = Vector3f.sub(new Vector3f(xV[2], yV[2], zV[2]), new Vector3f(xV[3], yV[3], zV[3]), null);
+		normal[3] = Vector3f.cross(left, right, null);
+		// System.out.println(normal[0]);
+		return normal;
 	}
 	
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
@@ -65,13 +97,26 @@ public class Chunk implements Externalizable{
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count * 2];
 		int vertexPointer = 0;
+		
+		float x1, x2,y1,y2,y3,y4,z1,z2;
 		// VERTICES NORMALS TEXTURECOORDS
 		for (int j = 0; j < TILE_COUNT; j++) { // i == z
 			for (int i = 0; i < TILE_COUNT; i++) { // j == x;
+				x1 = getTileX(i,j,false);
+				x2 = getTileX(i,j,true);
+				z1 = getTileZ(i,j,false);
+				z2 = getTileZ(i,j,true);
+				y1 = terrain.getGenerator().height(getTileX(i,j,false),getTileZ(i,j,false));
+				y2 = terrain.getGenerator().height(getTileX(i,j,true),getTileZ(i,j,false));
+				y3 = terrain.getGenerator().height(getTileX(i,j,false),getTileZ(i,j,true));
+				y4 = terrain.getGenerator().height(getTileX(i,j,true),getTileZ(i,j,true));
+				
 				// SQUARE BOTTOMLEFT
-				vertices[vertexPointer * 3] = chunkdata.getTile(i, j).getX()[0];
-				vertices[vertexPointer * 3 + 1] = chunkdata.getTile(i, j).getY()[0];
-				vertices[vertexPointer * 3 + 2] = chunkdata.getTile(i, j).getZ()[0];
+				vertices[vertexPointer * 3] = x1;
+				vertices[vertexPointer * 3 + 1] = y1;
+				vertices[vertexPointer * 3 + 2] = z1;
+				
+				Vector3f[] normal = calcNormal({x1, x1+TILE_SIZE/2, x2,x2+TILE_SIZE/2},{x1, x1+TILE_SIZE/2, x2,x2+TILE_SIZE/2},{x1, x1+TILE_SIZE/2, x2,x2+TILE_SIZE/2})
 				normals[vertexPointer * 3] = chunkdata.getTile(i, j).getNormal()[0].getX();
 				normals[vertexPointer * 3 + 1] = chunkdata.getTile(i, j).getNormal()[0].getY();
 				normals[vertexPointer * 3 + 2] = chunkdata.getTile(i, j).getNormal()[0].getZ();
@@ -116,7 +161,7 @@ public class Chunk implements Externalizable{
 
 		return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.topTileTextureIndices);
 	}
-	
+
 	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		VERSION = in.readByte();
@@ -125,9 +170,9 @@ public class Chunk implements Externalizable{
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public static void initIndices() {
 		// INDICES
 		indices = new int[4 * 6 * (TILE_COUNT - 1) * (TILE_COUNT - 1)];

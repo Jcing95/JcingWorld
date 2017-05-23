@@ -120,9 +120,11 @@ public class Tile implements Externalizable {
 		}
 	}
 
-	private Vector3f calcNormal() {
+	private Vector3f[] calcNormal() {
 		Vector3f left = Vector3f.sub(new Vector3f(xV[1], yV[1], zV[1]), new Vector3f(xV[0], yV[0], zV[0]), null);
 		Vector3f right = Vector3f.sub(new Vector3f(xV[0], yV[0], zV[0]), new Vector3f(xV[2], yV[2], zV[2]), null);
+		Vector3f[] normal = new Vector3f[4];
+
 		normal[0] = Vector3f.cross(left, right, null);
 
 		left = Vector3f.sub(new Vector3f(xV[1], yV[1], zV[1]), new Vector3f(xV[2], yV[2], zV[2]), null);
@@ -135,7 +137,7 @@ public class Tile implements Externalizable {
 		right = Vector3f.sub(new Vector3f(xV[2], yV[2], zV[2]), new Vector3f(xV[3], yV[3], zV[3]), null);
 		normal[3] = Vector3f.cross(left, right, null);
 		// System.out.println(normal[0]);
-		return null;
+		return normal;
 	}
 
 	private void calcSwap() {
