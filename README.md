@@ -1,5 +1,5 @@
 # JcingWorld
-### A Project by Jcing _[WIP]_[PAUSED]_.
+### A Project by Jcing _[WIP] _[PAUSED].
 ---
 **JcingWorld** is my attempt to create a simple and hopefully eventually a major 3D Java game using LWJGL.<br>
 I started by working along a [Youtube Tutorial](https://www.youtube.com/playlist?list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP "ThinMatrix's Java OpenGL Tutorial") by [ThinMatrix](https://www.youtube.com/user/ThinMatrix) and finally started to use that code to do my own thing :)<br>
