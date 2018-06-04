@@ -1,15 +1,13 @@
 package org.jcing.jcingworld.terrain;
 
-import java.io.PrintStream;
-
 import org.jcing.jcingworld.engine.Loader;
 import org.jcing.jcingworld.engine.entities.models.RawModel;
 import org.jcing.jcingworld.engine.imagery.BaseImage;
 import org.jcing.jcingworld.engine.imagery.TextureAtlas;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
-import org.jcing.jcingworld.logging.Logs;
 import org.jcing.jcingworld.terrain.generation.MapGenerator;
 import org.jcing.jcingworld.toolbox.Maths;
+import org.jcing.log.Log;
 import org.lwjgl.util.vector.Vector2f;
 
 /**
@@ -46,20 +44,19 @@ public class Chunk {
 	private BaseImage blendMap;
 	private Terrain terrain;
 
-	private static PrintStream info = Logs.subLog(Logs.chunkLoading, "info", false);
-	private static PrintStream out = Logs.subLog(Logs.chunkLoading, "Chunk", false);
+	private Log log = Log.getLog(Chunk.class);
 
 	private static int[] indices;
 	float x, z;
 
 	private BaseImage selectedTex;
 
-	public Chunk(int gridX, int gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas,
-			BaseImage blendMap, BaseImage selectedTex, Terrain terrain) {
+	public Chunk(int gridX, int gridZ, Loader loader, TerrainShader shader, TextureAtlas textureAtlas, BaseImage blendMap, BaseImage selectedTex,
+			Terrain terrain) {
 		// TODO: everything from manager
 		this.x = gridX * SIZE;
 		this.z = gridZ * SIZE;
-//		bounds = new Rectangle((int)x,(int)z,(int)SIZE,(int)SIZE);
+		// bounds = new Rectangle((int)x,(int)z,(int)SIZE,(int)SIZE);
 		this.textureAtlas = textureAtlas;
 		this.blendMap = blendMap;
 		this.selectedTex = selectedTex;
@@ -67,30 +64,29 @@ public class Chunk {
 		// gridPos = new Vector2f(gridX, gridZ);
 		chunkdata = terrain.getSaver().get(gridX, gridZ);
 		if (!chunkdata.initialized) {
-			System.out.println("CHUNK " + chunkdata.x + "|" + chunkdata.z + " WAS NOT INITIALIZED ("
-					+ Maths.fastFloor(chunkdata.x / DataChunk.SIZE) + "|"
-					+ Maths.fastFloor(chunkdata.z / DataChunk.SIZE) + ") ...");
-			info.println("generating Chunk[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
+			log.warn("CHUNK " + chunkdata.x + "|" + chunkdata.z + " WAS NOT INITIALIZED (" + Maths.fastFloor(chunkdata.x / DataChunk.SIZE)
+					+ "|" + Maths.fastFloor(chunkdata.z / DataChunk.SIZE) + ") ...");
+			log.info("generating Chunk[" + gridX + "][" + gridZ + "] - " + SIZE + "m² at " + TILE_COUNT + " Tiles");
 			chunkdata.generate(textureAtlas, terrain.getGenerator());
-			//			chunkdata.generate(textureAtlas);
-			//			chunkdata.apply();
-			out.println("G" + gridZ + " d" + chunkdata.z);
+			// chunkdata.generate(textureAtlas);
+			// chunkdata.apply();
+			log.debug("G" + gridZ + " d" + chunkdata.z);
 		}
 		this.model = generateTerrain(loader, shader);
 
 	}
 
-	public Tile generateTileData(byte xp, byte yp, TextureAtlas textureAtlas, MapGenerator gen){
-        float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
-        int xc = (int) (x*Chunk.SIZE);
-        int zc = (int) (z*Chunk.SIZE);
-        float x[] = { xp * SQUARE_SIZE, (xp + 1) * SQUARE_SIZE, xp * SQUARE_SIZE, (xp + 1) * SQUARE_SIZE };
-        float z[] = { yp * SQUARE_SIZE, yp * SQUARE_SIZE, (yp + 1) * SQUARE_SIZE, (yp + 1) * SQUARE_SIZE };
-        float y[] = { gen.height(x[0] + xc, z[0] + zc), gen.height(x[1] + xc, z[1] + zc),
-                gen.height(x[2] + xc, z[2] + zc), gen.height(x[3] + xc, z[3] + zc) };
-        return new Tile(x, y, z, gen.tex(x[3] + xc, z[3] + zc));
-    }
-	
+	public Tile generateTileData(byte xp, byte yp, TextureAtlas textureAtlas, MapGenerator gen) {
+		float SQUARE_SIZE = Chunk.TILE_SIZE / 2;
+		int xc = (int) (x * Chunk.SIZE);
+		int zc = (int) (z * Chunk.SIZE);
+		float x[] = { xp * SQUARE_SIZE, (xp + 1) * SQUARE_SIZE, xp * SQUARE_SIZE, (xp + 1) * SQUARE_SIZE };
+		float z[] = { yp * SQUARE_SIZE, yp * SQUARE_SIZE, (yp + 1) * SQUARE_SIZE, (yp + 1) * SQUARE_SIZE };
+		float y[] = { gen.height(x[0] + xc, z[0] + zc), gen.height(x[1] + xc, z[1] + zc), gen.height(x[2] + xc, z[2] + zc),
+				gen.height(x[3] + xc, z[3] + zc) };
+		return new Tile(x, y, z, gen.tex(x[3] + xc, z[3] + zc));
+	}
+
 	public static void initIndices() {
 		// INDICES
 		indices = new int[4 * 6 * (TILE_COUNT - 1) * (TILE_COUNT - 1)];
@@ -158,8 +154,8 @@ public class Chunk {
 	}
 
 	private RawModel generateTerrain(Loader loader, TerrainShader shader) {
-//		info.println("generated random Heightmap");
-		info.println("generated Tiles");
+		// info.println("generated random Heightmap");
+		log.info("generated Tiles");
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
@@ -214,18 +210,17 @@ public class Chunk {
 			}
 		}
 
-		info.println("loaded Mesh!");
+		log.info("loaded Mesh!");
 		return loader.loadToVAO(vertices, textureCoords, normals, indices, chunkdata.topTileTextureIndices);
 	}
 
 	public void registerNeighbour(Chunk terrain, boolean first) {
 		// L T R B
 		if (terrain != null) {
-			Logs.terrainRegistering.println();
+			log.debug("");
 
 			int side = checkSide(terrain);
-			Logs.terrainRegistering.println("### registering " + terrain.getCoordinateString() + " at "
-					+ getCoordinateString() + "(side " + side + ")");
+			log.debug("### registering " + terrain.getCoordinateString() + " at " + getCoordinateString() + "(side " + side + ")");
 			// if (side == 3)
 			setTileBorder(terrain.getTileBorder(side), side);
 			if (first)
@@ -251,8 +246,7 @@ public class Chunk {
 			return 2;
 		if (terrain.getGridZ() < this.getGridZ())
 			return 3;
-		Logs.terrainRegistering.println(
-				"someting went wrong! " + getCoordinateString() + " == " + terrain.getCoordinateString() + "??");
+		log.error("someting went wrong! " + getCoordinateString() + " == " + terrain.getCoordinateString() + "??");
 		return -1;
 
 	}
@@ -306,34 +300,31 @@ public class Chunk {
 			return border;
 
 		default:
-			Logs.terrainRegistering.println("WHY THE FUXK ARE NO INDEX?");
+			log.error("WHY THE FUXK ARE NO INDEX?");
 			return null;
 		}
 	}
 
 	public void setTileBorder(Tile[] tiles, int index) {
 		// L T R B
-		PrintStream out = Logs.terrainRegistering;
 		switch (index) {
 		case 0:
-			out.println("SETTING " + getCoordinateString() + "(left side)");
+			log.info("SETTING " + getCoordinateString() + "(left side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// works
-				chunkdata.topTileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT)
-						+ (i + 1)] = tiles[i].textureIndex;
+				chunkdata.topTileTextureIndices[(TILE_TEX_INDICE_COUNT - 1) * (TILE_TEX_INDICE_COUNT) + (i + 1)] = tiles[i].textureIndex;
 			}
 
 			break;
 		case 1:
-			out.println("SETTING " + getCoordinateString() + "(top side)");
+			log.info("SETTING " + getCoordinateString() + "(top side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// this.tiles[i][0] = tiles[i];
-				chunkdata.topTileTextureIndices[(i + 1) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT
-						- 1] = tiles[i].textureIndex;
+				chunkdata.topTileTextureIndices[(i + 1) * TILE_TEX_INDICE_COUNT + TILE_TEX_INDICE_COUNT - 1] = tiles[i].textureIndex;
 			}
 			break;
 		case 2:
-			out.println("SETTING " + getCoordinateString() + "(right side)");
+			log.info("SETTING " + getCoordinateString() + "(right side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// this.tiles[i][this.tiles[i].length - 1] = tiles[i];
 				chunkdata.topTileTextureIndices[i + 1] = tiles[i].textureIndex;
@@ -342,7 +333,7 @@ public class Chunk {
 			break;
 		case 3:
 
-			out.println("SETTING " + getCoordinateString() + "(bottom side)");
+			log.info("SETTING " + getCoordinateString() + "(bottom side)");
 			for (int i = 0; i < tiles.length; i++) {
 				// works
 				chunkdata.topTileTextureIndices[(i + 1) * (TILE_TEX_INDICE_COUNT)] = tiles[i].textureIndex;
@@ -430,28 +421,27 @@ public class Chunk {
 		chunkdata.dismiss();
 	}
 
-	int i,j;
-	
-	private int convertWorldPos(float x){
+	int i, j;
+
+	private int convertWorldPos(float x) {
 		return Maths.fastFloor(x / Chunk.SIZE);
 	}
+
 	public Vector2f getSelected() {
-		Vector2f mousePos = new Vector2f(terrain.getMousePos().x,terrain.getMousePos().z);
-		if(convertWorldPos(mousePos.x) == this.getGridX() && convertWorldPos(mousePos.y) == this.getGridZ()){
-//			System.out.println("SELECTED!" +  (mousePos.y-z)/TILE_SIZE +"|"+(mousePos.x-x)/TILE_SIZE);
-			return new Vector2f(Maths.fastFloor((mousePos.y-z)/TILE_SIZE),Maths.fastFloor(TILE_COUNT-(mousePos.x-x)/TILE_SIZE-1));
+		Vector2f mousePos = new Vector2f(terrain.getMousePos().x, terrain.getMousePos().z);
+		if (convertWorldPos(mousePos.x) == this.getGridX() && convertWorldPos(mousePos.y) == this.getGridZ()) {
+			// System.out.println("SELECTED!" + (mousePos.y-z)/TILE_SIZE +"|"+(mousePos.x-x)/TILE_SIZE);
+			return new Vector2f(Maths.fastFloor((mousePos.y - z) / TILE_SIZE), Maths.fastFloor(TILE_COUNT - (mousePos.x - x) / TILE_SIZE - 1));
 		}
-		i%=TILE_COUNT;
-		j%= TILE_COUNT;
-		return new Vector2f(-1,-1);
-//		return selectedVec;
+		i %= TILE_COUNT;
+		j %= TILE_COUNT;
+		return new Vector2f(-1, -1);
+		// return selectedVec;
 	}
 
 	public BaseImage getSelectedTex() {
-		// TODO Auto-generated method stub
 		return selectedTex;
 	}
-
 
 	// public Tile[][] getTiles() {
 	// return chunkdata.tiles;

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import org.jcing.jcingworld.main.MainLoop;
 import org.jcing.jcingworld.terrain.generation.MapGenerator;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -72,10 +71,10 @@ public class Tile implements Externalizable {
 
 		float xa[] = { x * SQUARE_SIZE, (x + 1) * SQUARE_SIZE, x * SQUARE_SIZE, (x + 1) * SQUARE_SIZE };
 		float za[] = { y * SQUARE_SIZE, y * SQUARE_SIZE, (y + 1) * SQUARE_SIZE, (y + 1) * SQUARE_SIZE };
-		float ya[] = { gen.height(xa[0] + xc, za[0] + zc), gen.height(xa[1] + xc, za[1] + zc),
-				gen.height(xa[2] + xc, za[2] + zc), gen.height(xa[3] + xc, za[3] + zc) };
-		if(textureIndex < 0)
-		    textureIndex=gen.tex(data.x*SQUARE_SIZE+x, data.z*SQUARE_SIZE+y);
+		float ya[] = { gen.height(xa[0] + xc, za[0] + zc), gen.height(xa[1] + xc, za[1] + zc), gen.height(xa[2] + xc, za[2] + zc),
+				gen.height(xa[3] + xc, za[3] + zc) };
+		if (textureIndex < 0)
+			textureIndex = gen.tex(data.x * SQUARE_SIZE + x, data.z * SQUARE_SIZE + y);
 		for (int i = 0; i < 4; i++) {
 			this.xV[i] = xa[i];
 			this.yV[i] = ya[i];

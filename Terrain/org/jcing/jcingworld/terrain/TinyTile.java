@@ -6,28 +6,27 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public class TinyTile implements Externalizable {
-    private byte x, y;
-    
-    private Chunk ch;
-    
-    public TinyTile(){
-        
-    }
-    
-    public void generate(Chunk ch){
-        
-    }
-    
-    @Override
-    public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
-        // TODO Auto-generated method stub
-        
-    }
+	private byte x, y;
 
-    @Override
-    public void writeExternal(ObjectOutput arg0) throws IOException {
-        // TODO Auto-generated method stub
-        
-    }
-    
+	private Chunk ch;
+
+	public TinyTile() {
+
+	}
+
+	public void generate(Chunk ch) {
+
+	}
+
+	@Override
+	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
+
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput arg0) throws IOException {
+
+
+	}
+
 }

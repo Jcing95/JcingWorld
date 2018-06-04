@@ -13,22 +13,21 @@ public class MapGenerator {
 	public static final int MAXBIOMES = 5;
 	private OpenSimplexNoise humidityNoise, fertilityNoise;
 
+	private OpenSimplexNoise noise;
+	public static float continentalHeightDelta = 100;
+	private static float continentalInterpolation = 1075;
 
-    private OpenSimplexNoise noise;
-    public static float continentalHeightDelta = 100;
-    private static float continentalInterpolation = 1075;
+	public static float hillDelta = 245;
+	public static float hillInterpolation = 375;
+	public static float hillSteadyness = 1050;
+	public static float hillErosionDelta = 25;
+	public static float hillErosionInterpolation = 75;
+	public static float hillErosionstretchdiff = 30f;
 
-    public static float hillDelta = 245;
-    public static float hillInterpolation = 375;
-    public static float hillSteadyness = 1050;
-    public static float hillErosionDelta = 25;
-    public static float hillErosionInterpolation = 75;
-    public static float hillErosionstretchdiff = 30f;
+	public static float roughnessDelta = 5;
+	public static float roughnesInterpolation = 15;
+	public static float roughnesSteadyness = 257;
 
-    public static float roughnessDelta = 5;
-    public static float roughnesInterpolation = 15;
-    public static float roughnesSteadyness = 257;
-	
 	public MapGenerator(long seed) {
 		defNoise = new OpenSimplexNoise(seed);
 		noise = new OpenSimplexNoise(1337);
@@ -37,21 +36,20 @@ public class MapGenerator {
 
 	}
 
-	 private float noise(float x, float z, float delta, float interpolation) {
-	        return delta * (float) (noise.eval(x / (interpolation), z / (interpolation)));
-	    }
+	private float noise(float x, float z, float delta, float interpolation) {
+		return delta * (float) (noise.eval(x / (interpolation), z / (interpolation)));
+	}
 
-	 
 	public float height(float x, float z) {
 		float height = noise(x, z, continentalHeightDelta, continentalInterpolation);
 
-        float steady = noise(x, z, 1, hillSteadyness);
-        height += noise(x, z, steady * hillDelta, hillInterpolation);
-        height -= noise(x, z, steady * hillErosionstretchdiff, hillErosionInterpolation);
+		float steady = noise(x, z, 1, hillSteadyness);
+		height += noise(x, z, steady * hillDelta, hillInterpolation);
+		height -= noise(x, z, steady * hillErosionstretchdiff, hillErosionInterpolation);
 
-        steady += steady * noise(x, z, 1, roughnesSteadyness);
-        height += noise(x, z, roughnessDelta * steady, roughnesInterpolation);
-        return height;
+		steady += steady * noise(x, z, 1, roughnesSteadyness);
+		height += noise(x, z, roughnessDelta * steady, roughnesInterpolation);
+		return height;
 	}
 
 	public int biome(float x, float z) {

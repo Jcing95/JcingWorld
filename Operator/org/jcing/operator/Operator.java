@@ -29,7 +29,8 @@ public class Operator implements Runnable {
 		running = false;
 		try {
 			th.join();
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

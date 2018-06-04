@@ -27,136 +27,144 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class MainLoop {
 
-    private static double newMouseX;
-    private static double newMouseY;
-    private static double prevMouseX;
-    private static double prevMouseY;
+	private static double newMouseX;
+	private static double newMouseY;
+	private static double prevMouseX;
+	private static double prevMouseY;
+	//TODO: external Mouse
+	
+	private static long window;
+	private static Game game;
+	private static Loader loader;
+	private static MasterRenderer renderer;
+	private static GUIRenderer guiRenderer;
+	private static GuiManager gui;
 
-    private static long window;
-    private static Game game;
-    private static Loader loader;
-    private static MasterRenderer renderer;
-    private static GUIRenderer guiRenderer;
-    private static GuiManager gui;
+	private static GUIText fpsText;
 
-    private static GUIText fpsText;
+	private static final boolean WIRE = false;
 
-    private static final boolean WIRE = false;
+	public static void main(String[] args) {
+		new MainLoop();
+	}
 
-    public static void main(String[] args) {   
-        new MainLoop();
-    }
+	public MainLoop() {
+		try {
+			
+			System.setProperty("org.lwjgl.librarypath", new File("lib/lwjgl3/native").getAbsolutePath());
 
-    public MainLoop() {
-        try {
-            System.setProperty("org.lwjgl.librarypath",
-                    new File("lib/lwjgl3/native").getAbsolutePath());
-            
-            loader = new Loader();
-            window = DisplayManager.init();
-            
-            renderer = new MasterRenderer();
-            
-            guiRenderer = new GUIRenderer(loader); //TODO: overlook GUI and Font
-            gui = new GuiManager();
-            
-            game = new Game(loader, renderer);
+			loader = new Loader();
+			window = DisplayManager.init();
 
-            TextMaster.init(loader);
-            
-            MasterRenderer.enableCulling();
-            
-            loop();
+			renderer = new MasterRenderer();
 
-            // Free the window callbacks and destroy the window
-            glfwFreeCallbacks(window);
-            glfwDestroyWindow(window);
-        } finally {
-            // Terminate GLFW and free the error callback
-            glfwTerminate();
-            glfwSetErrorCallback(null).free();
-        }
-    }
+			guiRenderer = new GUIRenderer(loader); // TODO: overlook GUI and Font
+			gui = new GuiManager();
 
-    private void loop() {
-        //Initializing FPS - text
-        DecimalFormat dec = new DecimalFormat("#.##");
-        dec.setMinimumFractionDigits(2);
-        FontType font = new FontType(loader.loadTexture("fonts/immortal.png", true),
-                new File("res/fonts/immortal.fnt"));
-        fpsText = new GUIText("FPS: ", 1, font, new Vector2f(0.1f, 0.1f), 0.3f, false);
-        fpsText.setColour(1f, 0.25f, 0.4f);
+			game = new Game(loader, renderer);
 
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
-        while (!glfwWindowShouldClose(window)) {
-            manageMouse(); //update mouse position
-            
-            game.tick(); //update game TODO: time based game ticks.
-            
-            //update debugging text
-            fpsText.setText("FPS: " + DisplayManager.fps + " X: "
-                    + dec.format(game.getPlayer().getPosition().x) + " Y: "
-                    + dec.format(game.getPlayer().getPosition().y) + " Z: "
-                    + dec.format(game.getPlayer().getPosition().z) + " Biome: " + game.getPlayer().getBiome());
+			TextMaster.init(loader);
 
-            //render game
-            renderer.render(game.getSun(), game.getCam());
+			MasterRenderer.enableCulling();
 
-            //render GUIs
-            guiRenderer.render(gui.getParts());
-            
-            //render text
-            if (WIRE)
-                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            TextMaster.render();
-            if (WIRE)
-                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+			loop();
 
-            //draw
-            DisplayManager.updateDisplay();
-        }
-        
-        game.cleanUp();
-        guiRenderer.cleanUp();
-        renderer.cleanUp();
-        loader.cleanUp();
-    }
+			// Free the window callbacks and destroy the window
+			glfwFreeCallbacks(window);
+			glfwDestroyWindow(window);
+			
+		}
+		finally {
+			
+			// Terminate GLFW and free the error callback
+			glfwTerminate();
+			glfwSetErrorCallback(null).free();
+			
+		}
+	}
 
-    private void manageMouse() {
-        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+	private void loop() {
+		// Initializing FPS - text
+		// TODO: Move FPS rendering out of MainLoop
+		DecimalFormat dec = new DecimalFormat("#.##");
+		dec.setMinimumFractionDigits(2);
+		FontType font = new FontType(loader.loadTexture("fonts/immortal.png", true), new File("res/fonts/immortal.fnt"));
+		fpsText = new GUIText("FPS: ", 1, font, new Vector2f(0.1f, 0.1f), 0.3f, false);
+		fpsText.setColour(1f, 0.25f, 0.4f);
 
-        GLFW.glfwGetCursorPos(DisplayManager.window, x, y);
-        x.rewind();
-        y.rewind();
+		// Run the rendering loop until the user has attempted to close
+		// the window or has pressed the ESCAPE key.
+		while (!glfwWindowShouldClose(window)) {
+			manageMouse(); // update mouse position
 
-        newMouseX = x.get();
-        newMouseY = y.get();
+			game.tick(); // update game TODO: time based game ticks.
 
-        Mouse.posX = newMouseX;
-        Mouse.posY = newMouseY;
+			// update debugging text
+			//TODO: implement console for debugging purposes?
+			fpsText.setText("FPS: " + DisplayManager.fps + " X: " + dec.format(game.getPlayer().getPosition().x) + " Y: "
+					+ dec.format(game.getPlayer().getPosition().y) + " Z: " + dec.format(game.getPlayer().getPosition().z) + " Biome: "
+					+ game.getPlayer().getBiome());
 
-        Mouse.deltaY = newMouseY - prevMouseY;
-        Mouse.deltaX = newMouseX - prevMouseX;
+			//TODO: handle rendering locally
+			// render game
+			renderer.render(game.getSun(), game.getCam());
 
-        prevMouseX = newMouseX;
-        prevMouseY = newMouseY;
-    }
+			// render GUIs
+			guiRenderer.render(gui.getParts());
 
-    public static Game getGame() {
-        return game;
-    }
+			// render text
+			if (WIRE)
+				GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+			TextMaster.render();
+			if (WIRE)
+				GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 
-    public static Loader getLoader() {
-        return loader;
-    }
+			// draw
+			DisplayManager.updateDisplay();
+		}
 
-    public static MasterRenderer getRenderer() {
-        return renderer;
-    }
+		game.cleanUp();
+		guiRenderer.cleanUp();
+		renderer.cleanUp();
+		loader.cleanUp();
+	}
 
-    public static GUIRenderer getGuiRenderer() {
-        return guiRenderer;
-    }
+	private void manageMouse() { //TODO: Static --> Handle mouse in its own Class
+		DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+		DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+
+		GLFW.glfwGetCursorPos(DisplayManager.window, x, y);
+		x.rewind();
+		y.rewind();
+
+		newMouseX = x.get();
+		newMouseY = y.get();
+
+		Mouse.posX = newMouseX;
+		Mouse.posY = newMouseY;
+
+		Mouse.deltaY = newMouseY - prevMouseY;
+		Mouse.deltaX = newMouseX - prevMouseX;
+
+		prevMouseX = newMouseX;
+		prevMouseY = newMouseY;
+	}
+
+	
+	//TODO: remove static getters and final?
+	public static Game getGame() {
+		return game;
+	}
+
+	public static Loader getLoader() {
+		return loader;
+	}
+
+	public static MasterRenderer getRenderer() {
+		return renderer;
+	}
+
+	public static GUIRenderer getGuiRenderer() {
+		return guiRenderer;
+	}
 }

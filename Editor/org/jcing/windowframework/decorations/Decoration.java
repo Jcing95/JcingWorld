@@ -6,14 +6,13 @@ import java.awt.Graphics;
 import org.jcing.windowframework.Component;
 
 public abstract class Decoration {
-	
-	public void print(Graphics g, Component c){
+
+	public void print(Graphics g, Component c) {
 		Color old = g.getColor();
-		paint(g,c);
+		paint(g, c);
 		g.setColor(old);
 	}
-		
-	public abstract void paint(Graphics g, Component c);
 
+	public abstract void paint(Graphics g, Component c);
 
 }

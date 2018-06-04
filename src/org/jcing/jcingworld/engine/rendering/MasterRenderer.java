@@ -14,7 +14,6 @@ import org.jcing.jcingworld.engine.DisplayManager;
 import org.jcing.jcingworld.engine.entities.Camera;
 import org.jcing.jcingworld.engine.entities.Entity;
 import org.jcing.jcingworld.engine.entities.models.TexturedModel;
-import org.jcing.jcingworld.engine.lighting.Ambient;
 import org.jcing.jcingworld.engine.lighting.Light;
 import org.jcing.jcingworld.engine.shading.entities.StaticShader;
 import org.jcing.jcingworld.engine.shading.terrain.TerrainShader;
@@ -29,6 +28,7 @@ public class MasterRenderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
 
+	//TODO: Add Sky Class
 	private static final float RED = Maths.getFloatColor(70);
 	private static final float GREEN = Maths.getFloatColor(171);
 	private static final float BLUE = Maths.getFloatColor(200);
@@ -56,15 +56,15 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadSkyColour(RED, GREEN, BLUE);
 		shader.loadLight(sun);
-//		shader.loadAmbient(sun.getAmbient());
+		// shader.loadAmbient(sun.getAmbient());
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
-
 		shader.stop();
+		
 		terrainShader.start();
 		terrainShader.loadSkyColour(RED, GREEN, BLUE);
 		terrainShader.loadLight(sun);
-//		terrainShader.loadAmbient(sun);
+		// terrainShader.loadAmbient(sun);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
@@ -72,14 +72,8 @@ public class MasterRenderer {
 		entities.clear();
 	}
 
-	public void processTerrain(Chunk terrain) {
-		if (terrain != null)
-			terrains.add(terrain);
-		else
-			System.err.println("TerrainRenderer received NULL-Terrain!");
-	}
-
 	public void prepare() {
+		//REDO SKY!
 		GL11.glClearColor(RED, GREEN, BLUE, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
@@ -100,12 +94,21 @@ public class MasterRenderer {
 		}
 	}
 
+	public void processTerrain(Chunk terrain) {
+		//TODO: stitch terrains?
+		if (terrain != null)
+			terrains.add(terrain);
+		else
+			System.err.println("TerrainRenderer received NULL-Terrain!");
+	}
+
 	public void cleanUp() {
 		shader.cleanUp();
 		terrainShader.cleanUp();
 	}
 
 	public static void enableCulling() {
+		//TODO: no static MasterRenderer methods.
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glCullFace(GL11.GL_BACK);
 	}
@@ -119,6 +122,9 @@ public class MasterRenderer {
 	}
 
 	private void createProjectionMatrix() {
+		
+		//TODO: recalculate Projectionmatrix in windowSizeCallback
+		
 		// IntBuffer w = BufferUtils.createIntBuffer(1);
 		// IntBuffer h = BufferUtils.createIntBuffer(1);
 		// GLFW.glfwGetWindowFrameSize(DisplayManager.window, w, h);

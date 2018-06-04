@@ -4,7 +4,7 @@ public class CollatzEuler {
 
 	private static final long MAXNR = 1000000;
 	private static final int NUMBEROFTHREADS = 10;
-	
+
 	public static void main(String[] args) {
 		for (int i = 0; i < NUMBEROFTHREADS; i++) {
 			new CollatzEuler(i + 1, false);
@@ -34,18 +34,17 @@ public class CollatzEuler {
 		while (!running()) {
 			try {
 				Thread.sleep(20);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		if (recursive)
-			System.err.println("Recursive: " + longestChainLength + " Chainlength @ " + longestChainNumber + " out of "
-					+ MAXNR + "  (" + (System.currentTimeMillis() - time) + "ms (+-20ms) with " + numThreads
-					+ " Threads)");
+			System.err.println("Recursive: " + longestChainLength + " Chainlength @ " + longestChainNumber + " out of " + MAXNR + "  ("
+					+ (System.currentTimeMillis() - time) + "ms (+-20ms) with " + numThreads + " Threads)");
 		else
-			System.out.println("Linear: " + longestChainLength + " Chainlength @ " + longestChainNumber + " out of "
-					+ MAXNR + "  (" + (System.currentTimeMillis() - time) + "ms (+-20ms) with " + numThreads
-					+ " Threads)");
+			System.out.println("Linear: " + longestChainLength + " Chainlength @ " + longestChainNumber + " out of " + MAXNR + "  ("
+					+ (System.currentTimeMillis() - time) + "ms (+-20ms) with " + numThreads + " Threads)");
 	}
 
 	private int calculateChainLength(long n, int len) {
@@ -85,9 +84,6 @@ public class CollatzEuler {
 		return true;
 	}
 
-	
-	
-	
 	private class Calc implements Runnable {
 
 		private int threadNumber;

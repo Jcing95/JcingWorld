@@ -20,13 +20,12 @@ public class Pane extends Component implements Container {
 		comps.add(c);
 	}
 
-	
 	@Override
-	public void evaluateMouse(Mouse mouse){
-	    super.evaluateMouse(mouse);
-	    for (Component component : comps) {
-            component.evaluateMouse(mouse);
-        }
+	public void evaluateMouse(Mouse mouse) {
+		super.evaluateMouse(mouse);
+		for (Component component : comps) {
+			component.evaluateMouse(mouse);
+		}
 	}
 
 	@Override
@@ -70,19 +69,19 @@ public class Pane extends Component implements Container {
 
 	@Override
 	public int setWithXBounds(int x, int width) {
-		if(x<0)
+		if (x < 0)
 			return 0;
-		if(x >this.width-width)
-			return this.width-width;
+		if (x > this.width - width)
+			return this.width - width;
 		return x;
 	}
 
 	@Override
 	public int setWithYBounds(int y, int height) {
-		if(y<0)
+		if (y < 0)
 			return 0;
-		if(y>this.height-height)
-			return this.height-height;
+		if (y > this.height - height)
+			return this.height - height;
 		return y;
 	}
 

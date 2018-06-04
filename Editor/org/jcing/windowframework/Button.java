@@ -19,12 +19,11 @@ public class Button extends TextField {
 		super(x, y, label);
 		listeners = new LinkedList<ActionListener>();
 	}
-	
-	public void addActionListener(ActionListener l){
+
+	public void addActionListener(ActionListener l) {
 		listeners.add(l);
 	}
-	
-	
+
 	@Override
 	public boolean evaluateClick(Mouse mouse, boolean pressed) {
 		if (pressed) {
@@ -32,7 +31,7 @@ public class Button extends TextField {
 			return this.pressed;
 		}
 		this.pressed = false;
-		if (contains(mouse.getPosX(), mouse.getPosY())){
+		if (contains(mouse.getPosX(), mouse.getPosY())) {
 			ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
 			for (ActionListener actionListener : listeners) {
 				actionListener.actionPerformed(event);

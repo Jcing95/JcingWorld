@@ -28,18 +28,16 @@ public class Player extends Entity {
 	private float upwardsSpeed = 0;
 	private float rightSpeed = 0;
 
-	
-	
 	private float xRotDelta;
 	private boolean doubleJumpRotation;
 	private long lastJump;
 	private float doubleJumpRotationDegrees;
 	private float doubleJumpRotationSpeed;
-	private static final float DOUBLEJUMPROTATIONACCELERATION= 37.5f;
+	private static final float DOUBLEJUMPROTATIONACCELERATION = 37.5f;
 	private static final long JUMPTIMEDELTA = 150;
 	private static final float MAXDOUBLEJUMPROTATIONSPEED = 707.5f;
 	private static final int MAXDOUBLEJUMPS = 3;
-	
+
 	private Terrain terrain;
 	private boolean spaceReleased;
 	private float xRotDJDelta;
@@ -51,15 +49,13 @@ public class Player extends Entity {
 		this.terrain = terrain;
 	}
 
-	
-	public String getBiome(){
-    switch(terrain.getGenerator().biome(this.getPosition().x,this.getPosition().z)){
-      default:
-        return ""+terrain.getGenerator().biome(this.getPosition().x,this.getPosition().z);
-    }
-  }
-	
-	
+	public String getBiome() {
+		switch (terrain.getGenerator().biome(this.getPosition().x, this.getPosition().z)) {
+		default:
+			return "" + terrain.getGenerator().biome(this.getPosition().x, this.getPosition().z);
+		}
+	}
+
 	public void move() {
 
 		flying = KeyBoard.toggled(GLFW.GLFW_KEY_F);
@@ -100,25 +96,26 @@ public class Player extends Entity {
 			if (KeyBoard.key(GLFW.GLFW_KEY_SPACE)) {
 				jump();
 				spaceReleased = false;
-			}else{
+			} else {
 				spaceReleased = true;
 			}
 		}
-		if(doubleJumpRotation){
-			if(doubleJumpRotationSpeed < MAXDOUBLEJUMPROTATIONSPEED)
+		if (doubleJumpRotation) {
+			if (doubleJumpRotationSpeed < MAXDOUBLEJUMPROTATIONSPEED)
 				doubleJumpRotationSpeed += DOUBLEJUMPROTATIONACCELERATION;
 
-			doubleJumpRotationDegrees += doubleJumpRotationSpeed*DisplayManager.getFrameTimeSeconds();;
-			if(doubleJumpRotationDegrees >= 360){
+			doubleJumpRotationDegrees += doubleJumpRotationSpeed * DisplayManager.getFrameTimeSeconds();
+			;
+			if (doubleJumpRotationDegrees >= 360) {
 				doubleJumpRotationDegrees = 0;
 				doubleJumpRotation = false;
 			}
 		}
 		xRotDJDelta = doubleJumpRotationDegrees;
-		
+
 		// ROTATION Horizontal
-		if(doubleJumps>2)
-			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()+xRotDJDelta), 0);
+		if (doubleJumps > 2)
+			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds() + xRotDJDelta), 0);
 		else
 			this.increaseRotation(0, (float) (Mouse.deltaX * TURN * DisplayManager.getFrameTimeSeconds()), 0);
 
@@ -144,8 +141,10 @@ public class Player extends Entity {
 
 		// FLYING
 		if (flying) {
-			distanceUp = speedUp;//(float) (distanceForward * Math.sin(Math.toRadians(getRotX())) - speedUp * Math.sin(Math.toRadians(getRotX() - 90)));
-			distanceForward = (float) (distanceForward * Math.cos(Math.toRadians(getRotX())) /*- speedUp * Math.cos(Math.toRadians(getRotX() - 90))*/);
+			distanceUp = speedUp;// (float) (distanceForward * Math.sin(Math.toRadians(getRotX())) - speedUp * Math.sin(Math.toRadians(getRotX() -
+									// 90)));
+			distanceForward = (float) (distanceForward
+					* Math.cos(Math.toRadians(getRotX())) /*- speedUp * Math.cos(Math.toRadians(getRotX() - 90))*/);
 			// distanceRight = (float) (distanceRight *
 			// Math.cos(Math.toRadians(getRotX()))
 			// - speedUp * Math.cos(Math.toRadians(getRotX() - 90)));
@@ -184,16 +183,16 @@ public class Player extends Entity {
 		if (!inAir) {
 			lastJump = DisplayManager.getLastFrameTime();
 			this.upwardsSpeed = JUMP_POWER;
-		}else if(!doubleJumpRotation && spaceReleased && doubleJumps < MAXDOUBLEJUMPS && DisplayManager.getLastFrameTime() - lastJump >= JUMPTIMEDELTA){
+		} else if (!doubleJumpRotation && spaceReleased && doubleJumps < MAXDOUBLEJUMPS
+				&& DisplayManager.getLastFrameTime() - lastJump >= JUMPTIMEDELTA) {
 			doubleJumps++;
 			doubleJumpRotationSpeed = 0;
-			this.upwardsSpeed += JUMP_POWER*(doubleJumps+0.3f);
+			this.upwardsSpeed += JUMP_POWER * (doubleJumps + 0.3f);
 			doubleJumpRotation = true;
 		}
 		inAir = true;
 	}
 
-	
 	public void moveCamera(Camera cam) {
 		// System.out.println("Y: " + getPosition().y);
 		cam.setPosition(new Vector3f(getPosition().x, getPosition().y + CAMERA_HEADOFFSET, getPosition().z));

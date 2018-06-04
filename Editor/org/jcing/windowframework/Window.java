@@ -60,7 +60,8 @@ public class Window extends Canvas implements Container {
 					render();
 					try {
 						sleep(5);
-					} catch (InterruptedException e) {
+					}
+					catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
@@ -84,24 +85,24 @@ public class Window extends Canvas implements Container {
 	private void manage() {
 		mouse.move();
 		for (Component component : comps) {
-            component.evaluateMouse(mouse);
-        }
+			component.evaluateMouse(mouse);
+		}
 	}
 
-	public void processClick(Mouse mouse,boolean pressed) {
-	    if (pressed && focused != null)
-            focused.setFocus(false);
+	public void processClick(Mouse mouse, boolean pressed) {
+		if (pressed && focused != null)
+			focused.setFocus(false);
 		Iterator<Component> i = comps.descendingIterator();
-		while(i.hasNext()){
-			if(i.next().evaluateClick(mouse,pressed))
+		while (i.hasNext()) {
+			if (i.next().evaluateClick(mouse, pressed))
 				return;
 		}
-//		for (Component component : comps) {
-//			component.evaluateClick(x, y);
-//		}
+		// for (Component component : comps) {
+		// component.evaluateClick(x, y);
+		// }
 	}
 
-	public void print(Graphics g){
+	public void print(Graphics g) {
 		for (Component component : comps) {
 			component.print(g);
 		}
@@ -133,7 +134,7 @@ public class Window extends Canvas implements Container {
 	}
 
 	public void paint(Graphics g) {
-		
+
 	}
 
 	@Override
@@ -149,23 +150,23 @@ public class Window extends Canvas implements Container {
 
 	@Override
 	public int setWithXBounds(int x, int width) {
-		if(x<0)
+		if (x < 0)
 			return 0;
-		if(x>getWidth()-width)
-			return getWidth()-width;
+		if (x > getWidth() - width)
+			return getWidth() - width;
 		return x;
 	}
 
 	@Override
 	public int setWithYBounds(int y, int height) {
-		if(y<0)
+		if (y < 0)
 			return 0;
-		if(y>getHeight()-height)
-			return getHeight()-height;
+		if (y > getHeight() - height)
+			return getHeight() - height;
 		return y;
 	}
 
-    public Mouse getMouse() {
-        return mouse;
-    }
+	public Mouse getMouse() {
+		return mouse;
+	}
 }

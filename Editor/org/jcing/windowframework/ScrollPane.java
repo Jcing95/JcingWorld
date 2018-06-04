@@ -19,12 +19,12 @@ public class ScrollPane extends Pane implements MouseWheelListener {
 	}
 
 	@Override
-	public void setContainer(Container c){
-	    super.setContainer(c);
-	    mouse = c.getWin().getMouse();
-	    mouse.addMouseWheelListener(this);
+	public void setContainer(Container c) {
+		super.setContainer(c);
+		mouse = c.getWin().getMouse();
+		mouse.addMouseWheelListener(this);
 	}
-	
+
 	@Override
 	public boolean evaluateClick(int x, int y) {
 		if (contains(x, y)) {
@@ -58,7 +58,7 @@ public class ScrollPane extends Pane implements MouseWheelListener {
 			component.print(g, 0, yOffset);
 		}
 	}
-	
+
 	@Override
 	public int setWithYBounds(int y, int height) {
 		return y;

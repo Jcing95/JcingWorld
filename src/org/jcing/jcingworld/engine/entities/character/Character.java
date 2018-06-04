@@ -2,10 +2,10 @@ package org.jcing.jcingworld.engine.entities.character;
 
 public interface Character {
 
-    int getLife();
+	int getLife();
 
-    int getMaxLife();
+	int getMaxLife();
 
-    int getCurrDamage();
+	int getCurrDamage();
 
 }
