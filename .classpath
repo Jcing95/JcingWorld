@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="FileSystem"/>
-	<classpathentry kind="src" path="Operator"/>
-	<classpathentry kind="src" path="Terrain"/>
-	<classpathentry kind="src" path="Editor"/>
-	<classpathentry kind="src" path="openSimplex"/>
-	<classpathentry kind="src" path="Log"/>
+	<classpathentry kind="src" path="src/operator"/>
+	<classpathentry kind="src" path="src/engine"/>
+	<classpathentry kind="src" path="src/FileSystem"/>
+	<classpathentry kind="src" path="src/terrain"/>
+	<classpathentry kind="src" path="src/opensimplex"/>
+	<classpathentry kind="src" path="src/log"/>
+	<classpathentry kind="src" path="src/editor"/>
+	<classpathentry kind="src" path="src/game"/>
+	<classpathentry kind="src" path="src/main"/>
+	<classpathentry kind="src" path="src/misc"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/jcing/Dropbox/lib/lwjgl3/native"/>
