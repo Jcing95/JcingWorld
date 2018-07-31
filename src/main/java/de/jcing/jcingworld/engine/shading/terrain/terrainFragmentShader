@@ -1,0 +1,92 @@
+#version 400 core
+
+in vec2 pass_textureCoords;
+in vec3 surfaceNormal;
+in vec3 toLightVector;
+in vec3 toCameraVector;
+in float visibility;
+
+out vec4 out_Color;
+
+/*
+uniform sampler2D backgroundTexture;
+uniform sampler2D topTexture;
+uniform sampler2D leftTexture;
+uniform sampler2D bottomTexture;
+uniform sampler2D rightTexture;
+*/
+
+uniform sampler2D blendMap;
+uniform sampler2D textureAtlas;
+uniform sampler2D selectedOverlay;
+
+uniform vec3 lightColor;
+uniform float ambient;
+uniform float shineDamper;
+uniform float reflectivity;
+uniform vec3 skyColor;
+
+uniform vec2 selected;
+
+uniform float numTextures;
+
+const int TILECOUNT = 16; /*CHANGE WITH Terrain.TILECOUNT for Position calculation*/
+const int TILETEXINDICELENGTH = TILECOUNT+1;
+uniform float textureIndices[(TILETEXINDICELENGTH)*(TILETEXINDICELENGTH)]; 
+
+vec2 texOffset(float texIndex){
+	return vec2(mod(texIndex,numTextures)/numTextures,floor(texIndex/numTextures)/numTextures);	
+}
+
+void main(void){
+	vec2 tiledCoords = pass_textureCoords*(TILECOUNT);
+	vec4 blendMapColor = texture(blendMap, tiledCoords);
+	vec4 selectedOverlayColor =  texture(selectedOverlay,tiledCoords);
+	float backGroundTextureAmount = 1-blendMapColor.a;
+	float rightTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
+	
+	vec2 pos = floor(tiledCoords); /*move to Geometry shader!!!!!!!*/
+	pos.y--;
+	tiledCoords = mod(tiledCoords,1)/numTextures;
+	
+	/*
+	vec4 backgroundTextureColor = texture(textureAtlas, tiledCoords+texOffset(textureIndices[int((pos.y)*	TILETEXINDICELENGTH+pos.x)])) * backGroundTextureAmount;
+	vec4 topTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y-1)*	TILETEXINDICELENGTH+pos.x)])) * blendMapColor.r*blendMapColor.a;
+	vec4 leftTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y)*	TILETEXINDICELENGTH+pos.x-1)])) * blendMapColor.g*blendMapColor.a;
+	vec4 bottomTextureColor = texture(textureAtlas, 	tiledCoords+texOffset(textureIndices[int((pos.y+1)*	TILETEXINDICELENGTH+pos.x)])) * blendMapColor.b*blendMapColor.a;
+	vec4 rightTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y)*	TILETEXINDICELENGTH+pos.x+1)])) * rightTextureAmount*blendMapColor.a;
+	*/
+	
+	//INCREMENTED:
+	vec4 backgroundTextureColor = texture(textureAtlas, tiledCoords+texOffset(textureIndices[int((pos.y+1)*	TILETEXINDICELENGTH+pos.x+1)])) * backGroundTextureAmount;
+	
+	vec4 topTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y)*	TILETEXINDICELENGTH+pos.x+1)])) * blendMapColor.r*blendMapColor.a;
+	vec4 leftTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y+1)*	TILETEXINDICELENGTH+pos.x)])) * blendMapColor.g*blendMapColor.a;
+	vec4 bottomTextureColor = texture(textureAtlas, 	tiledCoords+texOffset(textureIndices[int((pos.y+2)*	TILETEXINDICELENGTH+pos.x+1)])) * blendMapColor.b*blendMapColor.a;
+	vec4 rightTextureColor = texture(textureAtlas, 		tiledCoords+texOffset(textureIndices[int((pos.y+1)*	TILETEXINDICELENGTH+pos.x+2)])) * rightTextureAmount*blendMapColor.a;
+	
+	
+	vec4 totalColor = backgroundTextureColor + (topTextureColor + bottomTextureColor + leftTextureColor + rightTextureColor);
+	if(pos == selected){
+		totalColor += selectedOverlayColor;
+	}
+	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 unitLightVector = normalize(toLightVector);
+	
+	float nDot1 = dot(unitNormal, unitLightVector);
+	float brightness = max(nDot1,ambient);
+	vec3 diffuse = brightness * lightColor;
+	
+	vec3 unitVectorToCamera = normalize(toCameraVector);
+	vec3 lightDirection = -unitLightVector;
+	vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
+		
+	float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
+	specularFactor = max(specularFactor,0.0);
+	float dampedFactor = pow(specularFactor, shineDamper);
+	vec3 finalSpecular = dampedFactor * reflectivity*  lightColor;
+	
+	out_Color = vec4(diffuse,1.0)* totalColor + vec4(finalSpecular,1.0);
+	out_Color = mix(vec4(skyColor, 1.0),out_Color, visibility);
+}
+
